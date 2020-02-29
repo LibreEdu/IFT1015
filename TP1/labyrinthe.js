@@ -51,8 +51,8 @@ testIota();
 
 /* Indicate if an array contains a number.
  *
- * tab (array): array of numbers
- * x (number) : number
+ * tab (array)     : array of numbers
+ * x (number)      : number
  *
  * output (boolean): true if the array contains the number, false if not
  *
@@ -85,8 +85,8 @@ testContient();
 
 /* If the number is not in the array, add it.
  *
- * tab (array): array of numbers
- * x (number) : number
+ * tab (array)   : array of numbers
+ * x (number)    : number
  *
  * output (array): the new array
  *
@@ -114,8 +114,8 @@ testAjouter();
 
 /* If the number is in the array, remove it.
  *
- * tab (array): array of numbers
- * x (number) : number
+ * tab (array)   : array of numbers
+ * x (number)    : number
  *
  * output (array): the new array
  *
@@ -151,11 +151,11 @@ testRetirer();
 
 /* Number of the cell
  *
- *  x (number): column number of the cell
- *  y (number):    row number of the cell
- * nx (number): number of grid columns
+ *  x (number)    : column number of the cell
+ *  y (number)    :    row number of the cell
+ * nx (number)    : number of grid columns
  * 
- * output (array): list of cells close to (x, y)
+ * output (number): the cell number
  *
  * voisins(7, 2, 8, 4) = [15, 22, 31]
  */
@@ -176,16 +176,22 @@ testCellNumber();
 
 /* Cells close to (x, y) in a (nx, ny) grid
  *
- *  x (number): column number of the cell
- *  y (number):    row number of the cell
- * nx (number): number of grid columns
- * ny (number): number of grid lines
+ *  x (number)   : column number of the cell
+ *  y (number)   :    row number of the cell
+ * nx (number)   : number of grid columns
+ * ny (number)   : number of grid lines
  * 
  * output (array): list of cells close to (x, y)
  *
  * voisins(7, 2, 8, 4) = [15, 22, 31]
  */
 var voisins = function(x, y, nx, ny) {
+    var output = [];
+    if (y) { // Top cell
+        output.push(nx * (y-1) + x);
+    }
+    
+    return output;
 };
 
 // Unit test of the voisins function
