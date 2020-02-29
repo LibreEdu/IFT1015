@@ -209,20 +209,22 @@ var laby = function(nx, ny, pas) {
     mursH = retirer(mursH, 0);
     mursV = retirer(mursV, 0);
 
-    printMurs(mursH, mursV, nx, ny)
+    printMurs(mursH, mursV, nx, ny);
 };
 
-laby(8, 4, 40);
 
-var printMurs = function(mursH, mursV) {
+
+
+var printMurs = function(mursH, mursV, nx, ny) {
     var murs;
     var nb;
     var number;
+    
     var index = 0;
     print("mursH :");
-    for (var i=0; i<(ny+1); i++) {
+    for (var i = 0; i < ny+2; i++) {
         murs = "";
-        for(var j=i*nx; j<(i+1)*nx; j++) {
+        for(var j = i*nx; j < (i+1)*nx; j++) {
             nb = (index < 10 ? " " : "") + index;
             number = contient(mursH, index) ? " " + nb + " " : " -- ";
             murs += number;
@@ -231,11 +233,12 @@ var printMurs = function(mursH, mursV) {
         print(murs);
     }
     print();
+    
     index = 0;
     print("mursV :");
-    for (var i=0; i<ny; i++) {
+    for (var i = 0; i < ny+1; i++) {
         murs = "";
-        for(var j=i*(nx+1); j<(i+1)*(nx+1); j++) {
+        for(var j = i*(nx+1); j < (i+1)*(nx+1); j++) {
             nb = (index < 10 ? " " : "") + index;
             number = contient(mursV, index) ? " " + nb + " " : " -- ";
             murs += number;
@@ -245,3 +248,5 @@ var printMurs = function(mursH, mursV) {
     }
     print();
 };
+
+laby(8, 4, 40);
