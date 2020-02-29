@@ -10,7 +10,6 @@
  * contient(tab, x)      : indicate if tab contains x
  * ajouter(tab, x)       : if x is not in tab, add it
  * retirer(tab, x)       : if x is in tab, remove it
- * cellNumber(x, y, ny)  : number of the (x, y) cell in a grid of ny columns
  * voisins(x, y, nx, ny) : cells close to (x, y) in a (nx, ny) grid
  */
 
@@ -149,31 +148,6 @@ testRetirer();
 
 
 
-/* Number of the cell
- *
- *  x (number)    : column number of the cell
- *  y (number)    :    row number of the cell
- * nx (number)    : number of grid columns
- * 
- * output (number): the cell number
- *
- * voisins(7, 2, 8, 4) = [15, 22, 31]
- */
-var cellNumber = function(x, y, nx) {
-    return nx * y + x;
-};
-
-// Unit test of the cellNumber function
-var testCellNumber = function(){
-    assert( cellNumber(0, 0, 8) ==  0 );
-    assert( cellNumber(7, 3, 8) == 31 );
-};
-
-testCellNumber();
-
-
-
-
 /* Cells close to (x, y) in a (nx, ny) grid
  *
  *  x (number)   : column number of the cell
@@ -187,16 +161,29 @@ testCellNumber();
  */
 var voisins = function(x, y, nx, ny) {
     var output = [];
-    if (y) { // Top cell
+    if (y) {          // Top cell
         output.push(nx * (y-1) + x);
     }
-    
+    if (x) {          // Left cell
+        output.push(nx * y + x - 1);
+    }
+    if (x < (nx-1)) { // Right cell
+        output.push(nx * y + x + 1);
+    }
+    if (y < (ny-1)) { // Lower cell
+        output.push(nx * (y+1) + x);
+    }
+
     return output;
 };
 
 // Unit test of the voisins function
 var testVoisins = function(){
-    assert( "" + voisins(7, 2, 8, 4) == "" + [15, 22, 31] );
+    assert( "" + voisins(0, 0, 8, 4) == "" + [1, 8] );
+    assert( "" + voisins(7, 0, 8, 4) == "" + [6, 15] );
+    assert( "" + voisins(0, 3, 8, 4) == "" + [16, 25] );
+    assert( "" + voisins(7, 3, 8, 4) == "" + [23, 30] );
+    assert( "" + voisins(1, 1, 8, 4) == "" + [1, 8, 10, 17] );
 };
 
-//testVoisins();
+testVoisins();
