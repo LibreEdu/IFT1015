@@ -9,18 +9,19 @@
  * ioata(n)        : return an array containing numbers from 0 to n-1
  * contient(tab, x): indicate if x is contained in tab
  * ajouter(tab, x) : if x is not in tab, add it
+ * retirer(tab, x) : if x is in tab, remove it
  */
 
 
 
- 
+
 /* Return an array containing numbers from 0 to n-1.
  *
  * n (number): integer > 0
  *
  * output (array): array containing the values from 0 to n-1
  *
- * iota(5) = [0,1,2,3,4]
+ * iota(5) = [0, 1, 2, 3, 4]
  */
 var iota = function(n) {
 
@@ -49,18 +50,18 @@ testIota();
 /* Indicate if a number is contained in a array.
  *
  * tab (array): array of numbers
- * x (number): number
+ * x (number) : number
  *
  * output (boolean): true if the array contains the number, false if not
  *
- * contient([9,2,5], 2) = true
- * contient([9,2,5], 4) = false
+ * contient([9, 2, 5], 2) = true
+ * contient([9, 2, 5], 4) = false
  */
 var contient = function(tab, x) {
 
     var i = 0;
     while (i < tab.length) {
-        if ( tab[i++] == x ) {
+        if (tab[i++] == x) {
             return true;
         }
     }
@@ -69,10 +70,10 @@ var contient = function(tab, x) {
 
 // Unit test of the contient function
 var testContient = function(){
-    assert( contient([9,2,5], 2) == true  );
-    assert( contient([9,2,5], 4) == false );
-    assert( contient([9,2,5], 9) == true  );
-    assert( contient([9,2,5], 5) == true  );
+    assert( contient([9, 2, 5], 2) == true  );
+    assert( contient([9, 2, 5], 4) == false );
+    assert( contient([9, 2, 5], 9) == true  );
+    assert( contient([9, 2, 5], 5) == true  );
 };
 
 testContient();
@@ -83,31 +84,61 @@ testContient();
 /* If the number is not in the array, add it.
  *
  * tab (array): array of numbers
- * x (number): number
+ * x (number) : number
  *
  * output (array): the new array
  *
- * ajouter([9,2,5], 2) = [9,2,5]
- * ajouter([9,2,5], 4) = [9,2,5,4]
+ * ajouter([9, 2, 5], 2) = [9, 2, 5]
+ * ajouter([9, 2, 5], 4) = [9, 2, 5, 4]
  */
 var ajouter = function(tab, x) {
-    if ( contient(tab, x) ) {          // The array already contains x
-        return tab;                    // We're doing nothing
-    } else {                           // The array does not contain x
-        var length = tab.length;
-        if (tab.push(x) == ++length) { // It is added without error
-            return tab;
-        } else {                       // Error
-            return -1;
-        }
+    if (!contient(tab, x)) { // The array does not contain x
+        tab.push(x);         // It is added
     }
+    return tab;
 };
 
 // Unit test of the ajouter function
 var testAjouter = function(){
-    assert( "" + ajouter([9,2,5], 2) == "" + [9,2,5]   );
-    assert( "" + ajouter([9,2,5], 4) == "" + [9,2,5,4] );
-    assert( "" + ajouter([], 9)      == "" + [9]       );
+    assert( "" + ajouter([9, 2, 5], 2) == "" + [9, 2, 5]    );
+    assert( "" + ajouter([9, 2, 5], 4) == "" + [9, 2, 5, 4] );
+    assert( "" + ajouter([], 9)        == "" + [9]          );
 };
 
 testAjouter();
+
+
+
+
+/* If the number is in the array, remove it
+ *
+ * tab (array): array of numbers
+ * x (number) : number
+ *
+ * output (array): the new array
+ *
+ * retirer([9, 2, 5], 2) = [9, 5]
+ * retirer([9, 2, 5], 4) = [9, 2, 5, 4]
+ */
+var retirer = function(tab, x) {
+    if (contient(tab, x)) {      // The array contains x
+        var i = 0;
+        while (i < tab.length) {
+            if (tab[i++] == x) { // Delete x
+                return tab.slice(0, --i).concat(tab.slice(++i, tab.length));
+            }
+        }
+    }
+    return tab;
+};
+
+// Unit test of the retirer function
+var testRetirer = function(){
+    assert( "" + retirer([9, 2, 5], 2) == "" + [9, 5]    );
+    assert( "" + retirer([9, 2, 5], 4) == "" + [9, 2, 5] );
+    assert( "" + retirer([], 9)        == "" + []        );
+    assert( "" + retirer([9, 2, 5], 9) == "" + [2, 5]    );
+    assert( "" + retirer([9, 2, 5], 5) == "" + [9, 2]    );
+};
+
+testRetirer();
