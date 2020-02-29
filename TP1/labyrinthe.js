@@ -7,9 +7,10 @@
  * 
  * List of functions:
  * ioata(n)              : return an array containing numbers from 0 to n-1
- * contient(tab, x)      : indicate if x is contained in tab
+ * contient(tab, x)      : indicate if tab contains x
  * ajouter(tab, x)       : if x is not in tab, add it
  * retirer(tab, x)       : if x is in tab, remove it
+ * cellNumber(x, y, ny)  : number of the (x, y) cell in a grid of ny columns
  * voisins(x, y, nx, ny) : cells close to (x, y) in a (nx, ny) grid
  */
 
@@ -48,7 +49,7 @@ testIota();
 
 
 
-/* Indicate if a number is contained in a array.
+/* Indicate if an array contains a number.
  *
  * tab (array): array of numbers
  * x (number) : number
@@ -125,7 +126,7 @@ var retirer = function(tab, x) {
     if (contient(tab, x)) {      // The array contains x
         var i = 0;
         while (i < tab.length) {
-            if (tab[i++] == x) { // Delete x
+            if (tab[i++] == x) { // Remove x
                 return tab.slice(0, --i).concat(tab.slice(++i, tab.length));
             }
         }
@@ -148,6 +149,31 @@ testRetirer();
 
 
 
+/* Number of the cell
+ *
+ *  x (number): column number of the cell
+ *  y (number):    row number of the cell
+ * nx (number): number of grid columns
+ * 
+ * output (array): list of cells close to (x, y)
+ *
+ * voisins(7, 2, 8, 4) = [15, 22, 31]
+ */
+var cellNumber = function(x, y, nx) {
+    return nx * y + x;
+};
+
+// Unit test of the cellNumber function
+var testCellNumber = function(){
+    assert( cellNumber(0, 0, 8) ==  0 );
+    assert( cellNumber(7, 3, 8) == 31 );
+};
+
+testCellNumber();
+
+
+
+
 /* Cells close to (x, y) in a (nx, ny) grid
  *
  *  x (number): column number of the cell
@@ -157,14 +183,14 @@ testRetirer();
  * 
  * output (array): list of cells close to (x, y)
  *
- * voisins(7, 2 8, 4) = [15, 22, 31]
+ * voisins(7, 2, 8, 4) = [15, 22, 31]
  */
 var voisins = function(x, y, nx, ny) {
 };
 
 // Unit test of the voisins function
 var testVoisins = function(){
-    assert( "" + voisins(7, 2 8, 4) == "" + [15, 22, 31] );
+    assert( "" + voisins(7, 2, 8, 4) == "" + [15, 22, 31] );
 };
 
 //testVoisins();
