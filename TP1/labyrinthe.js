@@ -205,9 +205,17 @@ testVoisins();
 var laby = function(nx, ny, pas) {
     var mursH = iota( nx * (ny+1) ); // Set of horizontal walls
     var mursV = iota( (nx+1) * ny ); // Set of vertical walls
-    
-    mursH = retirer(mursH, 0);
-    mursV = retirer(mursV, 0);
+
+    // Initial cavity
+    var cx = 2;//Math.floor((Math.random() * (nx-2))) + 1; // 1 ≤ xCav ≤ nx-2
+    var cy = 1; //Math.floor((Math.random() * (ny-2))) + 1; // 1 ≤ yCav ≤ ny-2
+
+    // Walls removal
+    mursH = retirer(mursH,  nx    *  cy     + cx     ); // North
+    mursH = retirer(mursH,  nx    * (cy+1)  + cx     ); // South
+    mursV = retirer(mursV, (nx+1) *  cy     + cx     ); // West
+    mursV = retirer(mursV, (nx+1) *  cy     + cx + 1 ); // East
+
 
     printMurs(mursH, mursV, nx, ny);
 };
