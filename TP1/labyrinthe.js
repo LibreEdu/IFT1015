@@ -205,6 +205,9 @@ testVoisins();
 var laby = function(nx, ny, pas) {
     var mursH = iota( nx * (ny+1) ); // Set of horizontal walls
     var mursV = iota( (nx+1) * ny ); // Set of vertical walls
+    
+    mursH = retirer(mursH, 0);
+    mursV = retirer(mursV, 0);
 
     // Debug
     var murs;
@@ -216,7 +219,7 @@ var laby = function(nx, ny, pas) {
         murs = "";
         for(var j=i*nx; j<(i+1)*nx; j++) {
             nb = (index < 10 ? " " : "") + index;
-            number = index == mursH[j] ? " " + nb + " " : " " + nb + " ";
+            number = contient(mursH, index) ? " " + nb + " " : "    ";
             murs += number;
             index++;
         }
@@ -229,7 +232,7 @@ var laby = function(nx, ny, pas) {
         murs = "";
         for(var j=i*(nx+1); j<(i+1)*(nx+1); j++) {
             nb = (index < 10 ? " " : "") + index;
-            number = index == mursV[j] ? " " + nb + " " : " " + nb + " ";
+            number = contient(mursV, index) ? " " + nb + " " : "    ";
             murs += number;
             index++;
         }
