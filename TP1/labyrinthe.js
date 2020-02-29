@@ -1,4 +1,4 @@
-/* File: labyrinthes.js
+/* File: labyrinthe.js
  *
  * Authors: Alexandre Pachot and Eliecer Rodriguez Silva
  * Date: March 11, 2020
@@ -11,6 +11,7 @@
  * ajouter(tab, x)       : if x is not in tab, add it
  * retirer(tab, x)       : if x is in tab, remove it
  * voisins(x, y, nx, ny) : cells close to (x, y) in a (nx, ny) grid
+ * laby(ny, ny, pas)     : draw a nx * ny maze with pas pixel cells
  */
 
 
@@ -51,7 +52,7 @@ testIota();
 /* Indicate if an array contains a number.
  *
  * tab (array)     : array of numbers
- * x (number)      : number
+ * x   (number)    : number
  *
  * output (boolean): true if the array contains the number, false if not
  *
@@ -85,7 +86,7 @@ testContient();
 /* If the number is not in the array, add it.
  *
  * tab (array)   : array of numbers
- * x (number)    : number
+ * x   (number)  : number
  *
  * output (array): the new array
  *
@@ -114,7 +115,7 @@ testAjouter();
 /* If the number is in the array, remove it.
  *
  * tab (array)   : array of numbers
- * x (number)    : number
+ * x   (number)  : number
  *
  * output (array): the new array
  *
@@ -148,7 +149,7 @@ testRetirer();
 
 
 
-/* Cells close to (x, y) in a (nx, ny) grid
+/* Cells close to (x, y) in a (nx, ny) grid.
  *
  *  x (number)   : column number of the cell
  *  y (number)   :    row number of the cell
@@ -187,3 +188,54 @@ var testVoisins = function(){
 };
 
 testVoisins();
+
+
+
+
+/* Draw a maze
+ *
+ * nx  (number): number of columns
+ * ny  (number): number of lines
+ * pas (number): cell size
+ * 
+ * output      : none
+ *
+ * laby(16, 9, 20)
+ */
+var laby = function(nx, ny, pas) {
+    var mursH = iota( nx * (ny+1) ); // Set of horizontal walls
+    var mursV = iota( (nx+1) * ny ); // Set of vertical walls
+
+    // Debug
+    var murs;
+    var nb;
+    var number;
+    var index = 0;
+    print("mursH :");
+    for (var i=0; i<(ny+1); i++) {
+        murs = "";
+        for(var j=i*nx; j<(i+1)*nx; j++) {
+            nb = (index < 10 ? " " : "") + index;
+            number = index == mursH[j] ? " " + nb + " " : " " + nb + " ";
+            murs += number;
+            index++;
+        }
+        print(murs);
+    }
+    print();
+    index = 0;
+    print("mursV :");
+    for (var i=0; i<ny; i++) {
+        murs = "";
+        for(var j=i*(nx+1); j<(i+1)*(nx+1); j++) {
+            nb = (index < 10 ? " " : "") + index;
+            number = index == mursV[j] ? " " + nb + " " : " " + nb + " ";
+            murs += number;
+            index++;
+        }
+        print(murs);
+    }
+    print();
+};
+
+laby(8, 4, 40);
