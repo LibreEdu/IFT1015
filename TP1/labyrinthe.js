@@ -210,7 +210,7 @@ var laby = function(nx, ny, pas) {
     var cavity;                          // Cavity
 
     // Initial cavity
-    // newCave = randomInt(nx * ny);
+    // cavity = randomInt(nx * ny);
     cavity = 1;
     var rt = [9, 8, 0, 2];
     
