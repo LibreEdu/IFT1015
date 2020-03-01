@@ -207,11 +207,7 @@ var laby = function(nx, ny, pas) {
     var mursV = iota( (nx+1) *  ny    ); // Set of vertical walls
     var cave = [];                       // Set of cavities
     var front = [];                      // Set of frontal cells
-    var newCave;
-    var x;
-    var y;
-    var newFront = [];
-    var nextCave;
+    var newCave;                         // New cavity
 
     // Initial cavity
     // newCave = randomInt(nx * ny);
@@ -223,12 +219,17 @@ var laby = function(nx, ny, pas) {
         print("************");
         print("* Boucle " + ri + " *");
         print("************");
-        
         print("newCave  = " + newCave);
-        x = xVal(newCave, nx);
-        y = yVal(newCave, nx);
+        
+        // Coordinates of the new cavity
+        var x = xVal(newCave, nx);
+        var y = yVal(newCave, nx);
+        
+        // Adjacent cells of the new cavity
         var tempFront = voisins(x, y, nx, ny);
 
+        // Remove adjacent cell cavities
+        var newFront = [];
         do {
             var cell = tempFront.pop();
             if (!contient(cave, cell)) {
@@ -238,16 +239,21 @@ var laby = function(nx, ny, pas) {
         
         print("newFront = [" + newFront + "]");
         // if (ri == 3) pause();
+        
+        // Next cavity
+        var nextCave;
         if (newFront.length) {
             //nextCave = newFront[randomInt(newFront.length)];
+            
             nextCave = rt[ri];
             print("nextCave = " + nextCave);
         } else {
+            //nextCave = front[randomInt(front.length)];
+            
             print("else");
             print("front    = [" + front + "]");
             front = retirer(front, nextCave);
             print("front    = [" + front + "]");
-            //nextCave = front[randomInt(front.length)];
             nextCave = rt[ri];
             front = retirer(front, nextCave);
             print("nextCave = " + nextCave);
@@ -270,17 +276,23 @@ var laby = function(nx, ny, pas) {
             mursH = retirer(mursH,  nx * (y+1) + x );
             print("retirer(mursH, " + (nx * (y+1) + x) + ")");
         }
+        
+        
         cave.push(newCave);
-        print("cave     = [" + cave + "]");
         newCave = nextCave;
+        
+        print("cave     = [" + cave + "]");
         print("retirer([" + newFront + "]," + nextCave + ")");
         newFront = retirer(newFront, nextCave);
         print("newFront = [" + newFront + "]");
         
         //pause();
+        
+        // Add the new front cells to the front cells table
         while (newFront.length) {
             front = ajouter(front, newFront.pop());
         }
+        
         print("front    = [" + front + "]");
         printMurs(mursH, mursV, nx, ny);
         ri++;
