@@ -36,7 +36,7 @@ var iota = function(n) {
 
     return output;
 };
-
+/*
 // Unit test of the iota function
 var testIota = function(){
     assert( "" + iota(5) == "" + [0, 1, 2, 3, 4] );
@@ -45,7 +45,7 @@ var testIota = function(){
 };
 
 testIota();
-
+*/
 
 
 
@@ -69,7 +69,7 @@ var contient = function(tab, x) {
     }
     return false;
 };
-
+/*
 // Unit test of the contient function
 var testContient = function(){
     assert( contient([9, 2, 5], 2) == true  );
@@ -79,7 +79,7 @@ var testContient = function(){
 };
 
 testContient();
-
+*/
 
 
 
@@ -99,7 +99,7 @@ var ajouter = function(tab, x) {
     }
     return tab;
 };
-
+/*
 // Unit test of the ajouter function
 var testAjouter = function(){
     assert( "" + ajouter([9, 2, 5], 2) == "" + [9, 2, 5]    );
@@ -108,7 +108,7 @@ var testAjouter = function(){
 };
 
 testAjouter();
-
+*/
 
 
 
@@ -134,7 +134,7 @@ var retirer = function(tab, x) {
         return tab;
     }
 };
-
+/*
 // Unit test of the retirer function
 var testRetirer = function(){
     assert( "" + retirer([9, 2, 5], 2) == "" + [9, 5]    );
@@ -145,7 +145,7 @@ var testRetirer = function(){
 };
 
 testRetirer();
-
+*/
 
 
 
@@ -177,7 +177,7 @@ var voisins = function(x, y, nx, ny) {
 
     return output;
 };
-
+/*
 // Unit test of the voisins function
 var testVoisins = function(){
     assert( "" + voisins(0, 0, 8, 4) == "" + [1, 8] );
@@ -188,7 +188,7 @@ var testVoisins = function(){
 };
 
 testVoisins();
-
+*/
 
 
 
@@ -207,39 +207,67 @@ var laby = function(nx, ny, pas) {
     var mursV = iota( (nx+1) *  ny    ); // Set of vertical walls
     var cave = [];                       // Set of cavities
     var front = [];                      // Set of frontal cells
-    var currentCave;
+    var newCave;
     var x;
     var y;
-    var newFront;
+    var newFront = [];
     var nextCave;
 
     // Initial cavity
-    currentCave = randomInt(nx * ny);
-    x = xVal(currentCave, nx);
-    y = yVal(currentCave, nx);
-    newFront = voisins(x, y, nx, ny);
-    if (newFront.length) {
-        nextCave = newFront[randomInt(front.length)];
+    // newCave = randomInt(nx * ny);
+    newCave = 1;
+    var rt = [9, 8, 0];
+    
+    var ri = 0;
+    while (newCave) {
+        print("************");
+        print("* Boucle " + ri + " *");
+        print("************");
+        
+        print("newCave  = " + newCave);
+        x = xVal(newCave, nx);
+        y = yVal(newCave, nx);
+        var tempFront = voisins(x, y, nx, ny);
+
+        do {
+            var cell = tempFront.pop();
+            if (!contient(cave, cell)) {
+                newFront.push(cell);
+            }
+        } while (tempFront.length);
+        
+        print("newFront = [" + newFront + "]");
+        if (newFront.length) {
+            //nextCave = newFront[randomInt(front.length)];
+            nextCave = rt[ri++];
+            print("nextCave = " + nextCave);
+        }
+        // Walls removal
+        if (nextCave + 8 == newCave) {         // nextCave is above
+            mursH = retirer(mursH, nx * y + x );
+            print("retirer(mursH, " + (nx * y + x) + ")");
+        } else if (nextCave + 1 == newCave) {  // nextCave is on the left
+            mursV = retirer(mursV, (nx+1) * y + x);
+            print("retirer(mursV, " + ((nx+1) * y + x) + ")");
+        } else if (newCave + 1 == nextCave ) { // nextCave is on the right
+            mursV = retirer(mursV, (nx+1) * y + x + 1 );
+            print("retirer(mursV, " + ((nx+1) * y + x + 1) + ")");
+        } else if (newCave + 8 == nextCave) {  // nextCave is below
+            mursH = retirer(mursH,  nx * (y+1) + x );
+            print("retirer(mursH, " + (nx * (y+1) + x) + ")");
+        }
+        cave.push(newCave);
+        print("cave     = [" + cave + "]");
+        newCave = nextCave;
+        newFront = retirer(newFront, nextCave);
+        
+        while (newFront.length) {
+            front = ajouter(front, newFront.pop());
+        }
+        print("front    = [" + front + "]");
+        printMurs(mursH, mursV, nx, ny);
+        if (ri==rt.length) newCave = 0;
     }
-
-    // Walls removal
-    if (nextCave + 8 == currentCave) { // next cave is above
-        mursH = retirer(mursH, nx * y + x );
-    } else if (nextCave + 1 == currentCave) { // next cave is on the left
-        mursV = retirer(mursV, (nx+1) *  y     + x     );
-    } else if (currentCave + 1 == nextCave   ) { // next cave is on the right
-        mursV = retirer(mursV, (nx+1) *  y     + x + 1 );
-    } else if (currentCave + 8 == nextCave) { // next cave is below
-        mursH = retirer(mursH,  nx * (y+1) + x );
-    }
-
-    //front = front.concat(newFront);
-    print(currentCave);
-    print(newFront);
-    print(nextCave);
-    //print(front[randomInt(front.length)]);
-
-    printMurs(mursH, mursV, nx, ny);
 };
 
 var xVal = function(cellNumber, nx) {
