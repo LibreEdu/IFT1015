@@ -4,7 +4,7 @@
  * Date: March 11, 2020
  *
  * Library to generate mazes.
- * 
+ *
  * List of functions:
  * ioata(n)              : return an array containing numbers from 0 to n-1
  * contient(tab, x)      : indicate if tab contains x
@@ -29,7 +29,7 @@ var iota = function(n) {
 
     var output = Array(n);
     var i = 0;
-    
+
     while (i < n) {
         output[i] = i++;
     }
@@ -155,7 +155,7 @@ testRetirer();
  *  y (number)   :    row number of the cell
  * nx (number)   : number of grid columns
  * ny (number)   : number of grid lines
- * 
+ *
  * output (array): list of cells close to (x, y)
  *
  * voisins(7, 2, 8, 4) = [15, 22, 31]
@@ -197,36 +197,68 @@ testVoisins();
  * nx  (number): number of columns
  * ny  (number): number of lines
  * pas (number): cell size
- * 
+ *
  * output      : none
  *
  * laby(16, 9, 20)
  */
 var laby = function(nx, ny, pas) {
-    var mursH = iota( nx * (ny+1) ); // Set of horizontal walls
-    var mursV = iota( (nx+1) * ny ); // Set of vertical walls
+    var mursH = iota(  nx    * (ny+1) ); // Set of horizontal walls
+    var mursV = iota( (nx+1) *  ny    ); // Set of vertical walls
+    var cave = [];                       // Set of cavities
+    var front = [];                      // Set of frontal cells
+    var currentCave;
+    var x;
+    var y;
+    var newFront;
+    var nextCave;
 
     // Initial cavity
-    var cx = Math.floor((Math.random() * (nx-2))) + 1; // 1 ≤ cx ≤ nx-2
-    var cy = Math.floor((Math.random() * (ny-2))) + 1; // 1 ≤ cy ≤ ny-2
+    currentCave = randomInt(nx * ny);
+    x = xVal(currentCave, nx);
+    y = yVal(currentCave, nx);
+    newFront = voisins(x, y, nx, ny);
+    if (newFront.length) {
+        nextCave = newFront[randomInt(front.length)];
+    }
 
     // Walls removal
-    mursH = retirer(mursH,  nx    *  cy     + cx     ); // North
-    mursH = retirer(mursH,  nx    * (cy+1)  + cx     ); // South
-    mursV = retirer(mursV, (nx+1) *  cy     + cx     ); // West
-    mursV = retirer(mursV, (nx+1) *  cy     + cx + 1 ); // East
+    if (nextCave + 8 == currentCave) { // next cave is above
+        mursH = retirer(mursH, nx * y + x );
+    } else if (nextCave + 1 == currentCave) { // next cave is on the left
+        mursV = retirer(mursV, (nx+1) *  y     + x     );
+    } else if (currentCave + 1 == nextCave   ) { // next cave is on the right
+        mursV = retirer(mursV, (nx+1) *  y     + x + 1 );
+    } else if (currentCave + 8 == nextCave) { // next cave is below
+        mursH = retirer(mursH,  nx * (y+1) + x );
+    }
+
+    //front = front.concat(newFront);
+    print(currentCave);
+    print(newFront);
+    print(nextCave);
+    //print(front[randomInt(front.length)]);
 
     printMurs(mursH, mursV, nx, ny);
 };
 
+var xVal = function(cellNumber, nx) {
+    return cellNumber % nx;
+};
 
+var yVal = function(cellNumber, nx) {
+    return Math.floor(cellNumber / nx);
+};
 
+var randomInt = function(max) {
+    return Math.floor( ( Math.random() * max ) );
+};
 
 var printMurs = function(mursH, mursV, nx, ny) {
     var murs;
     var nb;
     var number;
-    
+
     var index = 0;
     print("mursH :");
     for (var i = 0; i < ny+2; i++) {
@@ -240,7 +272,7 @@ var printMurs = function(mursH, mursV, nx, ny) {
         print(murs);
     }
     print();
-    
+
     index = 0;
     print("mursV :");
     for (var i = 0; i < ny+1; i++) {
