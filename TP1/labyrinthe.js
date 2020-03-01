@@ -207,28 +207,28 @@ var laby = function(nx, ny, pas) {
     var mursV = iota( (nx+1) *  ny    ); // Set of vertical walls
     var cave = [];                       // Set of cavities
     var front = [];                      // Set of frontal cells
-    var newCave;                         // New cavity
+    var cavity;                          // Cavity
 
     // Initial cavity
     // newCave = randomInt(nx * ny);
-    newCave = 1;
+    cavity = 1;
     var rt = [9, 8, 0, 2];
     
     var ri = 0;
-    while (newCave != -1) {
+    while (cavity != -1) {
         print("************");
         print("* Boucle " + ri + " *");
         print("************");
-        print("newCave  = " + newCave);
+        print("cavity   = " + cavity);
         
         // Coordinates of the new cavity
-        var x = xVal(newCave, nx);
-        var y = yVal(newCave, nx);
+        var x = xVal(cavity, nx);
+        var y = yVal(cavity, nx);
         
         // Adjacent cells of the new cavity
         var tempFront = voisins(x, y, nx, ny);
 
-        // Remove adjacent cell cavities
+        // In adjacent cells, delete cavities
         var newFront = [];
         do {
             var cell = tempFront.pop();
@@ -241,49 +241,49 @@ var laby = function(nx, ny, pas) {
         // if (ri == 3) pause();
         
         // Next cavity
-        var nextCave;
+        var nextCav;
         if (newFront.length) {
-            //nextCave = newFront[randomInt(newFront.length)];
+            //nextCav = newFront[randomInt(newFront.length)];
             
-            nextCave = rt[ri];
-            print("nextCave = " + nextCave);
+            nextCav = rt[ri];
+            print("nextCav  = " + nextCav);
         } else {
-            //nextCave = front[randomInt(front.length)];
+            //nextCav = front[randomInt(front.length)];
             
             print("else");
             print("front    = [" + front + "]");
-            front = retirer(front, nextCave);
+            front = retirer(front, nextCav);
             print("front    = [" + front + "]");
-            nextCave = rt[ri];
-            front = retirer(front, nextCave);
-            print("nextCave = " + nextCave);
+            nextCav = rt[ri];
+            front = retirer(front, nextCav);
+            print("nextCav  = " + nextCav);
             print("front    = [" + front + "]");
             return;
         }
         
         
         // Walls removal
-        if (nextCave + 8 == newCave) {         // nextCave is above
+        if (nextCav + 8 == cavity) {         // nextCav is above
             mursH = retirer(mursH, nx * y + x );
             print("retirer(mursH, " + (nx * y + x) + ")");
-        } else if (nextCave + 1 == newCave) {  // nextCave is on the left
+        } else if (nextCav + 1 == cavity) {  // nextCav is on the left
             mursV = retirer(mursV, (nx+1) * y + x);
             print("retirer(mursV, " + ((nx+1) * y + x) + ")");
-        } else if (newCave + 1 == nextCave ) { // nextCave is on the right
+        } else if (cavity + 1 == nextCav ) { // nextCav is on the right
             mursV = retirer(mursV, (nx+1) * y + x + 1 );
             print("retirer(mursV, " + ((nx+1) * y + x + 1) + ")");
-        } else if (newCave + 8 == nextCave) {  // nextCave is below
+        } else if (cavity + 8 == nextCav) {  // nextCav is below
             mursH = retirer(mursH,  nx * (y+1) + x );
             print("retirer(mursH, " + (nx * (y+1) + x) + ")");
         }
         
         
-        cave.push(newCave);
-        newCave = nextCave;
+        cave.push(cavity);
+        cavity = nextCav;
         
         print("cave     = [" + cave + "]");
-        print("retirer([" + newFront + "]," + nextCave + ")");
-        newFront = retirer(newFront, nextCave);
+        print("retirer([" + newFront + "]," + nextCav + ")");
+        newFront = retirer(newFront, nextCav);
         print("newFront = [" + newFront + "]");
         
         //pause();
@@ -297,7 +297,7 @@ var laby = function(nx, ny, pas) {
         printMurs(mursH, mursV, nx, ny);
         ri++;
         
-        if (ri == rt.length + 1) newCave = -1;
+        if (ri == rt.length + 1) nextCav = -1;
     }
 };
 
