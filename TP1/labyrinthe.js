@@ -1,10 +1,10 @@
 /* File: labyrinthe.js
- * 
+ *
  * Authors: Alexandre Pachot and Eliecer Rodriguez Silva
  * Date: March 11, 2020
- * 
+ *
  * Library to draw labyrinth.
- * 
+ *
  * List of functions:
  * ioata(n)              : return an array containing numbers from 0 to n-1
  * contient(tab, x)      : indicate if tab contains x
@@ -22,22 +22,22 @@
 
 
 /* Return an array containing numbers from 0 to n-1.
- * 
+ *
  * n (number): integer > 0
- * 
+ *
  * output (array): array containing the values from 0 to n-1
- * 
+ *
  * iota(5) = [0, 1, 2, 3, 4]
  */
 var iota = function(n) {
-    
+
     var output = Array(n);
     var i = 0;
-    
+
     while (i < n) {
         output[i] = i++;
     }
-    
+
     return output;
 };
 
@@ -54,17 +54,17 @@ var testIota = function(){
 
 
 /* Indicate if an array contains a number.
- * 
+ *
  * tab (array)     : array of numbers
  * x   (number)    : number
- * 
+ *
  * output (boolean): true if the array contains the number, false if not
- * 
+ *
  * contient([9, 2, 5], 2) = true
  * contient([9, 2, 5], 4) = false
  */
 var contient = function(tab, x) {
-    
+
     var i = 0;
     while (i < tab.length) {
         if (tab[i++] == x) {
@@ -88,12 +88,12 @@ var testContient = function(){
 
 
 /* If the number is not in the array, add it.
- * 
+ *
  * tab (array)   : array of numbers
  * x   (number)  : number
- * 
+ *
  * output (array): the new array
- * 
+ *
  * ajouter([9, 2, 5], 2) = [9, 2, 5]
  * ajouter([9, 2, 5], 4) = [9, 2, 5, 4]
  */
@@ -117,12 +117,12 @@ var testAjouter = function(){
 
 
 /* If the number is in the array, remove it.
- * 
+ *
  * tab (array)   : array of numbers
  * x   (number)  : number
- * 
+ *
  * output (array): the new array
- * 
+ *
  * retirer([9, 2, 5], 2) = [9, 5]
  * retirer([9, 2, 5], 4) = [9, 2, 5]
  */
@@ -154,14 +154,14 @@ var testRetirer = function(){
 
 
 /* Cells close to (x, y) in a (nx, ny) grid.
- * 
+ *
  *  x (number)   : column number of the cell
  *  y (number)   :    row number of the cell
  * nx (number)   : number of grid columns
  * ny (number)   : number of grid lines
- * 
+ *
  * output (array): list of cells close to (x, y)
- * 
+ *
  * voisins(7, 2, 8, 4) = [15, 22, 31]
  */
 var voisins = function(x, y, nx, ny) {
@@ -178,7 +178,7 @@ var voisins = function(x, y, nx, ny) {
     if (y < (ny-1)) { // Lower cell
         output.push(nx * (y+1) + x);
     }
-    
+
     return output;
 };
 
@@ -197,7 +197,7 @@ var testVoisins = function(){
 
 
 /* Return the abscissa of a cell
- * 
+ *
  * cellNumber (number): the cell number
  * nx         (number): number of grid columns
  * 
@@ -221,7 +221,7 @@ var testxVal = function(){
 
 
 /* Returning the y-intercept of a cell
- * 
+ *
  * cellNumber (number): the cell number
  * nx         (number): number of grid columns
  * 
@@ -245,7 +245,7 @@ var testyVal = function(){
 
 
 /* Return an integer random value less than max
- * 
+ *
  * max (number)   : upper limit
  * 
  * output (number): an integer n such that 0 ≤ n < max
@@ -267,9 +267,8 @@ var testRandomInt = function(){
 
 
 
-
 /* Draw the labyrinth
- * 
+ *
  * nx  (number) : number of columns
  * ny  (number) : number of lines
  * pas (number) : cell size
@@ -311,7 +310,7 @@ var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
             }
         }
     }
-    
+
     // Arrow pointing down
     rt(90);
     
@@ -334,7 +333,7 @@ var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
             }
         }
     }
-    
+
     // Place the cursor at the entrance to the labyrinth
     pu();
     mv(ox + pas/2, oy + 15);
@@ -342,47 +341,47 @@ var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
 
 
 /* Generate a maze
- * 
+ *
  * nx  (number): number of columns (≥ 2)
  * ny  (number): number of lines   (≥ 2)
  * pas (number): cell size
- * 
+ *
  * output      : none
- * 
+ *
  * laby(16, 9, 20)
  */
 var laby = function(nx, ny, pas) {
-    
+
     // Robustness of the arguments
     nx = Math.max(Math.round(Math.abs(nx)), 2);
     ny = Math.max(Math.round(Math.abs(ny)), 2);
-    
+
     // Declaration of "global" variables
     var mursH = iota(  nx    * (ny+1) - 1); // Set of horizontal walls - exit
     var mursV = iota( (nx+1) *  ny       ); // Set of vertical walls
     var cave = [];                          // Set of cavities
     var front = [];                         // Set of frontal cells
     var cavity;                             // Cavity
-    
+
     // Remove the entrance wall
     mursH = retirer(mursH, 0);
-    
+
     // Initial cavity
     cavity = randomInt(nx * ny);
-    
+
     // As long as all the cells are not a cavity
     while (cavity != -1) {
-        
+
         // Coordinates of the new cavity
         var x = xVal(cavity, nx);
         var y = yVal(cavity, nx);
-        
+
         // All the adjacent cells of the new cavity, temporary array
         var tempFront = voisins(x, y, nx, ny);
-        
+
         // Local frontal cells, close to the cavity
         var newFront = [];
-        
+
         // In adjacent cells, delete cavities (tempFront => newFront)
         do {
             var cell = tempFront.pop();
@@ -390,26 +389,26 @@ var laby = function(nx, ny, pas) {
                 newFront.push(cell);
             }
         } while (tempFront.length);
-        
-        
+
+
         // What will be the next cavity ?
         var nextCav;
-        
+
         if (newFront.length) { // We have local adjacent cells
-            
+
             // Take one of them
             nextCav = newFront[randomInt(newFront.length)];
-            
+
         } else { // No more local front cells, let's explore a new branch
-            
+
             // Remove old branch last cavity from the list of front cells
             front = retirer(front, nextCav);
-            
+
             if (front.length) { // There are still frontal cells
                 
                 // Choice of a new cavity from the list of front cells
                 nextCav = front[randomInt(front.length)];
-                
+
                 // Coordinates of this cavity
                 x = xVal(nextCav, nx);
                 y = yVal(nextCav, nx);
@@ -426,25 +425,25 @@ var laby = function(nx, ny, pas) {
                 do {
                     var cell = tempFront.pop();
                     if (contient(cave, cell)) {
+                        // We found out which cavity we're attaching the new
+                        // branch to
+                        cavity = cell;
                         
                         // Retrieve the coordinates of this cavity, in order to
                         // remove the wall.
                         x = xVal(cavity, nx);
                         y = yVal(cavity, nx);
-                        
-                        // It's time to come out of this loop
-                        cavity = cell;
                     }
                 } while (cavity == -1);
-                
+
             } else { // No more frontal cells, the labyrinth is done, yay :-)
                 nextCav = -1;
             }
         }
-        
-        // Remove the next cavity from the list of frontal cells
+
+        // Remove the next cavity from the list of frontal cells.
         front = retirer(front, nextCav);
-        
+
         // Remove the wall between the two cavities
         if (nextCav != -1) {
             if (nextCav + nx == cavity) {        // nextCav is above
@@ -457,16 +456,16 @@ var laby = function(nx, ny, pas) {
                 mursH = retirer(mursH,  nx * (y+1) + x );
             }
         }
-        
+
         // Add the cavity to the list of cavities
         cave.push(cavity);
-        
+
         // The new cavity for the next loop
         cavity = nextCav;
-        
+
         // Remove this cavity from the list of front cells
         newFront = retirer(newFront, nextCav);
-        
+
         // Add the new front cells to the front cells table
         while (newFront.length) {
             front = ajouter(front, newFront.pop());
