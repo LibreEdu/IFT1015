@@ -317,7 +317,7 @@ var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
     // Draw the vertical walls, column by column, from left to right.
     for (var i = 0; i <= nx; i++) {
         
-        // Go to the vertical line
+        // Go to the next vertical line
         pu();
         mv(ox + i*pas, oy);
         pd();
@@ -353,10 +353,14 @@ var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
 var laby = function(nx, ny, pas) {
 
     // Robustness of the arguments
-    nx = Math.max(Math.round(Math.abs(nx)), 2);
-    ny = Math.max(Math.round(Math.abs(ny)), 2);
+    nx = Math.max( Math.round(Math.abs(nx)), 2 );
+    ny = Math.max( Math.round(Math.abs(ny)), 2 );
+    pas = pas/pas * pas;
+    nx = nx != nx ? 2 : nx;
+    ny = ny != ny ? 2 : ny;
+    pas = pas != pas ? 10 : pas;
 
-    // Declaration of "global" variables
+    // Declaration of global variables to the loop
     var mursH = iota(  nx    * (ny+1) - 1); // Set of horizontal walls - exit
     var mursV = iota( (nx+1) *  ny       ); // Set of vertical walls
     var cave = [];                          // Set of cavities
