@@ -203,28 +203,41 @@ testVoisins();
  * laby(16, 9, 20)
  */
 var laby = function(nx, ny, pas) {
-    var mursH = iota(  nx    * (ny+1) ); // Set of horizontal walls
-    var mursV = iota( (nx+1) *  ny    ); // Set of vertical walls
-    var cave = [];                       // Set of cavities
-    var front = [];                      // Set of frontal cells
-    var cavity;                          // Cavity
+
+    nx = Math.round(Math.abs(nx));
+    ny = Math.round(Math.abs(ny));
     
-    mursH = retirer(mursH, 31);
+    if (!(nx * ny > 0)) {
+        return;
+    }
+    
+    var mursH = iota(  nx    * (ny+1) - 1); // Set of horizontal walls
+    var mursV = iota( (nx+1) *  ny       ); // Set of vertical walls
+    var cave = [];                          // Set of cavities
+    var front = [];                         // Set of frontal cells
+    var cavity;                             // Cavity
+    
+    mursH = retirer(mursH, 0);
+    /*
+    mursH = retirer(mursH, 0);
+    mursH = retirer(mursH, 8);
+    mursV = retirer(mursV, 0);
+    mursV = retirer(mursV, 9);
     printMurs(nx, ny, pas, mursH, mursV);
-    return;
+    //return;
+    */
 
     // Initial cavity
     cavity = randomInt(nx * ny);
     
-    // cavity = 1;
-    var rt = [9, 8, 0, 2, 3];
+    //cavity = 56;
+    var rt = [57,58,59,43];
     var ri = 0;
     
     while (cavity != -1) {
-        print("************");
-        print("* Boucle " + ri + " *");
-        print("************");
-        print("cavity   = " + cavity);
+        //print();
+        //print("Itération " + ri + ":");
+        //print("cavity   = " + cavity);
         
         // Coordinates of the new cavity
         var x = xVal(cavity, nx);
@@ -244,26 +257,26 @@ var laby = function(nx, ny, pas) {
             }
         } while (tempFront.length);
         
-        print("newFront = [" + newFront + "]");
-        // if (ri == 3) pause();
+        //print("newFront = [" + newFront + "]");
+        //if (ri == 3) pause();
         
         // Next cavity
         var nextCav;
         
         if (newFront.length) { // We have local adjacent cells
             
-            print("If : start");
+            //print("If : start");
             
             // Take one of them
             nextCav = newFront[randomInt(newFront.length)];
-            
+        
             //nextCav = rt[ri];
-            print("nextCav  = " + nextCav);
-            print("If : end");
+            //print("nextCav  = " + nextCav);
+            //print("If : end");
         } else { // No more local front cells, let's explore a new branch
             
-            print("Else : start");
-            print("front    = [" + front + "]");
+            //print("Else : start");
+            //print("front    = [" + front + "]");
         
             // Remove old branch last cavity from the list of front cells
             front = retirer(front, nextCav);
@@ -273,33 +286,54 @@ var laby = function(nx, ny, pas) {
                 nextCav = front[randomInt(front.length)];
                 
                 //nextCav = rt[ri];
+
+                x = xVal(nextCav, nx);
+                y = yVal(nextCav, nx);
+                tempFront = voisins(x, y, nx, ny);
+                cavity = -1;
+                do {
+                    var cell = tempFront.pop();
+                    if (contient(cave, cell)) {
+                        cavity = cell;
+                        x = xVal(cavity, nx);
+                        y = yVal(cavity, nx);
+                    }
+                } while (cavity == -1);
                 
-                print("front    = [" + front + "]");
+                //print("front    = [" + front + "]");
                 
             } else {            //No more frontal cells
                 // The labyrinth is over
                 nextCav = -1;
             }
             
-            print("nextCav  = " + nextCav);
-            print("Else : end");
+            //print("nextCav  = " + nextCav);
+            //print("Else : end");
             //return;
         }
+        //pause();
+        front = retirer(front, nextCav);
+        //pause();
         
-        
+        //pause();
+        //print("cavity   = " + cavity);
+        //print("nextCav  = " + nextCav);
+        //if (ri == 3) pause();
         // Remove the wall between the two cavities
-        if (nextCav + 8 == cavity) {         // nextCav is above
-            mursH = retirer(mursH, nx * y + x );
-            print("retirer(mursH, " + (nx * y + x) + ")");
-        } else if (nextCav + 1 == cavity) {  // nextCav is on the left
-            mursV = retirer(mursV, (nx+1) * y + x);
-            print("retirer(mursV, " + ((nx+1) * y + x) + ")");
-        } else if (cavity + 1 == nextCav ) { // nextCav is on the right
-            mursV = retirer(mursV, (nx+1) * y + x + 1 );
-            print("retirer(mursV, " + ((nx+1) * y + x + 1) + ")");
-        } else if (cavity + 8 == nextCav) {  // nextCav is below
-            mursH = retirer(mursH,  nx * (y+1) + x );
-            print("retirer(mursH, " + (nx * (y+1) + x) + ")");
+        if (nextCav != -1) {
+            if (nextCav + nx == cavity) {         // nextCav is above
+                mursH = retirer(mursH, nx * y + x );
+                //print("retirer(murs N, " + (nx * y + x) + ")");
+            } else if (nextCav + 1 == cavity) {  // nextCav is on the left
+                mursV = retirer(mursV, (nx+1) * y + x);
+                //print("retirer(murs O, " + ((nx+1) * y + x) + ")");
+            } else if (cavity + 1 == nextCav ) { // nextCav is on the right
+                mursV = retirer(mursV, (nx+1) * y + x + 1 );
+                //print("retirer(murs E, " + ((nx+1) * y + x + 1) + ")");
+            } else if (cavity + nx == nextCav) {  // nextCav is below
+                mursH = retirer(mursH,  nx * (y+1) + x );
+                //print("retirer(murs S, " + (nx * (y+1) + x) + ")");
+            }
         }
         
         // Add the cavity to the list of cavities
@@ -307,14 +341,15 @@ var laby = function(nx, ny, pas) {
         
         // The new cavity for the next loop
         cavity = nextCav;
+        //print("cavity   = " + cavity);
         
-        print("cave     = [" + cave + "]");
-        print("retirer([" + newFront + "]," + nextCav + ")");
+        //print("cave     = [" + cave + "]");
+        //print("retirer([" + newFront + "]," + nextCav + ")");
         
         // Remove this cavity from the list of front cells
         newFront = retirer(newFront, nextCav);
         
-        print("newFront = [" + newFront + "]");
+        //print("newFront = [" + newFront + "]");
         
         //pause();
         
@@ -323,15 +358,16 @@ var laby = function(nx, ny, pas) {
             front = ajouter(front, newFront.pop());
         }
         
-        print("front    = [" + front + "]");
-        printMursTab(mursH, mursV, nx, ny);
+        //print("front    = [" + front + "]");
+        //printMursTab(mursH, mursV, nx, ny);
         //printMursASCII(mursH, mursV, nx, ny);
-        printMurs(nx, ny, pas, mursH, mursV);
-        ri++;
-        pause();
+        //printMurs(nx, ny, pas, mursH, mursV);
+        //ri++;
+        //pause();
         
         //if (ri == rt.length + 1) nextCav = -1;
     }
+    printMurs(nx, ny, pas, mursH, mursV);
 };
 
 var xVal = function(cellNumber, nx) {
@@ -356,8 +392,8 @@ var printMursTab = function(mursH, mursV, nx, ny) {
     for (var i = 0; i < ny+2; i++) {
         murs = "";
         for(var j = i*nx; j < (i+1)*nx; j++) {
-            nb = (index < 10 ? " " : "") + index;
-            number = contient(mursH, index) ? " " + nb + " " : " -- ";
+            nb = (index < 10 ? "  " : index < 100 ? " " : "") + index;
+            number = contient(mursH, index) ? " " + nb + " " : " --- ";
             murs += number;
             index++;
         }
@@ -370,66 +406,14 @@ var printMursTab = function(mursH, mursV, nx, ny) {
     for (var i = 0; i < ny+1; i++) {
         murs = "";
         for(var j = i*(nx+1); j < (i+1)*(nx+1); j++) {
-            nb = (index < 10 ? " " : "") + index;
-            number = contient(mursV, index) ? " " + nb + " " : " -- ";
+            nb = (index < 10 ? "  " : index < 100 ? " " : "") + index;
+            number = contient(mursV, index) ? " " + nb + " " : " --- ";
             murs += number;
             index++;
         }
         print(murs);
     }
     print();
-};
-
-var printMursASCII = function(mursH, mursV, nx, ny) {
-    var murs;
-    var nb;
-    var number;
-    var index = 0;
-    var w;
-    
-    for (var i = 0; i < ny; i++) {
-        
-        if (i == 0) {
-            w = "╔" ;
-            for (var k=1; k<nx; k++) {
-                w += "════╦";
-            }
-            w += "════╗";
-            murs = w;
-            print(murs);
-        } 
-        
-        murs = "";
-        for(var j = i*nx; j < (i+1)*nx; j++) {
-            nb = (index < 10 ? " " : "") + index;
-            w = "║ " + nb + " " ;
-            murs += w;
-            index++;
-        }
-        murs += "║";
-        print(murs);
-        
-        if (i < ny - 1) {
-            w =  "╠";
-            for (var k=1; k<nx; k++) {
-                w += "════╬";
-            }
-            w += "════╣";
-            murs = w;
-            print(murs);
-        }
-
-        if (i == ny - 1) {
-            w =  "╚";
-            for (var k=1; k<nx; k++) {
-                w += "════╩";
-            }
-            w += "════╝";
-            murs = w;
-            print(murs);
-        }
-
-    }
 };
 
 var printMurs = function(nx, ny, pas, mursH, mursV) {
@@ -443,13 +427,17 @@ var printMurs = function(nx, ny, pas, mursH, mursV) {
         mv(ox, oy-j*pas);
         pd();
         for (var i = 0; i <nx; i++) {
-            if (contient(mursH, j*ny + nx)) {
-                pd();
+            if (contient(mursH, j*nx + i)) {
+                //print("mursH contient " + (j*nx + i));
+                fd(pas);
             } else {
+                //print("mursH ne contient pas " + (j*nx + i));
                 pu();
+                fd(pas);
+                pd();
             }
-            fd(pas);
         }
+        //pause();
     }
     
     rt(90);
@@ -458,18 +446,27 @@ var printMurs = function(nx, ny, pas, mursH, mursV) {
         mv(ox+i*pas, oy);
         pd();
         for (var j = 0; j < ny; j++) {
-            if (contient(mursV, i*nx + ny)) {
-                pd();
+            if (contient(mursV, j*(nx+1) + i)) {
+                //print("mursV contient " + (j*(nx+1) + i));
+                //pause();
+                fd(pas);
             } else {
+                //print("mursV ne contient pas " + (j*(nx+1) + i));
                 pu();
+                fd(pas);
+                pd();
             }
-            fd(pas);
+            //pause();
         }
     }
+    
+    pu();
+    mv(ox + pas/2, oy + 20);
 };
 
 
 
 
-laby(8, 4, 40);
+
+laby(10, 9, 20);
 
