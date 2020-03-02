@@ -247,30 +247,38 @@ var laby = function(nx, ny, pas) {
         var nextCav;
         
         if (newFront.length) { // We have local adjacent cells
-        
+            
+            print("If : start");
+            
             // Take one of them
             //nextCav = newFront[randomInt(newFront.length)];
             
             nextCav = rt[ri];
             print("nextCav  = " + nextCav);
+            print("If : end");
         } else { // No more local front cells, let's explore a new branch
             
-            print("else");
+            print("Else : start");
             print("front    = [" + front + "]");
         
             // Remove old branch last cavity from the list of front cells
             front = retirer(front, nextCav);
             
-            // Choice of a new cavity from the list of front cells
-            //nextCav = front[randomInt(front.length)];
-            
-            nextCav = rt[ri];
-            
-            // Remove this cavity from the list of front cells
-            front = retirer(front, nextCav);
+            if (front.length) { // There are still frontal cells
+                // Choice of a new cavity from the list of front cells
+                //nextCav = front[randomInt(front.length)];
+                
+                nextCav = rt[ri];
+                
+                print("front    = [" + front + "]");
+                
+            } else {            //No more frontal cells
+                // The labyrinth is over
+                nextCav = -1;
+            }
             
             print("nextCav  = " + nextCav);
-            print("front    = [" + front + "]");
+            print("Else : end");
             return;
         }
         
