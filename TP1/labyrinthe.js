@@ -245,7 +245,7 @@ var laby = function(nx, ny, pas) {
 
         // Next cavity
         var nextCav;
-        
+
         if (newFront.length) { // We have local adjacent cells
 
             // Take one of them
