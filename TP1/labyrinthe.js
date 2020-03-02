@@ -276,22 +276,33 @@ var testRandomInt = function(){
  * 
  * output       : none
  * 
- * randomInt(31) = 26
+ * drawLabyrinth(2, 2, 20, [1, 4], [0, 2, 3, 4, 5])
  */
 var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
+    
+    // Clear screen
     cs();
+    
+    // Origin point of the labyrinth, top left
     var ox = - (nx * pas) / 2;
     var oy = (ny * pas) / 2;
     
+    // Arrow pointing to the right
     rt(90);
+    
+    // Draw the horizontal walls, line by line, from top to bottom
     for (var j = 0; j <= ny; j++) {
+        
+        // Go to next horizontal line
         pu();
         mv(ox, oy-j*pas);
         pd();
+        
+        // Draw the walls of a horizontal line
         for (var i = 0; i <nx; i++) {
-            if (contient(mursH, j*nx + i)) {
+            if (contient(mursH, j*nx + i)) { // We have a wall
                 fd(pas);
-            } else {
+            } else {                         // No wall
                 pu();
                 fd(pas);
                 pd();
@@ -299,15 +310,22 @@ var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
         }
     }
 
+    // Arrow pointing down
     rt(90);
+    
+    // Draw the vertical walls, column by column, from left to right.
     for (var i = 0; i <= nx; i++) {
+        
+        // Go to the vertical line
         pu();
         mv(ox+i*pas, oy);
         pd();
+        
+        // Draw the walls of a vertical line
         for (var j = 0; j < ny; j++) {
-            if (contient(mursV, j*(nx+1) + i)) {
+            if (contient(mursV, j*(nx+1) + i)) { // We have a wall
                 fd(pas);
-            } else {
+            } else {                             // No wall
                 pu();
                 fd(pas);
                 pd();
@@ -315,6 +333,7 @@ var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
         }
     }
 
+    // Place the cursor at the entrance to the labyrinth
     pu();
     mv(ox + pas/2, oy + 15);
 };
@@ -438,7 +457,5 @@ var laby = function(nx, ny, pas) {
     }
     drawLabyrinth(nx, ny, pas, mursH, mursV);
 };
-
-
 
 laby(10, 9, 20);
