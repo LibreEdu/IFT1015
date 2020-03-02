@@ -10,8 +10,11 @@
  * contient(tab, x)      : indicate if tab contains x
  * ajouter(tab, x)       : if x is not in tab, add it
  * retirer(tab, x)       : if x is in tab, remove it
- * voisins(x, y, nx, ny) : cells close to (x, y) in a (nx, ny) grid
- * laby(ny, ny, pas)     : draw a nx * ny maze with pas pixel cells
+ * voisins(x, y, nx, ny) : return cells close to (x, y) in a (nx, ny) grid
+ * xVal (cellNumber, nx) : return cell abscissa in a nx * ny grid
+ * yVal (cellNumber, nx) : return cell y-intercept in a nx * ny grid
+ * randomInt(max)        : return an random integer < max
+ * laby(nx, ny, pas)     : draw a nx * ny maze with pas pixel cells
  */
 
 
@@ -44,7 +47,7 @@ var testIota = function(){
     assert( "" + iota(0) == "" + []              );
 };
 
-testIota();
+// testIota();
 
 
 
@@ -78,7 +81,7 @@ var testContient = function(){
     assert( contient([9, 2, 5], 5) == true  );
 };
 
-testContient();
+// testContient();
 
 
 
@@ -107,7 +110,7 @@ var testAjouter = function(){
     assert( "" + ajouter([], 9)        == "" + [9]          );
 };
 
-testAjouter();
+// testAjouter();
 
 
 
@@ -144,7 +147,7 @@ var testRetirer = function(){
     assert( "" + retirer([9, 2, 5], 5) == "" + [9, 2]    );
 };
 
-testRetirer();
+// testRetirer();
 
 
 
@@ -187,9 +190,134 @@ var testVoisins = function(){
     assert( "" + voisins(1, 1, 8, 4) == "" + [1, 8, 10, 17] );
 };
 
-testVoisins();
+// testVoisins();
 
 
+
+
+/* Return the abscissa of a cell
+ *
+ * cellNumber (number): the cell number
+ * nx         (number): number of grid columns
+ * 
+ * output (number)    : the abscissa of the cell
+ * 
+ * xVal(15, 8) = 7
+ */
+var xVal = function(cellNumber, nx) {
+    return cellNumber % nx;
+};
+
+// Unit test of the xval function
+var testxVal = function(){
+    assert( xVal(15, 8) == 7 );
+    assert( xVal(16, 8) == 0 );
+};
+
+// testxVal();
+
+
+
+
+/* Returning the y-intercept of a cell
+ *
+ * cellNumber (number): the cell number
+ * nx         (number): number of grid columns
+ * 
+ * output (number)    : the y-intercept of the cell
+ * 
+ * xVal(15, 8) = 1
+ */
+var yVal = function(cellNumber, nx) {
+    return Math.floor(cellNumber / nx);
+};
+
+// Unit test of the xval function
+var testyVal = function(){
+    assert( yVal(15, 8) == 1 );
+    assert( yVal(16, 8) == 2 );
+};
+
+// testyVal();
+
+
+
+
+/* Return an integer random value less than max
+ *
+ * max (number)   : upper limit
+ * 
+ * output (number): an integer n such that 0 ≤ n < max
+ * 
+ * randomInt(31) = 26
+ */
+var randomInt = function(max) {
+    return Math.floor( ( Math.random() * max ) );
+};
+
+// Unit test of the randomInt function
+var testRandomInt = function(){
+    for (var i = 0; i < 100; i++) {
+        assert( randomInt(10) < 10 );
+    }
+};
+
+//testRandomInt();
+
+
+
+/* Draw the labyrinth
+ *
+ * nx  (number) : number of columns
+ * ny  (number) : number of lines
+ * pas (number) : cell size
+ * mursH (array): set of horizontal walls
+ * mursV (array): Set of vertical walls
+ * 
+ * output       : none
+ * 
+ * randomInt(31) = 26
+ */
+var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
+    cs();
+    var ox = - (nx * pas) / 2;
+    var oy = (ny * pas) / 2;
+    
+    rt(90);
+    for (var j = 0; j <= ny; j++) {
+        pu();
+        mv(ox, oy-j*pas);
+        pd();
+        for (var i = 0; i <nx; i++) {
+            if (contient(mursH, j*nx + i)) {
+                fd(pas);
+            } else {
+                pu();
+                fd(pas);
+                pd();
+            }
+        }
+    }
+
+    rt(90);
+    for (var i = 0; i <= nx; i++) {
+        pu();
+        mv(ox+i*pas, oy);
+        pd();
+        for (var j = 0; j < ny; j++) {
+            if (contient(mursV, j*(nx+1) + i)) {
+                fd(pas);
+            } else {
+                pu();
+                fd(pas);
+                pd();
+            }
+        }
+    }
+
+    pu();
+    mv(ox + pas/2, oy + 15);
+};
 
 
 /* Draw a maze
@@ -311,57 +439,6 @@ var laby = function(nx, ny, pas) {
     drawLabyrinth(nx, ny, pas, mursH, mursV);
 };
 
-var xVal = function(cellNumber, nx) {
-    return cellNumber % nx;
-};
 
-var yVal = function(cellNumber, nx) {
-    return Math.floor(cellNumber / nx);
-};
-
-var randomInt = function(max) {
-    return Math.floor( ( Math.random() * max ) );
-};
-
-var drawLabyrinth = function(nx, ny, pas, mursH, mursV) {
-    cs();
-    var ox = - (nx * pas) / 2;
-    var oy = (ny * pas) / 2;
-    
-    rt(90);
-    for (var j = 0; j <= ny; j++) {
-        pu();
-        mv(ox, oy-j*pas);
-        pd();
-        for (var i = 0; i <nx; i++) {
-            if (contient(mursH, j*nx + i)) {
-                fd(pas);
-            } else {
-                pu();
-                fd(pas);
-                pd();
-            }
-        }
-    }
-
-    rt(90);
-    for (var i = 0; i <= nx; i++) {
-        pu();
-        mv(ox+i*pas, oy);
-        pd();
-        for (var j = 0; j < ny; j++) {
-            if (contient(mursV, j*(nx+1) + i)) {
-                fd(pas);
-            } else {
-                pu();
-                fd(pas);
-                pd();
-            }
-        }
-    }
-
-    pu();
-    mv(ox + pas/2, oy + 15);
-};
 
 laby(10, 9, 20);
