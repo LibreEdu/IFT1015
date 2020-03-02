@@ -211,10 +211,11 @@ var laby = function(nx, ny, pas) {
 
     // Initial cavity
     // cavity = randomInt(nx * ny);
+    
     cavity = 1;
     var rt = [9, 8, 0, 2];
-    
     var ri = 0;
+    
     while (cavity != -1) {
         print("************");
         print("* Boucle " + ri + " *");
@@ -225,11 +226,13 @@ var laby = function(nx, ny, pas) {
         var x = xVal(cavity, nx);
         var y = yVal(cavity, nx);
         
-        // Adjacent cells of the new cavity
+        // All the adjacent cells of the new cavity
         var tempFront = voisins(x, y, nx, ny);
 
-        // In adjacent cells, delete cavities
+        // Local frontal cells, close to the cavity
         var newFront = [];
+        
+        // In adjacent cells, delete cavities
         do {
             var cell = tempFront.pop();
             if (!contient(cave, cell)) {
@@ -242,27 +245,37 @@ var laby = function(nx, ny, pas) {
         
         // Next cavity
         var nextCav;
-        if (newFront.length) {
+        
+        if (newFront.length) { // We have local adjacent cells
+        
+            // Take one of them
             //nextCav = newFront[randomInt(newFront.length)];
             
             nextCav = rt[ri];
             print("nextCav  = " + nextCav);
-        } else {
-            //nextCav = front[randomInt(front.length)];
+        } else { // No more local front cells, let's explore a new branch
             
             print("else");
             print("front    = [" + front + "]");
+        
+            // Remove old branch last cavity from the list of front cells
             front = retirer(front, nextCav);
-            print("front    = [" + front + "]");
+            
+            // Choice of a new cavity from the list of front cells
+            //nextCav = front[randomInt(front.length)];
+            
             nextCav = rt[ri];
+            
+            // Remove this cavity from the list of front cells
             front = retirer(front, nextCav);
+            
             print("nextCav  = " + nextCav);
             print("front    = [" + front + "]");
             return;
         }
         
         
-        // Walls removal
+        // Remove the wall between the two cavities
         if (nextCav + 8 == cavity) {         // nextCav is above
             mursH = retirer(mursH, nx * y + x );
             print("retirer(mursH, " + (nx * y + x) + ")");
@@ -277,13 +290,18 @@ var laby = function(nx, ny, pas) {
             print("retirer(mursH, " + (nx * (y+1) + x) + ")");
         }
         
-        
+        // Add the cavity to the list of cavities
         cave.push(cavity);
+        
+        // The new cavity for the next loop
         cavity = nextCav;
         
         print("cave     = [" + cave + "]");
         print("retirer([" + newFront + "]," + nextCav + ")");
+        
+        // Remove this cavity from the list of front cells
         newFront = retirer(newFront, nextCav);
+        
         print("newFront = [" + newFront + "]");
         
         //pause();
