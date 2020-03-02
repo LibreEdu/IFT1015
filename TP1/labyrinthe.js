@@ -208,12 +208,16 @@ var laby = function(nx, ny, pas) {
     var cave = [];                       // Set of cavities
     var front = [];                      // Set of frontal cells
     var cavity;                          // Cavity
+    
+    mursH = retirer(mursH, 31);
+    printMurs(nx, ny, pas, mursH, mursV);
+    return;
 
     // Initial cavity
-    // cavity = randomInt(nx * ny);
+    cavity = randomInt(nx * ny);
     
-    cavity = 1;
-    var rt = [9, 8, 0, 2];
+    // cavity = 1;
+    var rt = [9, 8, 0, 2, 3];
     var ri = 0;
     
     while (cavity != -1) {
@@ -251,9 +255,9 @@ var laby = function(nx, ny, pas) {
             print("If : start");
             
             // Take one of them
-            //nextCav = newFront[randomInt(newFront.length)];
+            nextCav = newFront[randomInt(newFront.length)];
             
-            nextCav = rt[ri];
+            //nextCav = rt[ri];
             print("nextCav  = " + nextCav);
             print("If : end");
         } else { // No more local front cells, let's explore a new branch
@@ -266,9 +270,9 @@ var laby = function(nx, ny, pas) {
             
             if (front.length) { // There are still frontal cells
                 // Choice of a new cavity from the list of front cells
-                //nextCav = front[randomInt(front.length)];
+                nextCav = front[randomInt(front.length)];
                 
-                nextCav = rt[ri];
+                //nextCav = rt[ri];
                 
                 print("front    = [" + front + "]");
                 
@@ -279,7 +283,7 @@ var laby = function(nx, ny, pas) {
             
             print("nextCav  = " + nextCav);
             print("Else : end");
-            return;
+            //return;
         }
         
         
@@ -320,10 +324,13 @@ var laby = function(nx, ny, pas) {
         }
         
         print("front    = [" + front + "]");
-        printMurs(mursH, mursV, nx, ny);
+        printMursTab(mursH, mursV, nx, ny);
+        //printMursASCII(mursH, mursV, nx, ny);
+        printMurs(nx, ny, pas, mursH, mursV);
         ri++;
+        pause();
         
-        if (ri == rt.length + 1) nextCav = -1;
+        //if (ri == rt.length + 1) nextCav = -1;
     }
 };
 
@@ -339,7 +346,7 @@ var randomInt = function(max) {
     return Math.floor( ( Math.random() * max ) );
 };
 
-var printMurs = function(mursH, mursV, nx, ny) {
+var printMursTab = function(mursH, mursV, nx, ny) {
     var murs;
     var nb;
     var number;
@@ -373,4 +380,96 @@ var printMurs = function(mursH, mursV, nx, ny) {
     print();
 };
 
+var printMursASCII = function(mursH, mursV, nx, ny) {
+    var murs;
+    var nb;
+    var number;
+    var index = 0;
+    var w;
+    
+    for (var i = 0; i < ny; i++) {
+        
+        if (i == 0) {
+            w = "╔" ;
+            for (var k=1; k<nx; k++) {
+                w += "════╦";
+            }
+            w += "════╗";
+            murs = w;
+            print(murs);
+        } 
+        
+        murs = "";
+        for(var j = i*nx; j < (i+1)*nx; j++) {
+            nb = (index < 10 ? " " : "") + index;
+            w = "║ " + nb + " " ;
+            murs += w;
+            index++;
+        }
+        murs += "║";
+        print(murs);
+        
+        if (i < ny - 1) {
+            w =  "╠";
+            for (var k=1; k<nx; k++) {
+                w += "════╬";
+            }
+            w += "════╣";
+            murs = w;
+            print(murs);
+        }
+
+        if (i == ny - 1) {
+            w =  "╚";
+            for (var k=1; k<nx; k++) {
+                w += "════╩";
+            }
+            w += "════╝";
+            murs = w;
+            print(murs);
+        }
+
+    }
+};
+
+var printMurs = function(nx, ny, pas, mursH, mursV) {
+    cs();
+    var ox = - (nx * pas) / 2;
+    var oy = (ny * pas) / 2;
+    
+    rt(90);
+    for (var j = 0; j <= ny; j++) {
+        pu();
+        mv(ox, oy-j*pas);
+        pd();
+        for (var i = 0; i <nx; i++) {
+            if (contient(mursH, j*ny + nx)) {
+                pd();
+            } else {
+                pu();
+            }
+            fd(pas);
+        }
+    }
+    
+    rt(90);
+    for (var i = 0; i <= nx; i++) {
+        pu();
+        mv(ox+i*pas, oy);
+        pd();
+        for (var j = 0; j < ny; j++) {
+            if (contient(mursV, i*nx + ny)) {
+                pd();
+            } else {
+                pu();
+            }
+            fd(pas);
+        }
+    }
+};
+
+
+
+
 laby(8, 4, 40);
+
