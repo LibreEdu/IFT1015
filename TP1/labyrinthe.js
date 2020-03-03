@@ -356,6 +356,35 @@ var labyDraw = function(nx, ny, pas, mursH, mursV) {
  * labySol(2, 2, 20, [1, 4], [0, 2, 3, 4, 5])
  */
 var labySol = function(nx, ny, pas, mursH, mursV) {
+    // https://interstices.info/lalgorithme-de-pledge/
+    
+    // Origin point of the labyrinth, top left
+    var ox = - (nx * pas) / 2;
+    var oy = (ny * pas) / 2;
+    
+    // Move the cursor inside the labyrinth
+    mv(ox + pas/2, oy);
+    
+    // Close the entrance of the labyrinth.
+    ajouter(mursH, 0);
+    
+    // Declaration of global variables to the loop
+    var position = 0;       // Initial position
+    var exit = nx * ny - 1; // Exit position
+    var pledge = 0;         // Number of rotations
+    
+    while (cell != exit) {
+        if ( pledge % 4 == 0 ) {        // We're heading south
+            
+        } else if ( pledge % 4 == -1 ) { // We're heading west
+            
+        } else if ( pledge % 4 == -2 ) { // We're heading north
+            
+        } else {                         // We're heading north
+            
+        }
+    }
+
 };
 
 
@@ -498,11 +527,15 @@ var laby = function(nx, ny, pas) {
         }
     }
     
+    // mursH = [1,2,3,4,5,6,7,13,14,17,19,24,30,31,32,33,34,35,36,37,38];
+    // mursV = [0,1,3,4,8,9,11,12,14,16,17,18,20,21,22,23,24,26,27,29,32,35];
+    
     // No labyrinth without its visual representation
     labyDraw(nx, ny, pas, mursH, mursV);
     
     // No representation without a solution
-    labySol(nx, ny, pas, mursH, mursV);
+    // labySol(nx, ny, pas, mursH, mursV);
 };
 
 laby(10, 9, 20);
+//laby(8, 4, 40);
