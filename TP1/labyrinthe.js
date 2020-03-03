@@ -487,7 +487,7 @@ var laby = function(nx, ny, pas) {
         // Local frontal cells, close to the cavity
         var newFront = [];
         
-        // In adjacent cells, delete cavities (tempFront => newFront)
+        // In adjacent cells, delete cavities (newFront <- tempFront)
         do {
             var cell = tempFront.pop();
             if (!contient(cave, cell)) {
@@ -496,7 +496,7 @@ var laby = function(nx, ny, pas) {
         } while (tempFront.length);
 
 
-        // What will be the next cavity ?
+        // What will be the next cavity?
         var nextCav;
         
         if (newFront.length) { // We have local adjacent cells
