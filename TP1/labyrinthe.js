@@ -533,11 +533,11 @@ var laby = function(nx, ny, pas) {
         // The new cavity for the next loop
         cavity = nextCav;
         
-        // Remove the next cavity from the list of frontal cells.
-        front = retirer(front, cavity);
-        
-        // Remove this cavity from the list of front cells
+        // Remove the cavity from the list of the new frontal cells
         newFront = retirer(newFront, cavity);
+        
+        // Remove the cavity from the list of frontal cells.
+        front = retirer(front, cavity);
         
         // Add the new front cells to the front cells table
         while (newFront.length) {
