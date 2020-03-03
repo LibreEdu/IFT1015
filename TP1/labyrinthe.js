@@ -384,7 +384,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     // In red, to be more visible
     setpc(1, 0, 0);
     
-    // Ready to go, on the starting blocks
+    // Pen down, ready to go, on the starting blocks
     pd();
     
     // Until we get to the exit
@@ -559,19 +559,19 @@ var laby = function(nx, ny, pas) {
             }
         }
         
-        // Add the cavity to the list of cavities
+        // Add the cavity to the set of cavities
         cave.push(cavity);
         
         // The new cavity for the next loop
         cavity = nextCav;
         
-        // Remove the cavity from the list of the new frontal cells
+        // Remove the cavity from the set of new frontal cells
         newFront = retirer(newFront, cavity);
         
-        // Remove the cavity from the list of frontal cells.
+        // Remove the cavity from the set of frontal cells
         front = retirer(front, cavity);
         
-        // Add the new front cells to the front cells table
+        // Add the new frontal cells to the set of frontal cells
         while (newFront.length) {
             front = ajouter(front, newFront.pop());
         }
@@ -589,8 +589,8 @@ var laby = function(nx, ny, pas) {
 };
 
 // If we want to calculate an average number of steps per labyrinth
-// We get 308 000 steps per labyrinth (without labysol)
 // for (var i = 0; i < 100; i++)
+// We get 308 000 steps per labyrinth (without labysol)
 laby(10, 9, 20);
 
 // laby(8, 4, 40);
