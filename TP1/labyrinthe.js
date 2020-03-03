@@ -428,15 +428,16 @@ var laby = function(nx, ny, pas) {
                 // to all the cavities.
                 do {
                     var cell = tempFront.pop();
-                    if (contient(cave, cell)) {
-                        // We found out which cavity we're attaching the new
-                        // branch to
-                        cavity = cell;
+                    if (contient(cave, cell)) { // We just found out which
+                        // cavity we're attaching the new branch to
                         
                         // Retrieve the coordinates of this cavity, in order to
                         // remove the wall.
-                        x = xVal(cavity, nx);
-                        y = yVal(cavity, nx);
+                        x = xVal(cell, nx);
+                        y = yVal(cell, nx);
+                        
+                        // It's time to exit the loop
+                        cavity = cell;
                     }
                 } while (cavity == -1);
 
