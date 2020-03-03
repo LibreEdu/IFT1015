@@ -452,13 +452,12 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
  */
 var laby = function(nx, ny, pas) {
     
-    // Robustness of the arguments
-    // laby("", "", "") => laby(2, 2, 10)
+    // Robustness of the arguments: laby("", "", "") => laby(2, 2, 10)
     nx = Math.max( Math.round(Math.abs(nx)), 2 );
     ny = Math.max( Math.round(Math.abs(ny)), 2 );
-    pas = pas === 0 ? pas : pas/pas * pas;
     nx = nx != nx ? 2 : nx;
     ny = ny != ny ? 2 : ny;
+    pas = pas === 0 ? pas : pas/pas * pas;
     pas = pas != pas ? 10 : pas;
     
     // Declaration of global variables to the loop
