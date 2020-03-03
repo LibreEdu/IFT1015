@@ -442,8 +442,8 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
 
 /* Generate a labyrinth
  * 
- * nx  (number): number of columns (≥ 2)
- * ny  (number): number of lines   (≥ 2)
+ * nx  (number): number of columns, integer ≥ 2
+ * ny  (number): number of lines,   integer ≥ 2
  * pas (number): cell size
  * 
  * output      : none
@@ -453,9 +453,10 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
 var laby = function(nx, ny, pas) {
     
     // Robustness of the arguments
+    // laby("", "", "") => laby(2, 2, 10)
     nx = Math.max( Math.round(Math.abs(nx)), 2 );
     ny = Math.max( Math.round(Math.abs(ny)), 2 );
-    pas = pas/pas * pas;
+    pas = pas === 0 ? pas : pas/pas * pas;
     nx = nx != nx ? 2 : nx;
     ny = ny != ny ? 2 : ny;
     pas = pas != pas ? 10 : pas;
