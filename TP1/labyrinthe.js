@@ -358,51 +358,83 @@ var labyDraw = function(nx, ny, pas, mursH, mursV) {
 var labySol = function(nx, ny, pas, mursH, mursV) {
     // https://interstices.info/lalgorithme-de-pledge/
     
+    // Declaration of variables
+    var cell = 0;           // Initial position
+    var exit = nx * ny - 1; // Exit position
+    var nbRot = 0;          // Number of rotations
+    var along = false;      // Go along the wall
+    
     // Origin point of the labyrinth, top left
     var ox = - (nx * pas) / 2;
     var oy = (ny * pas) / 2;
     
-    // Move the cursor inside the labyrinth
-    mv(ox + pas/2, oy);
+    // Change of strategy, go along the wall
+    var alongStrategy = function() {
+        along = true;
+        rt(90); 
+        nbRot--;
+    };
     
-    // Close the entrance of the labyrinth.
+    // Move the cursor inside the labyrinth, in the middle of the first cell
+    mv(ox + pas/2, oy - pas/2);
+    
+    // Close the entrance of the labyrinth: no return possible. Good luck :-)
     ajouter(mursH, 0);
     
-    // Declaration of global variables to the loop
-    var cell = 0;           // Initial position
-    var exit = nx * ny - 1; // Exit position
-    var pledge = 0;         // Number of rotations
+    // In red, to be more visible
+    setpc(1, 0, 0);
+    
+    // Ready to go, on the starting blocks
+    pd();
     
     // Until we get to the exit
     while (cell != exit) {
-        if ( pledge % 4 == 0 ) {                          // We're heading south
-            if ( contient(mursH, cell + nx) ) {           // We hit a wall
+        if ( nbRot % 4 == 0 ) {         // We're heading south
+            if (along) {                // Go along the wall
                 
-            } else {                                      // We keep going south
-                cell = cell + nx;
-                
+            } else {                    // Go straight ahead
+                if ( contient(mursH, cell + nx) ) { // We hit a wall
+                    alongStrategy();
+                } else {                // We keep going south
+                    cell = cell + nx;
+                    fd(pas);
+                }
             }
-        } else if ( pledge % 4 == -1 ) {                  // We're heading west
-            if ( contient(mursV, cell + yVal(cell)) ) {   // We hit a wall
+        } else if ( nbRot % 4 == -1 ) { // We're heading west
+            if (along) {                // Go along the wall
+                
+            } else {                    // Go straight ahead
+                if ( contient(mursV, cell + yVal(cell, nx)) ) { // We hit a wall
+                    alongStrategy();
+                } else {                // We keep going west
                     
-            } else {                                      // We keep going west
-                
+                }
             }
-        } else if ( pledge % 4 == -2 ) {                  // We're heading north
-            if ( contient(mursH, cell) ) {                // We hit a wall
+        } else if ( nbRot % 4 == -2 ) { // We're heading north
+            if (along) {                // Go along the wall
                     
-            } else {                                      // We keep going north
-                
+            } else {                    // Go straight ahead
+                if ( contient(mursH, cell) ) { // We hit a wall
+                    alongStrategy();
+                } else {                // We keep going north
+                    cell = cell - nx;
+                    fd(pas);
+                }
             }
-        } else {                                          // We're heading east
-            if ( contient(mursV, cell + yVal(cell)+1) ) { // We hit a wall
+        } else {                        // We're heading east
+            if (along) {                // Go along the wall
                         
-            } else {                                      // We keep going east
-                
+            } else {                    // Go straight ahead
+                if ( contient(mursV, cell + yVal(cell, nx) + 1) ) {
+                    // We hit a wall
+                    alongStrategy();
+                } else {                // We keep going east
+                    
+                }
             }
         }
+        pause();
     }
-
 };
 
 
@@ -545,6 +577,7 @@ var laby = function(nx, ny, pas) {
         }
     }
     
+    // Set for laby(8, 4, x);
     // mursH = [1,2,3,4,5,6,7,13,14,17,19,24,30,31,32,33,34,35,36,37,38];
     // mursV = [0,1,3,4,8,9,11,12,14,16,17,18,20,21,22,23,24,26,27,29,32,35];
     
@@ -556,8 +589,8 @@ var laby = function(nx, ny, pas) {
 };
 
 // If we want to calculate an average number of steps per labyrinth
-// We get 308 000 steps (without labysol)
+// We get 308 000 steps per labyrinth (without labysol)
 // for (var i = 0; i < 100; i++)
 laby(10, 9, 20);
 
-//laby(8, 4, 40);
+// laby(8, 4, 40);
