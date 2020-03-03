@@ -475,7 +475,7 @@ var laby = function(nx, ny, pas) {
     cavity = randomInt(nx * ny);
     
     // As long as all the cells are not a cavity
-    while (cavity != -1) {
+    do {
         
         // Coordinates of the new cavity
         var x = xVal(cavity, nx);
@@ -522,6 +522,7 @@ var laby = function(nx, ny, pas) {
                 tempFront = voisins(x, y, nx, ny);
                 
                 // Initialize the end of loop indicator
+                // For the following loop
                 cavity = -1;
                 
                 // Among all the frontal cells of this cavity we are looking
@@ -576,7 +577,7 @@ var laby = function(nx, ny, pas) {
         while (newFront.length) {
             front = ajouter(front, newFront.pop());
         }
-    }
+    } while (cavity != -1);
     
     // Set for laby(8, 4, x);
     // mursH = [1,2,3,4,5,6,7,13,14,17,19,24,30,31,32,33,34,35,36,37,38];
