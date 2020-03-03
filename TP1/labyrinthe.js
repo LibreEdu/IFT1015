@@ -369,19 +369,37 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     ajouter(mursH, 0);
     
     // Declaration of global variables to the loop
-    var position = 0;       // Initial position
+    var cell = 0;           // Initial position
     var exit = nx * ny - 1; // Exit position
     var pledge = 0;         // Number of rotations
     
+    // Until we get to the exit
     while (cell != exit) {
-        if ( pledge % 4 == 0 ) {        // We're heading south
-            
-        } else if ( pledge % 4 == -1 ) { // We're heading west
-            
-        } else if ( pledge % 4 == -2 ) { // We're heading north
-            
-        } else {                         // We're heading north
-            
+        if ( pledge % 4 == 0 ) {                          // We're heading south
+            if ( contient(mursH, cell + nx) ) {           // We hit a wall
+                
+            } else {                                      // We keep going south
+                cell = cell + nx;
+                
+            }
+        } else if ( pledge % 4 == -1 ) {                  // We're heading west
+            if ( contient(mursV, cell + yVal(cell)) ) {   // We hit a wall
+                    
+            } else {                                      // We keep going west
+                
+            }
+        } else if ( pledge % 4 == -2 ) {                  // We're heading north
+            if ( contient(mursH, cell) ) {                // We hit a wall
+                    
+            } else {                                      // We keep going north
+                
+            }
+        } else {                                          // We're heading east
+            if ( contient(mursV, cell + yVal(cell)+1) ) { // We hit a wall
+                        
+            } else {                                      // We keep going east
+                
+            }
         }
     }
 
@@ -467,22 +485,22 @@ var laby = function(nx, ny, pas) {
                 x = xVal(nextCav, nx);
                 y = yVal(nextCav, nx);
                 
-                // The frontal cells of this cavity
+                // The list of frontal cells of this cavity
                 tempFront = voisins(x, y, nx, ny);
                 
-                // End-of-loop indicator
+                // Initialize the end of loop indicator
                 cavity = -1;
                 
-                // Among all the frontal cells of this cavity, we are looking
-                // for which one is a cavity, in order to attach this new branch
-                // to all the cavities.
+                // Among all the frontal cells of this cavity we are looking
+                // for, which one is a cavity? In order to connect this new
+                // branch to all the cavities.
                 do {
                     var cell = tempFront.pop();
                     if (contient(cave, cell)) { // We just found out which
-                        // cavity we're attaching the new branch to
+                        // cavity we're connecting the new branch to
                         
-                        // Retrieve the coordinates of this cavity, in order to
-                        // remove the wall.
+                        // Get the coordinates of this cavity, in order to
+                        // remove the wall, later.
                         x = xVal(cell, nx);
                         y = yVal(cell, nx);
                         
@@ -495,9 +513,6 @@ var laby = function(nx, ny, pas) {
                 nextCav = -1;
             }
         }
-        
-        // Remove the next cavity from the list of frontal cells.
-        front = retirer(front, nextCav);
         
         // Remove the wall between the two cavities
         if (nextCav != -1) {
@@ -518,8 +533,11 @@ var laby = function(nx, ny, pas) {
         // The new cavity for the next loop
         cavity = nextCav;
         
+        // Remove the next cavity from the list of frontal cells.
+        front = retirer(front, cavity);
+        
         // Remove this cavity from the list of front cells
-        newFront = retirer(newFront, nextCav);
+        newFront = retirer(newFront, cavity);
         
         // Add the new front cells to the front cells table
         while (newFront.length) {
@@ -537,5 +555,9 @@ var laby = function(nx, ny, pas) {
     // labySol(nx, ny, pas, mursH, mursV);
 };
 
+// If we want to calculate an average number of steps per labyrinth
+// We get 308 000 steps (without labysol)
+// for (var i = 0; i < 100; i++)
 laby(10, 9, 20);
+
 //laby(8, 4, 40);
