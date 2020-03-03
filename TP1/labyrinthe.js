@@ -505,19 +505,19 @@ var laby = function(nx, ny, pas) {
             
         } else { // No more local front cells, let's explore a new branch
             
-            // Remove old branch last cavity from the list of front cells
+            // Remove old branch last cavity from the set of frontal cells
             front = retirer(front, nextCav);
             
             if (front.length) { // There are still frontal cells
                 
-                // Choice of a new cavity from the list of front cells
+                // Choice of a new cavity from the set of frontal cells
                 nextCav = front[randomInt(front.length)];
                 
                 // Coordinates of this cavity
                 x = xVal(nextCav, nx);
                 y = yVal(nextCav, nx);
                 
-                // The list of frontal cells of this cavity
+                // The set of frontal cells of this cavity
                 tempFront = voisins(x, y, nx, ny);
                 
                 // Initialize the end of loop indicator
