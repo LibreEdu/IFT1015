@@ -13,7 +13,7 @@
  * voisins(x, y, nx, ny) : return cells close to (x, y) in a (nx, ny) grid
  * xVal(cellNumber, nx)  : return cell abscissa in a nx * ny grid
  * yVal(cellNumber, nx)  : return cell y-intercept in a nx * ny grid
- * randomInt(max)        : return an random integer < max
+ * randomInt(max)        : return a natural number < max
  * labyDraw(nx, ny, pas, mursH, mursV): visual output of the labyrinth
  * labySol(nx, ny, pas, mursH, mursV) : solve the labyrinth
  * laby(nx, ny, pas)     : generate a nx * ny labyrinth with pas pixel cells
