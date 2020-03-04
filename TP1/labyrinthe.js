@@ -370,31 +370,26 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // check if there's a north wall
     var checkNorth = function() {
-        //print("checking north wall : " + cell);
         return contient(mursH, cell);
     };
     
     // check if there's a south wall
     var checkSouth = function() {
-        //print("checking south wall : " + (cell + nx));
         return contient(mursH, cell + nx);
     };
     
     // check if there's a west wall
     var checkWest = function() {
-        //print("checking west wall : " + (cell + yVal(cell, nx)));
         return contient(mursV, cell + yVal(cell, nx));
     };
     
     // check if there's a east wall
     var checkEast = function() {
-        //print("checking east wall : " + (cell + yVal(cell, nx) + 1));
         return contient(mursV, cell + yVal(cell, nx) + 1);
     };
     
     // Check the front wall
     var checkFront = function() {
-        //print("checking front wall");
         if ( nbRot % 4 == 0 ) {         // We're heading south
             return checkSouth();
         } else if ( nbRot % 4 == -1 ) { // We're heading west
@@ -408,7 +403,6 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // Check the left wall
     var checkLeft = function() {
-        //print("checking left wall");
         if ( nbRot % 4 == 0 ) {         // We're heading south
             return checkEast();
         } else if ( nbRot % 4 == -1 ) { // We're heading west
@@ -422,35 +416,30 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         
     // Going to the north cell
     var goingNorth = function() {
-        //print("going north");
         fd(pas);
         cell = cell - nx;
     };
     
     // Going to the south cell
     var goingSouth = function() {
-        //print("going south");
         fd(pas);
         cell = cell + nx;
     };
     
     // Going to the west cell
     var goingWest = function() {
-        //print("going west");
         fd(pas);
         cell = cell - 1;
     };
     
     // Going to the south cell
     var goingEast = function() {
-        //print("going east");
         fd(pas);
         cell = cell + 1;
     };
     
     // Go straight ahead
     var goAhead = function() {
-        //print("going straight");
         if ( nbRot % 4 == 0 ) {         // We're heading south
             goingSouth();
         } else if ( nbRot % 4 == -1 ) { // We're heading west
@@ -464,35 +453,28 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // Turn right and go along the wall
     var turnRightGoAlong = function() {
-        //print("turn right go along");
         rt(90); 
         nbRot--;
         along = true;
-        //print("nbRot = " + nbRot);
     };
     
     // Turn right
     var turnRight = function() {
-        //print("turn right");
         rt(90); 
         nbRot--;
-        //print("nbRot = " + nbRot);
     };
     
     // Turn left
     var turnLeft = function() {
-        //print("turn left");
         lt(90); 
         if (++nbRot == 0) {
             along = false;
         }
-        //print("nbRot = " + nbRot);
-        //print("along = " + along);
     };
     
     
     // Move the cursor inside the labyrinth, in the middle of the first cell
-    mv(ox + pas/2, oy - pas/2);
+    mv(ox + pas/2, oy);
     
     // Close the entrance of the labyrinth: no return possible. Good luck :-)
     ajouter(mursH, 0);
@@ -500,44 +482,34 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     // In red, to be more visible
     setpc(1, 0, 0);
     
-    // Pen down, ready to go, on the starting blocks
+    // Pen down, ready to go
     pd();
+    
+    // Moving from the edge to the centre of the cell, on the starting blocks
+    fd(pas/2);
     
     // Until we get to the exit
     while (cell != exit) {
-        print();
-        //print("cell = " + cell + ", along = " + along + ", nbRot = " + nbRot);
-        
         if (along) {                  // Go along the wall
-            //print("along = true => go along the wall");
-            if ( checkLeft() ) {      // A wall on the left
-                //print("there's a wall");
-                if ( checkFront() ) { // A wall in front
-                    //print("there's a wall");
+            if ( checkLeft() ) {      // There's a wall to the left
+                if ( checkFront() ) { // There's a wall in front
                     turnRight();
-                } else {              // No wall in front
-                    //print("there's no wall");
+                } else {              // There's no wall in front
                     goAhead();
                 }
-            } else {                  // No wall on the left
-                //print("there's no wall");
+            } else {                  // There's no wall to the left
                 turnLeft();
                 goAhead();
             }
         } else {                      // Going straight ahead
-            //print("along = false => go straight ahead");
-            if ( checkFront() ) {     // A wall in front
-                //print("there's a wall");
+            if ( checkFront() ) {     // There's a wall in front
                 turnRightGoAlong();
-            } else {                  // No wall in front
-                //print("there's no wall");
+            } else {                  // There's no wall in front
                 goAhead();
             }
         }
-
-        //print("cell = " + cell);
-        // if (cell == 31) pause();
     }
+
     // To have the cursor that points to the output
     rt(nbRot * 90);
 };
@@ -682,10 +654,6 @@ var laby = function(nx, ny, pas) {
         }
     } while (cavity != -1);
     
-    // Set for laby(8, 4, x);
-    mursH = [1,2,3,4,5,6,7,13,14,17,19,24,30,31,32,33,34,35,36,37,38];
-    mursV = [0,1,3,4,8,9,11,12,14,16,17,18,20,21,22,23,24,26,27,29,32,35];
-    
     // No labyrinth without its visual representation
     labyDraw(nx, ny, pas, mursH, mursV);
     
@@ -695,7 +663,5 @@ var laby = function(nx, ny, pas) {
 
 // If we want to calculate an average number of steps per labyrinth
 // for (var i = 0; i < 100; i++)
-// We get 308 000 steps per labyrinth (without labysol)
-// laby(10, 9, 20);
-
-laby(8, 4, 40);
+// We get 309 000 steps per labyrinth (without labysol)
+laby(10, 9, 20);
