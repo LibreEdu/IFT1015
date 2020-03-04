@@ -360,7 +360,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // Declaration of variables
     var cell = 0;           // Initial position
-    var exitVal = nx * ny - 1; // Exit position
+    var exit = nx * ny - 1; // Exit position
     var nbRot = 0;          // Number of rotations
     var along = false;      // Go along the wall
     
@@ -370,31 +370,31 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // check if there's a north wall
     var checkNorth = function() {
-        print("checking north wall : " + cell);
+        //print("checking north wall : " + cell);
         return contient(mursH, cell);
     };
     
     // check if there's a south wall
     var checkSouth = function() {
-        print("checking south wall : " + (cell + nx));
+        //print("checking south wall : " + (cell + nx));
         return contient(mursH, cell + nx);
     };
     
     // check if there's a west wall
     var checkWest = function() {
-        print("checking west wall : " + (cell + yVal(cell, nx)));
+        //print("checking west wall : " + (cell + yVal(cell, nx)));
         return contient(mursV, cell + yVal(cell, nx));
     };
     
     // check if there's a east wall
     var checkEast = function() {
-        print("checking east wall : " + (cell + yVal(cell, nx) + 1));
+        //print("checking east wall : " + (cell + yVal(cell, nx) + 1));
         return contient(mursV, cell + yVal(cell, nx) + 1);
     };
     
     // Check the front wall
     var checkFront = function() {
-        print("checking front wall");
+        //print("checking front wall");
         if ( nbRot % 4 == 0 ) {         // We're heading south
             return checkSouth();
         } else if ( nbRot % 4 == -1 ) { // We're heading west
@@ -408,7 +408,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // Check the left wall
     var checkLeft = function() {
-        print("checking left wall");
+        //print("checking left wall");
         if ( nbRot % 4 == 0 ) {         // We're heading south
             return checkEast();
         } else if ( nbRot % 4 == -1 ) { // We're heading west
@@ -422,35 +422,35 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         
     // Going to the north cell
     var goingNorth = function() {
-        print("going north");
+        //print("going north");
         fd(pas);
         cell = cell - nx;
     };
     
     // Going to the south cell
     var goingSouth = function() {
-        print("going south");
+        //print("going south");
         fd(pas);
         cell = cell + nx;
     };
     
     // Going to the west cell
     var goingWest = function() {
-        print("going west");
+        //print("going west");
         fd(pas);
         cell = cell - 1;
     };
     
     // Going to the south cell
     var goingEast = function() {
-        print("going east");
+        //print("going east");
         fd(pas);
         cell = cell + 1;
     };
     
     // Go straight ahead
     var goAhead = function() {
-        print("going straight");
+        //print("going straight");
         if ( nbRot % 4 == 0 ) {         // We're heading south
             goingSouth();
         } else if ( nbRot % 4 == -1 ) { // We're heading west
@@ -464,30 +464,30 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // Turn right and go along the wall
     var turnRightGoAlong = function() {
-        print("turn right go along");
+        //print("turn right go along");
         rt(90); 
         nbRot--;
         along = true;
-        print("nbRot = " + nbRot);
+        //print("nbRot = " + nbRot);
     };
     
     // Turn right
     var turnRight = function() {
-        print("turn right");
+        //print("turn right");
         rt(90); 
         nbRot--;
-        print("nbRot = " + nbRot);
+        //print("nbRot = " + nbRot);
     };
     
     // Turn left
     var turnLeft = function() {
-        print("turn left");
+        //print("turn left");
         lt(90); 
         if (++nbRot == 0) {
             along = false;
         }
-        print("nbRot = " + nbRot);
-        print("along = " + along);
+        //print("nbRot = " + nbRot);
+        //print("along = " + along);
     };
     
     
@@ -504,40 +504,42 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     pd();
     
     // Until we get to the exit
-    while (cell != exitVal) {
+    while (cell != exit) {
         print();
-        print("cell = " + cell + ", along = " + along + ", nbRot = " + nbRot);
+        //print("cell = " + cell + ", along = " + along + ", nbRot = " + nbRot);
         
         if (along) {                  // Go along the wall
-            print("along = true => go along the wall");
+            //print("along = true => go along the wall");
             if ( checkLeft() ) {      // A wall on the left
-                print("there's a wall");
+                //print("there's a wall");
                 if ( checkFront() ) { // A wall in front
-                    print("there's a wall");
+                    //print("there's a wall");
                     turnRight();
                 } else {              // No wall in front
-                    print("there's no wall");
+                    //print("there's no wall");
                     goAhead();
                 }
             } else {                  // No wall on the left
-                print("there's no wall");
+                //print("there's no wall");
                 turnLeft();
                 goAhead();
             }
         } else {                      // Going straight ahead
-            print("along = false => go straight ahead");
+            //print("along = false => go straight ahead");
             if ( checkFront() ) {     // A wall in front
-                print("there's a wall");
+                //print("there's a wall");
                 turnRightGoAlong();
             } else {                  // No wall in front
-                print("there's no wall");
+                //print("there's no wall");
                 goAhead();
             }
         }
 
-        print("cell = " + cell);
-        if (cell == 31) pause();
+        //print("cell = " + cell);
+        // if (cell == 31) pause();
     }
+    // To have the cursor that points to the output
+    rt(nbRot * 90);
 };
 
 
