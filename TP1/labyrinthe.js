@@ -360,7 +360,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // Declaration of variables
     var cell = 0;           // Initial position
-    var exit = nx * ny - 1; // Exit position
+    var exitVal = nx * ny - 1; // Exit position
     var nbRot = 0;          // Number of rotations
     var along = false;      // Go along the wall
     
@@ -370,26 +370,26 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // check if there's a north wall
     var checkNorth = function() {
-        print("checking north wall");
+        print("checking north wall : " + cell);
         return contient(mursH, cell);
     };
     
     // check if there's a south wall
     var checkSouth = function() {
-        print("checking south wall");
+        print("checking south wall : " + (cell + nx));
         return contient(mursH, cell + nx);
     };
     
     // check if there's a west wall
     var checkWest = function() {
-        print("checking west wall");
-        return contient(mursV, cell - yVal(cell, nx));
+        print("checking west wall : " + (cell + yVal(cell, nx)));
+        return contient(mursV, cell + yVal(cell, nx));
     };
     
     // check if there's a east wall
     var checkEast = function() {
-        print("checking east wall");
-        return contient(mursV, cell + yVal(cell, nx));
+        print("checking east wall : " + (cell + yVal(cell, nx) + 1));
+        return contient(mursV, cell + yVal(cell, nx) + 1);
     };
     
     // Check the front wall
@@ -404,8 +404,22 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         } else {                        // We're heading east
             return checkEast();
         }
-    }
+    };
     
+    // Check the left wall
+    var checkLeft = function() {
+        print("checking left wall");
+        if ( nbRot % 4 == 0 ) {         // We're heading south
+            return checkEast();
+        } else if ( nbRot % 4 == -1 ) { // We're heading west
+            return checkSouth();
+        } else if ( nbRot % 4 == -2 ) { // We're heading north
+            return checkWest();
+        } else {                        // We're heading east
+            return checkNorth();
+        }
+    };
+        
     // Going to the north cell
     var goingNorth = function() {
         print("going north");
@@ -435,7 +449,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     };
     
     // Go straight ahead
-    var goStraight = function() {
+    var goAhead = function() {
         print("going straight");
         if ( nbRot % 4 == 0 ) {         // We're heading south
             goingSouth();
@@ -446,13 +460,14 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         } else {                        // We're heading east
             goingEast();
         }
-    }
+    };
     
-    // Change of strategy, go along the wall
-    var goAlong = function() {
-        along = true;
+    // Turn right and go along the wall
+    var turnRightGoAlong = function() {
+        print("turn right go along");
         rt(90); 
         nbRot--;
+        along = true;
         print("nbRot = " + nbRot);
     };
     
@@ -463,7 +478,18 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         nbRot--;
         print("nbRot = " + nbRot);
     };
-
+    
+    // Turn left
+    var turnLeft = function() {
+        print("turn left");
+        lt(90); 
+        if (++nbRot == 0) {
+            along = false;
+        }
+        print("nbRot = " + nbRot);
+        print("along = " + along);
+    };
+    
     
     // Move the cursor inside the labyrinth, in the middle of the first cell
     mv(ox + pas/2, oy - pas/2);
@@ -478,83 +504,39 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     pd();
     
     // Until we get to the exit
-    while (cell != exit) {
+    while (cell != exitVal) {
         print();
-        print("along = " + along + ", nbRot = " + nbRot);
-        if ( nbRot % 4 == 0 ) {                // We're heading south
-            print("we're heading south");
-            if (along) {                       // Go along the wall
-                print("along = true => go along the wall");
-            } else {                           // Go straight ahead
-                print("along = false => go straight ahead");
-                if ( checkSouth() ) {          // There's a wall
-                    print("there's a wall");
-                    goAlong();
-                } else {                       // We keep going south
-                    print("there's no wall");
-                    goingSouth();
-                }
-            }
-        } else if ( nbRot % 4 == -1 ) {        // We're heading west
-            print("we're heading west");
-            if (along) {                       // Go along the wall
-                print("along = true => go along the wall");
-                if (contient(mursV, cell - yVal(cell, nx))) { // There's a wall
+        print("cell = " + cell + ", along = " + along + ", nbRot = " + nbRot);
+        
+        if (along) {                  // Go along the wall
+            print("along = true => go along the wall");
+            if ( checkLeft() ) {      // A wall on the left
+                print("there's a wall");
+                if ( checkFront() ) { // A wall in front
                     print("there's a wall");
                     turnRight();
-                    goingNorth();
-                } else {
+                } else {              // No wall in front
                     print("there's no wall");
+                    goAhead();
                 }
-            } else {                           // Go straight ahead
-                print("along = false => go straight ahead");
-                if ( checkWest() ) {           // There's a wall
-                    goAlong();
-                } else {                       // We keep going west
-                    print("there's no wall");
-                    goingWest();
-                }
+            } else {                  // No wall on the left
+                print("there's no wall");
+                turnLeft();
+                goAhead();
             }
-        } else if ( nbRot % 4 == -2 ) {        // We're heading north
-            print("we're heading north");
-            if (along) {                       // Go along the wall
-                print("along = true => go along the wall");
-                if (checkNorth()) {            // There's a wall
-                    print("there's a wall");
-                    turnRight();
-                } else {
-                    print("there's no wall");
-                    //fd(pas);
-                }
-            } else {                           // Go straight ahead
-                print("along = false => go straight ahead");
-                if ( checkFront ) { // There's a wall
-                    goAlong();
-                } else {                       // We keep going north
-                    goingNorth();
-                }
-            }
-        } else {                               // We're heading east
-            print("we're heading east");
-            if (along) {                       // Go along the wall
-                print("along = true => go along the wall");
-                if () {
-                    
-                } else {}
-                
-            } else {                           // Go straight ahead
-                print("along = false => go straight ahead");
-                if ( checkFront() ) {           // There's a wall
-                    print("there's a wall");
-                    goAlong();
-                } else {                       // We keep going east
-                    print("there's no wall");
-                    goingEast();
-                }
+        } else {                      // Going straight ahead
+            print("along = false => go straight ahead");
+            if ( checkFront() ) {     // A wall in front
+                print("there's a wall");
+                turnRightGoAlong();
+            } else {                  // No wall in front
+                print("there's no wall");
+                goAhead();
             }
         }
+
         print("cell = " + cell);
-        pause();
+        if (cell == 31) pause();
     }
 };
 
