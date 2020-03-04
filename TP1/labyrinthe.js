@@ -335,7 +335,7 @@ var labyDraw = function(nx, ny, pas, mursH, mursV) {
         }
     }
     
-    // Place the cursor at the entrance to the labyrinth
+    // Move the cursor at the entrance to the labyrinth
     pu();
     mv(ox + pas/2, oy + 15);
 };
@@ -512,6 +512,13 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
 
     // To have the cursor that points to the output
     rt(nbRot * 90);
+    
+    // Last Steps
+    fd(pas/2);
+    
+    // Move the cursor at the entrance to the labyrinth
+    pu();
+    mv(ox + pas/2, oy + 15);
 };
 
 
@@ -663,5 +670,8 @@ var laby = function(nx, ny, pas) {
 
 // If we want to calculate an average number of steps per labyrinth
 // for (var i = 0; i < 100; i++)
-// We get 309 000 steps per labyrinth (without labysol)
+// We get 309 000 steps per labyrinth (without labysol) for:
 laby(10, 9, 20);
+
+// laby(16, 9, 20);
+// laby(34, 18, 10);
