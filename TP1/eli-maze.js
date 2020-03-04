@@ -1,5 +1,15 @@
+/******************************************************************
+ * *
+ * note: this group of functions draw a maze
+ * using two arrays is perfectly functional
+ * 
+ * was not included in the TP1 because we used the functions
+ * Alexander used to debug the whole algoritm
+ * 
+ */
+
 ///////////////////////
-// not include just for testing
+// not include -contient- just for testing
 ////////////////////////
 
 var contient = function(tab, x) {
@@ -13,11 +23,12 @@ var contient = function(tab, x) {
     return false;
 };
 
-// todosLosMurosHorizontales
-var mursH = [1,2,3,4,5,6,7,8,10,13,14,16,17,23,30,31,32,33,34,35,36,37,38] ;
+// var mursH = [1,2,3,4,5,6,7,8,10,13,14,16,17,23,30,31,32,33,34,35,36,37,38] ;
 
-// todosLosMurosVerticales
-var mursV = [0,4,8,9,12,13,14,15,17,18,21,23,26,27,28,29,30,31,32,35] ;
+// var mursV = [0,4,8,9,12,13,14,15,17,18,21,23,26,27,28,29,30,31,32,35] ;
+
+var mursH = [1,2,3,4,5,6,7,13,14,17,19,24,30,31,32,33,34,35,36,37,38];
+var mursV = [0,1,3,4,8,9,11,12,14,16,17,18,20,21,22,23,24,26,27,29,32,35];
 
 ///////////////////////////////////////////////////////////
 var NX = 8;
@@ -37,15 +48,12 @@ const START = 1 ;
 const STOP = 0 ;
 
 var sauter = function(arlong){
-    print("salta: " + arlong + " px");
     pu();
-     fd(arlong);
+    fd(arlong);
     pd();
-
 };
 
 var dessinerDroite = function(arlong){
-     print("linea: " + arlong + " px");
     pd();
     fd(arlong);
     pu(); 
@@ -79,10 +87,7 @@ var tortueDansVoi = function (voi, dirMur){
 
     }
 
-    bk(voi);
-
 } ;
-
 
 var traceMur = function (tblSeqMurs, argpas){
        
@@ -93,21 +98,13 @@ var traceMur = function (tblSeqMurs, argpas){
     for(var elemDessiner = 0; elemDessiner < tblSeqMurs.length ; elemDessiner ++){
 
         if(elemDessiner > 0){
-
-            //  print("elemento a dibujar numero: " + elemDessiner + ", tipo: " + tblSeqMurs [elemDessiner] );        
             // accumuler la longeur 
             if( tblSeqMurs [elemDessiner] ==  tblSeqMurs [elemDessiner - 1] ){
-                //     acumula un paso aumentando el largo
-                
-                // print("elemento anterior( " + tblSeqMurs [elemDessiner - 1]+ " ) == elemento actual( " + tblSeqMurs [elemDessiner] + " )");
+              
                 long += argpas ;
-                // print("acumula paso, long = " + long );
 
             } else { // sino
     
-                // print("elemento anterior( " + tblSeqMurs [elemDessiner - 1]+ " ) NO ES IGUAL  elemento actual( " + tblSeqMurs [elemDessiner] + " )");
-            //    print(" [elemDessiner - 1] == 0: salta o dibuja");
-                //   si elemento a crear es cero salta, sino dibuja el largo acumulado
                 tblSeqMurs [elemDessiner - 1] == 0 ? sauter (long) : dessinerDroite(long)  ;
         
                 //  reinitialise la longueur 
@@ -118,8 +115,9 @@ var traceMur = function (tblSeqMurs, argpas){
             
             //dernier element
             if(elemDessiner == tblSeqMurs.length - 1){
-                // print("ultimo elemento adibujar");
+
                 tblSeqMurs [elemDessiner] == 0 ? sauter (long) : dessinerDroite(long)  ;
+
             }
 
         }
@@ -138,8 +136,6 @@ var dessineEnsembleMurs = function (argtblMurs,qttVoiMurs,dirVoi){
   
     for (var compteVoi = 0 ; compteVoi < qttVoiMurs ; compteVoi ++ ) {
     
-        print("columna #"+ compteVoi);
-    
         tblMursDessiner = [] ;
 
         // horiz = 1, vert NX
@@ -150,22 +146,21 @@ var dessineEnsembleMurs = function (argtblMurs,qttVoiMurs,dirVoi){
             // cree un tableau [011110101] pour signaler vide et murs
             for (var compteMur = (compteVoi * NX) ; compteMur < ((compteVoi * NX)+ NX) ; compteMur++){
                 
-                // print("busca: "+ compteMur + " en mursH");
                 if( contient (argtblMurs, compteMur)){
-                    // print("el elemento: "+ compteMur + " fue hallado en mursH");
+    
                     tblMursDessiner.push(1);
+    
                 } else { //         sino
-                    // print("el elemento: "+ compteMur + " NO fue hallado en mursH");
+    
                     tblMursDessiner.push(0);    
+    
                 } //  fin
 
             } //  proximo muro
-            // print("muros a crear: "+tblMursDessiner);           
-
+    
         } else { // vertical
 
             for (var compteMur = 0 ; compteMur < NY ; compteMur++){
-                print("compteMur: " + compteMur );
               
                 if( compteMur  != 0 ) {
     
@@ -177,25 +172,23 @@ var dessineEnsembleMurs = function (argtblMurs,qttVoiMurs,dirVoi){
     
                 };
     
-                print("busca: "+ murChercher + " en mursV");
                 if( contient (argtblMurs, murChercher)){ // ver
-                    // print("el elemento: "+ compteMur + " fue hallado en mursH");
+    
                     tblMursDessiner.push(1);
+    
                 } else { //         sino
-                    // print("el elemento: "+ compteMur + " NO fue hallado en mursH");
+    
                     tblMursDessiner.push(0);    
+    
                 } //  fin
             
             } //  proximo muro
         };
         
-        // print("muros a crear: "+tblMursDessiner);
-    
         tortueDansVoi (compteVoi, dirVoi);
            
         traceMur(tblMursDessiner, pas );
         
-        print("-------------------------------");
     } // proxima fila de muros 
 
     tortueOriginLab(dirVoi, STOP);
@@ -203,6 +196,4 @@ var dessineEnsembleMurs = function (argtblMurs,qttVoiMurs,dirVoi){
 } ;// fonct
 
  dessineEnsembleMurs(mursH, ranHor, DIR_HOR);
-
  dessineEnsembleMurs(mursV, ranVer,DIR_VER);
-
