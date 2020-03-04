@@ -676,5 +676,6 @@ var laby = function(nx, ny, pas) {
 // We get 309 000 steps per labyrinth (without labysol) for:
 laby(10, 9, 20);
 
+// laby(8, 4, 40);
 // laby(16, 9, 20);
 // laby(34, 18, 10);
