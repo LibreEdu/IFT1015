@@ -260,7 +260,7 @@ var randomInt = function(max) {
 // Unit test of the randomInt function
 var testRandomInt = function(){
     for (var i = 0; i < 10; i++) {
-        assert( randomInt(2) == 1 || 2);
+        assert( randomInt(2) == 0 || 1 || 2);
     }
 };
 
@@ -518,7 +518,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     
     // Move the cursor at the entrance to the labyrinth
     pu();
-    mv(ox + pas/2, oy + 15);
+    mv(ox + pas/2, oy + 20);
 };
 
 
