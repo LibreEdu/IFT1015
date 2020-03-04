@@ -337,7 +337,7 @@ var labyDraw = function(nx, ny, pas, mursH, mursV) {
     
     // Move the cursor at the entrance to the labyrinth
     pu();
-    mv(ox + pas/2, oy + 15);
+    mv(ox + pas/2, oy + 20);
 };
 
 
@@ -665,7 +665,10 @@ var laby = function(nx, ny, pas) {
     labyDraw(nx, ny, pas, mursH, mursV);
     
     // No representation without a solution
+    /*
+    pause();
     labySol(nx, ny, pas, mursH, mursV);
+    //*/
 };
 
 // If we want to calculate an average number of steps per labyrinth
