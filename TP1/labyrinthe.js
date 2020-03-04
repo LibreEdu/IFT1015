@@ -501,7 +501,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
                 turnLeft();
                 goAhead();
             }
-        } else {                      // Going straight ahead
+        } else {                      // Go straight ahead
             if ( checkFront() ) {     // There's a wall in front
                 turnRightGoAlong();
             } else {                  // There's no wall in front
