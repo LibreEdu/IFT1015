@@ -414,26 +414,26 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         }
     };
         
-    // Going to the north cell
-    var goingNorth = function() {
+    // Go to the north cell
+    var goNorth = function() {
         fd(pas);
         cell = cell - nx;
     };
     
-    // Going to the south cell
-    var goingSouth = function() {
+    // Go to the south cell
+    var goSouth = function() {
         fd(pas);
         cell = cell + nx;
     };
     
-    // Going to the west cell
-    var goingWest = function() {
+    // Go to the west cell
+    var goWest = function() {
         fd(pas);
         cell = cell - 1;
     };
     
-    // Going to the south cell
-    var goingEast = function() {
+    // Go to the south cell
+    var goEast = function() {
         fd(pas);
         cell = cell + 1;
     };
@@ -441,13 +441,13 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     // Go straight ahead
     var goAhead = function() {
         if ( nbRot % 4 == 0 ) {         // We're heading south
-            goingSouth();
+            goSouth();
         } else if ( nbRot % 4 == -1 ) { // We're heading west
-            goingWest();
+            goWest();
         } else if ( nbRot % 4 == -2 ) { // We're heading north
-            goingNorth();
+            goNorth();
         } else {                        // We're heading east
-            goingEast();
+            goEast();
         }
     };
     
