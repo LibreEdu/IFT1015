@@ -510,7 +510,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         }
     }
 
-    // To have the cursor that points to the output
+    // To have the cursor that points to the exit
     rt(nbRot * 90);
     
     // Last Steps
