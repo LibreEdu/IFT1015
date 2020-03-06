@@ -11,12 +11,12 @@
  * ajouter(tab, x)       : if x is not in tab, add it
  * retirer(tab, x)       : if x is in tab, remove it
  * voisins(x, y, nx, ny) : return cells close to (x, y) in a (nx, ny) grid
- * xVal(cellNumber, nx)  : return cell abscissa in a nx * ny grid
- * yVal(cellNumber, nx)  : return cell y-intercept in a nx * ny grid
+ * xVal(cellNumber, nx)  : return cell abscissa in a grid of nx columns
+ * yVal(cellNumber, nx)  : return cell y-intercept in a grid of nx columns
  * randomInt(max)        : return a natural number < max
- * labyDraw(nx, ny, pas, mursH, mursV): visual output of the labyrinth
+ * labyDraw(nx, ny, pas, mursH, mursV): draw the labyrinth with pas pixel cells
  * labySol(nx, ny, pas, mursH, mursV) : solve the labyrinth
- * laby(nx, ny, pas)     : generate a nx * ny labyrinth with pas pixel cells
+ * laby(nx, ny, pas)     : generate a nx * ny labyrinth
  */
 
 
