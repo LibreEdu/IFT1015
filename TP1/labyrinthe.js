@@ -413,41 +413,18 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
             return checkNorth();
         }
     };
-        
-    // Go to the north cell
-    var goNorth = function() {
-        fd(pas);
-        cell = cell - nx;
-    };
-    
-    // Go to the south cell
-    var goSouth = function() {
-        fd(pas);
-        cell = cell + nx;
-    };
-    
-    // Go to the west cell
-    var goWest = function() {
-        fd(pas);
-        cell = cell - 1;
-    };
-    
-    // Go to the east cell
-    var goEast = function() {
-        fd(pas);
-        cell = cell + 1;
-    };
     
     // Go straight ahead
     var goAhead = function() {
+        fd(pas);
         if ( nbRot % 4 == 0 ) {         // We're heading south
-            goSouth();
+            cell = cell + nx;           // New cell = south cell
         } else if ( nbRot % 4 == -1 ) { // We're heading west
-            goWest();
+            cell = cell - 1;            // New cell = west cell
         } else if ( nbRot % 4 == -2 ) { // We're heading north
-            goNorth();
+            cell = cell - nx;           // New cell = north cell
         } else {                        // We're heading east
-            goEast();
+            cell = cell + 1;            // New cell = east cell
         }
     };
     
