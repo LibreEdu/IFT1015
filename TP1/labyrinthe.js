@@ -432,7 +432,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         cell = cell - 1;
     };
     
-    // Go to the south cell
+    // Go to the east cell
     var goEast = function() {
         fd(pas);
         cell = cell + 1;
