@@ -428,13 +428,6 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         }
     };
     
-    // Turn right and go along the wall
-    var turnRightGoAlong = function() {
-        rt(90); 
-        nbRot--;
-        along = true;
-    };
-    
     // Turn right
     var turnRight = function() {
         rt(90); 
@@ -480,7 +473,8 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
             }
         } else {                      // Go straight ahead
             if ( checkFront() ) {     // There's a wall in front
-                turnRightGoAlong();
+                turnRight();
+                along = true;         // Now, go along the wall
             } else {                  // There's no wall in front
                 goAhead();
             }
