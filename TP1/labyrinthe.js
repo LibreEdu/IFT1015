@@ -442,7 +442,6 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
         }
     };
     
-    
     // Move the cursor inside the labyrinth, in the middle of the first cell
     mv(ox + pas/2, oy);
     
@@ -480,7 +479,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
             }
         }
     }
-
+    
     // To have the cursor that points to the exit
     rt(nbRot * 90);
     
@@ -548,8 +547,8 @@ var laby = function(nx, ny, pas) {
                 newFront.push(cell);
             }
         } while (tempFront.length);
-
-
+        
+        
         // What will be the next cavity?
         var nextCav;
         
