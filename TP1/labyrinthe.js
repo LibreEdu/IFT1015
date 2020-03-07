@@ -6,18 +6,18 @@
  * Library to draw labyrinth.
  * 
  * List of functions:
- * ioata(n)                   : return an array containing numbers from 0 to n-1
- * contient(tab, x)           : indicate if tab contains x
- * ajouter(tab, x)            : if x is not in tab, add it
- * retirer(tab, x)            : if x is in tab, remove it
- * voisins(x, y, nx, ny)      : return cells close to (x, y) in a (nx, ny) grid
- * xVal(cellNumber, nx)       : return cell abscissa in a grid of nx columns
- * yVal(cellNumber, nx)       : return cell y-intercept in a grid of nx columns
- * randomInt(max)             : return a natural number < max
- * creerLaby(nx, ny)          : generate walls of a nx * ny labyrinth
+ * ioata(n)                  : return an array containing numbers from 0 to n-1
+ * contient(tab, x)          : indicate if tab contains x
+ * ajouter(tab, x)           : if x is not in tab, add it
+ * retirer(tab, x)           : if x is in tab, remove it
+ * voisins(x, y, nx, ny)     : return cells close to (x, y) in a (nx, ny) grid
+ * xVal(cellNumber, nx)      : return cell abscissa in a grid of nx columns
+ * yVal(cellNumber, nx)      : return cell y-intercept in a grid of nx columns
+ * randomInt(max)            : return a natural number < max
+ * creerLaby(nx, ny)         : generate walls of a nx * ny labyrinth
  * afficherLaby(nx, ny, pas, murs): display the walls of the labyrinth
- * labySol(nx, ny, pas, murs) : solve the labyrinth
- * laby(nx, ny, pas)          : a labyrinth and its solution
+ * labySol(nx, ny, pas, murs): solve the labyrinth
+ * laby(nx, ny, pas)         : a labyrinth and its solution
  */
 
 
