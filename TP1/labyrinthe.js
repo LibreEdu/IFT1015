@@ -339,11 +339,11 @@ var creerLaby = function(nx, ny) {
                 // And we remove it from the neighboring cells
                 neighbour = retirer(neighbour, cell);
                 
-                // Is neighboring cell part of the cavity?
+                // Is this neighboring cell part of the cavity?
                 if (contient(cave, cell)) { // If yes
                     
-                    // Get the coordinates of this cavity, in order to remove
-                    // the wall, later.
+                    // Get the coordinates of this cell, in order to remove the
+                    // wall, later.
                     x = xVal(cell, nx);
                     y = yVal(cell, nx);
                     
@@ -356,7 +356,7 @@ var creerLaby = function(nx, ny) {
             nextCav = -1;
         }
         
-        // Remove the wall between the two cavities
+        // Remove the wall between the two cavity cells
         if (nextCav != -1) {
             if (nextCav + nx == cavity) {        // nextCav is above
                 mursH = retirer(mursH, nx * y + x );
