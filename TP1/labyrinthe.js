@@ -212,12 +212,12 @@ var xVal = function(cellNumber, nx) {
 };
 
 // Unit test of the xval function
-var testxVal = function(){
+var testXVal = function(){
     assert( xVal(15, 8) == 7 );
     assert( xVal(16, 8) == 0 );
 };
 
-// testxVal();
+// testXVal();
 
 
 
@@ -236,12 +236,12 @@ var yVal = function(cellNumber, nx) {
 };
 
 // Unit test of the xval function
-var testyVal = function(){
+var testYVal = function(){
     assert( yVal(15, 8) == 1 );
     assert( yVal(16, 8) == 2 );
 };
 
-// testyVal();
+// testYVal();
 
 
 
@@ -272,10 +272,10 @@ var testRandomInt = function(){
 
 /* Generate the walls of the labyrinth
  * 
- * nx  (number): number of columns, integer ≥ 2
- * ny  (number): number of lines,   integer ≥ 2
+ * nx  (number)  : number of columns, integer ≥ 2
+ * ny  (number)  : number of lines,   integer ≥ 2
  * 
- * output      : array of the walls of the labyrinth
+ * output (array): walls of the labyrinth
  * 
  * creerLaby(16, 9)
  */
