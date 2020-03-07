@@ -475,7 +475,7 @@ var afficherLaby = function(nx, ny, pas, murs) {
  * 
  * output       : none
  * 
- * labySol(2, 2, 20, [1, 4], [0, 2, 3, 4, 5])
+ * labySol(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
  */
 var labySol = function(nx, ny, pas, murs) {
     // https://interstices.info/lalgorithme-de-pledge/
