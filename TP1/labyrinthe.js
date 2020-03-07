@@ -628,7 +628,7 @@ var labySol = function(nx, ny, pas, murs) {
  * 
  * output      : none
  * 
- * creerLaby(16, 9, 20)
+ * laby(16, 9, 20)
  */
 var laby = function(nx, ny, pas) {
     
