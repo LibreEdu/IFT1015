@@ -651,7 +651,7 @@ var laby = function(nx, ny, pas) {
 };
 
 // If we want to calculate an average number of steps per labyrinth
-for (var i = 0; i < 100; i++)
+// for (var i = 0; i < 100; i++)
 // We get 374 000 steps per labyrinth (without labysol) for:
 laby(10, 9, 20);
 
