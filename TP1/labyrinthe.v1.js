@@ -517,76 +517,87 @@ var laby = function(nx, ny, pas) {
     // Declaration of global variables to the loop
     var mursH = iota(  nx    * (ny+1) - 1); // Set of horizontal walls - exit
     var mursV = iota( (nx+1) *  ny       ); // Set of vertical walls
-    var cave = [];                          // Cells that are part of the cavity
+    var cave = [];                          // Set of cavities
     var front = [];                         // Set of frontal cells
-    var cavity;                             // Next cell added to the cave[]
+    var cavity;                             // Cavity
     
     // Remove the entrance wall
     mursH = retirer(mursH, 0);
     
-    // Initial cavity cell
+    // Initial cavity
     cavity = randomInt(nx * ny);
     
-    // Until all the cells are part of the cavity
+    // As long as all the cells are not a cavity
     do {
         
-        // Add the cell to the cavity
-        cave.push(cavity);
-        
-        // Coordinates of the new cell cavity
+        // Coordinates of the new cavity
         var x = xVal(cavity, nx);
         var y = yVal(cavity, nx);
         
-        // All the adjacent cells of the new cavity
-        var neighbour = voisins(x, y, nx, ny);
+        // All the adjacent cells of the new cavity, temporary array
+        var tempFront = voisins(x, y, nx, ny);
         
-        // Cells that are not part of the cavity are added to front[]
+        // Local frontal cells, close to the cavity
+        var newFront = [];
+        
+        // In adjacent cells, delete cavities (newFront <- tempFront)
         do {
-            var cell = neighbour.pop();
-            if ( !contient(cave, cell) && !contient(front, cell)) {
-                front.push(cell);
+            var cell = tempFront.pop();
+            if (!contient(cave, cell)) {
+                newFront.push(cell);
             }
-        } while (neighbour.length);
+        } while (tempFront.length);
         
-        if (front.length) { // There are still frontal cells
+        
+        // What will be the next cavity?
+        var nextCav;
+        
+        if (newFront.length) { // We have local adjacent cells
             
-            // Choice of a new cavity cell from the set of frontal cells
-            var nextCav = front[randomInt(front.length)];
+            // Take one of them
+            nextCav = newFront[randomInt(newFront.length)];
             
-            // Coordinates of this cavity cell
-            x = xVal(nextCav, nx);
-            y = yVal(nextCav, nx);
+        } else { // No more local front cells, let's explore a new branch
             
-            // The frontal cells of this cavity cell
-            neighbour = voisins(x, y, nx, ny);
+            // Remove old branch last cavity from the set of frontal cells
+            front = retirer(front, nextCav);
             
-            // Initialize the end of loop indicator for the following loop
-            cavity = -1;
-            
-            // Among all the frontal cells of the cavity cell, which one is a
-            // cavity cell?
-            do {
-                // From the adjacent cells, we randomly pick one of them
-                var cell = neighbour[randomInt(neighbour.length)];
+            if (front.length) { // There are still frontal cells
                 
-                // And we remove it from the neighboring cells
-                neighbour = retirer(neighbour, cell);
+                // Choice of a new cavity from the set of frontal cells
+                nextCav = front[randomInt(front.length)];
                 
-                // Is neighboring cell part of the cavity?
-                if (contient(cave, cell)) { // If yes
-                    
-                    // Get the coordinates of this cavity, in order to remove
-                    // the wall, later.
-                    x = xVal(cell, nx);
-                    y = yVal(cell, nx);
-                    
-                    // It's time to exit the loop
-                    cavity = cell;
-                }
-            } while (cavity == -1);
-            
-        } else { // No more frontal cells, the labyrinth is done, yay :-)
-            nextCav = -1;
+                // Coordinates of this cavity
+                x = xVal(nextCav, nx);
+                y = yVal(nextCav, nx);
+                
+                // The set of frontal cells of this cavity
+                tempFront = voisins(x, y, nx, ny);
+                
+                // Initialize the end of loop indicator for the following loop
+                cavity = -1;
+                
+                // Among all the frontal cells of this cavity we are looking
+                // for, which one is a cavity? In order to connect this new
+                // branch to all the cavities.
+                do {
+                    var cell = tempFront.pop();
+                    if (contient(cave, cell)) { // We just found out which
+                        // cavity we're connecting the new branch to
+                        
+                        // Get the coordinates of this cavity, in order to
+                        // remove the wall, later.
+                        x = xVal(cell, nx);
+                        y = yVal(cell, nx);
+                        
+                        // It's time to exit the loop
+                        cavity = cell;
+                    }
+                } while (cavity == -1);
+                
+            } else { // No more frontal cells, the labyrinth is done, yay :-)
+                nextCav = -1;
+            }
         }
         
         // Remove the wall between the two cavities
@@ -598,28 +609,38 @@ var laby = function(nx, ny, pas) {
             } else if (cavity + 1 == nextCav ) { // nextCav is on the right
                 mursV = retirer(mursV, (nx+1) * y + x + 1 );
             } else if (cavity + nx == nextCav) { // nextCav is below
-                mursH = retirer(mursH, nx * (y+1) + x );
+                mursH = retirer(mursH,  nx * (y+1) + x );
             }
         }
         
-        // The new cavity cell for the next loop
+        // Add the cavity to the set of cavities
+        cave.push(cavity);
+        
+        // The new cavity for the next loop
         cavity = nextCav;
         
-        // Remove the cavity cell from the set of frontal cells
+        // Remove the cavity from the set of new frontal cells
+        newFront = retirer(newFront, cavity);
+        
+        // Remove the cavity from the set of frontal cells
         front = retirer(front, cavity);
         
+        // Add the new frontal cells to the set of frontal cells
+        while (newFront.length) {
+            front = ajouter(front, newFront.pop());
+        }
     } while (cavity != -1);
     
     // No labyrinth without its visual representation
     labyDraw(nx, ny, pas, mursH, mursV);
     
     // No representation without a solution
-    //labySol(nx, ny, pas, mursH, mursV);
+    // labySol(nx, ny, pas, mursH, mursV);
 };
 
 // If we want to calculate an average number of steps per labyrinth
 // for (var i = 0; i < 100; i++)
-// We get 309 000 steps per labyrinth (without labysol) for:
+// We get 308 000 steps per labyrinth (without labysol) for:
 laby(10, 9, 20);
 
 // laby(8, 4, 40);
