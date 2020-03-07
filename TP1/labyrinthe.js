@@ -6,17 +6,18 @@
  * Library to draw labyrinth.
  * 
  * List of functions:
- * ioata(n)              : return an array containing numbers from 0 to n-1
- * contient(tab, x)      : indicate if tab contains x
- * ajouter(tab, x)       : if x is not in tab, add it
- * retirer(tab, x)       : if x is in tab, remove it
- * voisins(x, y, nx, ny) : return cells close to (x, y) in a (nx, ny) grid
- * xVal(cellNumber, nx)  : return cell abscissa in a grid of nx columns
- * yVal(cellNumber, nx)  : return cell y-intercept in a grid of nx columns
- * randomInt(max)        : return a natural number < max
- * labyDraw(nx, ny, pas, mursH, mursV): draw the labyrinth with pas pixel cells
- * labySol(nx, ny, pas, mursH, mursV) : solve the labyrinth
- * laby(nx, ny, pas)     : generate a nx * ny labyrinth
+ * ioata(n)                   : return an array containing numbers from 0 to n-1
+ * contient(tab, x)           : indicate if tab contains x
+ * ajouter(tab, x)            : if x is not in tab, add it
+ * retirer(tab, x)            : if x is in tab, remove it
+ * voisins(x, y, nx, ny)      : return cells close to (x, y) in a (nx, ny) grid
+ * xVal(cellNumber, nx)       : return cell abscissa in a grid of nx columns
+ * yVal(cellNumber, nx)       : return cell y-intercept in a grid of nx columns
+ * randomInt(max)             : return a natural number < max
+ * creerLaby(nx, ny)          : generate walls of a nx * ny labyrinth
+ * afficherLaby(nx, ny, pas, murs): display the walls of the labyrinth
+ * labySol(nx, ny, pas, murs) : solve the labyrinth
+ * laby(nx, ny, pas)          : a labyrinth and its solution
  */
 
 
@@ -268,26 +269,148 @@ var testRandomInt = function(){
 
 
 
+
+/* Generate the walls of the labyrinth
+ * 
+ * nx  (number): number of columns, integer ≥ 2
+ * ny  (number): number of lines,   integer ≥ 2
+ * 
+ * output      : array of the walls of the labyrinth
+ * 
+ * creerLaby(16, 9)
+ */
+var creerLaby = function(nx, ny) {
+    
+    // Declaration of global variables to the loop
+    var mursH = iota(  nx    * (ny+1) - 1); // Set of horizontal walls - exit
+    var mursV = iota( (nx+1) *  ny       ); // Set of vertical walls
+    var cave = [];                          // Cells that are part of the cavity
+    var front = [];                         // Set of frontal cells
+    var cavity;                             // Next cell added to the cave[]
+    
+    // Remove the entrance wall
+    mursH = retirer(mursH, 0);
+    
+    // Initial cavity cell
+    cavity = randomInt(nx * ny);
+    
+    // Until all the cells are part of the cavity
+    do {
+        
+        // Add the cell to the cavity
+        cave.push(cavity);
+        
+        // Coordinates of the new cell cavity
+        var x = xVal(cavity, nx);
+        var y = yVal(cavity, nx);
+        
+        // All the adjacent cells of the new cavity
+        var neighbour = voisins(x, y, nx, ny);
+        
+        // Cells that are not part of the cavity are added to front[]
+        do {
+            var cell = neighbour.pop();
+            if ( !contient(cave, cell) && !contient(front, cell)) {
+                front.push(cell);
+            }
+        } while (neighbour.length);
+        
+        if (front.length) { // There are still frontal cells
+            
+            // Choice of a new cavity cell from the set of frontal cells
+            var nextCav = front[randomInt(front.length)];
+            
+            // Coordinates of this cavity cell
+            x = xVal(nextCav, nx);
+            y = yVal(nextCav, nx);
+            
+            // The frontal cells of this cavity cell
+            neighbour = voisins(x, y, nx, ny);
+            
+            // Initialize the end of loop indicator for the following loop
+            cavity = -1;
+            
+            // Among all the frontal cells of the cavity cell, which one is a
+            // cavity cell?
+            do {
+                // From the adjacent cells, we randomly pick one of them
+                var cell = neighbour[randomInt(neighbour.length)];
+                
+                // And we remove it from the neighboring cells
+                neighbour = retirer(neighbour, cell);
+                
+                // Is neighboring cell part of the cavity?
+                if (contient(cave, cell)) { // If yes
+                    
+                    // Get the coordinates of this cavity, in order to remove
+                    // the wall, later.
+                    x = xVal(cell, nx);
+                    y = yVal(cell, nx);
+                    
+                    // It's time to exit the loop
+                    cavity = cell;
+                }
+            } while (cavity == -1);
+            
+        } else { // No more frontal cells, the labyrinth is done, yay :-)
+            nextCav = -1;
+        }
+        
+        // Remove the wall between the two cavities
+        if (nextCav != -1) {
+            if (nextCav + nx == cavity) {        // nextCav is above
+                mursH = retirer(mursH, nx * y + x );
+            } else if (nextCav + 1 == cavity) {  // nextCav is on the left
+                mursV = retirer(mursV, (nx+1) * y + x);
+            } else if (cavity + 1 == nextCav ) { // nextCav is on the right
+                mursV = retirer(mursV, (nx+1) * y + x + 1 );
+            } else if (cavity + nx == nextCav) { // nextCav is below
+                mursH = retirer(mursH, nx * (y+1) + x );
+            }
+        }
+        
+        // The new cavity cell for the next loop
+        cavity = nextCav;
+        
+        // Remove the cavity cell from the set of frontal cells
+        front = retirer(front, cavity);
+        
+    } while (cavity != -1);
+    
+    // Output
+    var murs = Array(2);
+    murs[0] = mursH;
+    murs[1] = mursV;
+    
+    return murs;
+};
+
+
+
+
 /* Draw the labyrinth
  * 
  * nx  (number) : number of columns
  * ny  (number) : number of lines
  * pas (number) : cell size
- * mursH (array): set of horizontal walls
- * mursV (array): Set of vertical walls
+ * murs (array) : horizontal and vertical walls
  * 
  * output       : none
  * 
- * labyDraw(2, 2, 20, [1, 4], [0, 2, 3, 4, 5])
+ * afficherLaby(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
  */
-var labyDraw = function(nx, ny, pas, mursH, mursV) {
-    
-    // Clear screen
-    cs();
+var afficherLaby = function(nx, ny, pas, murs) {
     
     // Origin point of the labyrinth, top left
     var ox = - (nx * pas) / 2;
     var oy = (ny * pas) / 2;
+    
+    // Horizontal and vertical walls
+    var mursH = murs[0];
+    var mursV = murs[1];
+    
+    // Clear screen
+    cs();
     
     // Arrow pointing to the right
     rt(90);
@@ -348,14 +471,13 @@ var labyDraw = function(nx, ny, pas, mursH, mursV) {
  * nx  (number) : number of columns
  * ny  (number) : number of lines
  * pas (number) : cell size
- * mursH (array): set of horizontal walls
- * mursV (array): Set of vertical walls
+ * murs (array) : horizontal and vertical walls
  * 
  * output       : none
  * 
  * labySol(2, 2, 20, [1, 4], [0, 2, 3, 4, 5])
  */
-var labySol = function(nx, ny, pas, mursH, mursV) {
+var labySol = function(nx, ny, pas, murs) {
     // https://interstices.info/lalgorithme-de-pledge/
     
     // Declaration of variables
@@ -363,6 +485,10 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
     var exit = nx * ny - 1; // Exit position
     var nbRot = 0;          // Number of rotations
     var along = false;      // Go along the wall
+    
+    // Horizontal and vertical walls
+    var mursH = murs[0];
+    var mursV = murs[1];
     
     // Origin point of the labyrinth, top left
     var ox = - (nx * pas) / 2;
@@ -502,7 +628,7 @@ var labySol = function(nx, ny, pas, mursH, mursV) {
  * 
  * output      : none
  * 
- * laby(16, 9, 20)
+ * creerLaby(16, 9, 20)
  */
 var laby = function(nx, ny, pas) {
     
@@ -514,112 +640,19 @@ var laby = function(nx, ny, pas) {
     pas = pas === 0 ? pas : pas/pas * pas;
     pas = pas != pas ? 10 : pas;
     
-    // Declaration of global variables to the loop
-    var mursH = iota(  nx    * (ny+1) - 1); // Set of horizontal walls - exit
-    var mursV = iota( (nx+1) *  ny       ); // Set of vertical walls
-    var cave = [];                          // Cells that are part of the cavity
-    var front = [];                         // Set of frontal cells
-    var cavity;                             // Next cell added to the cave[]
-    
-    // Remove the entrance wall
-    mursH = retirer(mursH, 0);
-    
-    // Initial cavity cell
-    cavity = randomInt(nx * ny);
-    
-    // Until all the cells are part of the cavity
-    do {
-        
-        // Add the cell to the cavity
-        cave.push(cavity);
-        
-        // Coordinates of the new cell cavity
-        var x = xVal(cavity, nx);
-        var y = yVal(cavity, nx);
-        
-        // All the adjacent cells of the new cavity
-        var neighbour = voisins(x, y, nx, ny);
-        
-        // Cells that are not part of the cavity are added to front[]
-        do {
-            var cell = neighbour.pop();
-            if ( !contient(cave, cell) && !contient(front, cell)) {
-                front.push(cell);
-            }
-        } while (neighbour.length);
-        
-        if (front.length) { // There are still frontal cells
-            
-            // Choice of a new cavity cell from the set of frontal cells
-            var nextCav = front[randomInt(front.length)];
-            
-            // Coordinates of this cavity cell
-            x = xVal(nextCav, nx);
-            y = yVal(nextCav, nx);
-            
-            // The frontal cells of this cavity cell
-            neighbour = voisins(x, y, nx, ny);
-            
-            // Initialize the end of loop indicator for the following loop
-            cavity = -1;
-            
-            // Among all the frontal cells of the cavity cell, which one is a
-            // cavity cell?
-            do {
-                // From the adjacent cells, we randomly pick one of them
-                var cell = neighbour[randomInt(neighbour.length)];
-                
-                // And we remove it from the neighboring cells
-                neighbour = retirer(neighbour, cell);
-                
-                // Is neighboring cell part of the cavity?
-                if (contient(cave, cell)) { // If yes
-                    
-                    // Get the coordinates of this cavity, in order to remove
-                    // the wall, later.
-                    x = xVal(cell, nx);
-                    y = yVal(cell, nx);
-                    
-                    // It's time to exit the loop
-                    cavity = cell;
-                }
-            } while (cavity == -1);
-            
-        } else { // No more frontal cells, the labyrinth is done, yay :-)
-            nextCav = -1;
-        }
-        
-        // Remove the wall between the two cavities
-        if (nextCav != -1) {
-            if (nextCav + nx == cavity) {        // nextCav is above
-                mursH = retirer(mursH, nx * y + x );
-            } else if (nextCav + 1 == cavity) {  // nextCav is on the left
-                mursV = retirer(mursV, (nx+1) * y + x);
-            } else if (cavity + 1 == nextCav ) { // nextCav is on the right
-                mursV = retirer(mursV, (nx+1) * y + x + 1 );
-            } else if (cavity + nx == nextCav) { // nextCav is below
-                mursH = retirer(mursH, nx * (y+1) + x );
-            }
-        }
-        
-        // The new cavity cell for the next loop
-        cavity = nextCav;
-        
-        // Remove the cavity cell from the set of frontal cells
-        front = retirer(front, cavity);
-        
-    } while (cavity != -1);
+    // Generate the walls of the labyrinth
+    var murs = creerLaby(nx, ny);
     
     // No labyrinth without its visual representation
-    labyDraw(nx, ny, pas, mursH, mursV);
+    afficherLaby(nx, ny, pas, murs);
     
     // No representation without a solution
-    //labySol(nx, ny, pas, mursH, mursV);
+    // labySol(nx, ny, pas, murs);
 };
 
 // If we want to calculate an average number of steps per labyrinth
-// for (var i = 0; i < 100; i++)
-// We get 309 000 steps per labyrinth (without labysol) for:
+for (var i = 0; i < 100; i++)
+// We get 374 000 steps per labyrinth (without labysol) for:
 laby(10, 9, 20);
 
 // laby(8, 4, 40);
