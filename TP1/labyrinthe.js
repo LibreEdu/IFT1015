@@ -556,13 +556,13 @@ var labySol = function(nx, ny, pas, murs) {
     
     // Turn right
     var turnRight = function() {
-        rt(90); 
+        rt(90);
         nbRot--;
     };
     
     // Turn left
     var turnLeft = function() {
-        lt(90); 
+        lt(90);
         if (++nbRot == 0) {
             along = false;
         }
