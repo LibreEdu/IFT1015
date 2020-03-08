@@ -168,10 +168,10 @@ var testRetirer = function(){
  */
 var voisins = function(x, y, nx, ny) {
     var output = [];
-    if (y) {          // Top cell
+    if (y != 0) {       // Top cell
         output.push(nx * (y-1) + x);
     }
-    if (x) {          // Left cell
+    if (x != 0) {      // Left cell
         output.push(nx * y + x - 1);
     }
     if (x < (nx-1)) { // Right cell
@@ -559,13 +559,13 @@ var labySol = function(nx, ny, pas, murs) {
     
     // Turn right
     var turnRight = function() {
-        rt(90); 
+        rt(90);
         nbRot--;
     };
     
     // Turn left
     var turnLeft = function() {
-        lt(90); 
+        lt(90);
         if (++nbRot == 0) {
             along = false;
         }
