@@ -315,10 +315,13 @@ var creerLaby = function(nx, ny) {
             }
         } while (neighbour.length);
         
+        // Next cell to be added to the cavity
+        var nextCav
+        
         if (front.length) { // There are still frontal cells
             
             // Choice of a new cavity cell from the set of frontal cells
-            var nextCav = front[randomInt(front.length)];
+            nextCav = front[randomInt(front.length)];
             
             // Coordinates of this cavity cell
             x = xVal(nextCav, nx);
