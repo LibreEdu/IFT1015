@@ -191,16 +191,10 @@ var testRetirer = function(){
  */
 var voisins = function(x, y, nx, ny) {
     var output = [];
-    // eli-comm
-    // cest pas tres clair
-    // que cette condition va etre true quand y > 0 seulement
-    if (y) {          // Top cell
+    if (y > 0) {          // Top cell
         output.push(nx * (y-1) + x);
     }
-    // eli-comm
-    // cest pas tres clair
-    // qu cette condition va etre true quand x > 0 seulement
-    if (x) {          // Left cell
+    if (x > 0) {          // Left cell
         output.push(nx * y + x - 1);
     }
     if (x < (nx-1)) { // Right cell
