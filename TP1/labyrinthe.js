@@ -90,9 +90,10 @@ var arrayElementIndex = function(tab, x) {
     
     var i = 0;
     while (i < tab.length) {
-        if (tab[i++] == x) {
+        if (tab[i] == x) {
             return i;
         }
+        i++;
     }
     return -1;
 };
@@ -313,32 +314,32 @@ var testRandomInt = function(){
 var ecraseMur = function (arrMurs, arrCav, arrPosCell  ){
 
     // arrMurs[0] mursH
-
     // arrMurs[1]mursV
     // arrPosCell [0]nx
     // arrPosCell [1]x
     // arrPosCell [2]y
     // arrCav[0]-nextCav
      // arrCav[1]-cavity
+     const MURS_H = 0;
+     const MURS_V = 1;
+     const NX = 0;
+     const X = 1;
+     const Y = 2;
+     const NEXT_CAV = 0;
+     const CAVITY = 1;
+     
 
-        // if (nextCav + nx == cavity) {        // nextCav is above
-        //     mursH = retirer(mursH, nx * y + x );
-        // } else if (nextCav + 1 == cavity) {  // nextCav is on the left
-        //     mursV = retirer(mursV, (nx+1) * y + x);
-        // } else if (cavity + 1 == nextCav ) { // nextCav is on the right
-        //     mursV = retirer(mursV, (nx+1) * y + x + 1 );
-        // } else if (cavity + nx == nextCav) { // nextCav is below
-        //     mursH = retirer(mursH, nx * (y+1) + x );
-        // }
-        if (arrCav[0] + arrPosCell[0] == arrCav[1]) {        // nextCav is above
-            arrMurs[0] = retirer(arrMurs[0], arrPosCell[0]  * arrPosCell[2] + arrPosCell[1] );
-        } else if (arrCav[0] + 1 == arrCav[1]) {  // nextCav is on the left
-            arrMurs[1] = retirer(arrMurs[1], (arrPosCell[0] +1) * arrPosCell[2] + arrPosCell[1]);
-        } else if (arrCav[1] + 1 == arrCav[0] ) { // nextCav is on the right
-            arrMurs[1] = retirer(arrMurs[1], (arrPosCell[0] +1) * arrPosCell[2] + arrPosCell[1] + 1 );
-        } else if (arrCav[1] + arrPosCell[0]  == arrCav[0]) { // nextCav is below
-            arrMurs[0] = retirer(arrMurs[0], arrPosCell[0]  * (arrPosCell[2]+1) + arrPosCell[1] );
+     const CAVITY = 1;
+        if (arrCav[NEXT_CAV] + arrPosCell[NX] == arrCav[CAVITY]) {        // nextCav is above
+            arrMurs[MURS_H] = retirer(arrMurs[MURS_H], arrPosCell[NX]  * arrPosCell[Y] + arrPosCell[X] );
+        } else if (arrCav[NEXT_CAV] + 1 == arrCav[CAVITY]) {  // nextCav is on the left
+            arrMurs[MURS_V] = retirer(arrMurs[MURS_V], (arrPosCell[NX] +1) * arrPosCell[Y] + arrPosCell[X]);
+        } else if (arrCav[CAVITY] + 1 == arrCav[NEXT_CAV] ) { // nextCav is on the right
+            arrMurs[MURS_V] = retirer(arrMurs[MURS_V], (arrPosCell[NX] +1) * arrPosCell[Y] + arrPosCell[X] + 1 );
+        } else if (arrCav[CAVITY] + arrPosCell[NX]  == arrCav[NEXT_CAV]) { // nextCav is below
+            arrMurs[MURS_H] = retirer(arrMurs[MURS_H], arrPosCell[NX]  * (arrPosCell[Y]+1) + arrPosCell[X] );
         }
+        return [arrMurs[MURS_H],arrMurs[1]];
 
  
 };
@@ -543,15 +544,16 @@ neighbour = [];
 // end intialisation
 
 var arrCellToConnect = [];
+var arrtempResult = [];
 var cellToJoin ;
 
-print("initialisation fornt: "+ front);
-print("initialisation cave: "+ cave);
-
+// print("initialisation fornt: "+ front);
+// print("initialisation cave: "+ cave);
+// print("-----------------------------------");
 // Todo untill cave-array have all cell in the grid
 while ( cave.length != cellQtty){
-    print("cellQtty " + cellQtty);
-    print("cave.length = " + cave.length);
+    // print("cellQtty " + cellQtty);
+    // print("cave.length = " + cave.length);
 
     // Pick random cell from front-array(to turn it into a cave)
     var nextCav = front[randomInt(front.length)];
@@ -561,6 +563,9 @@ while ( cave.length != cellQtty){
 
     // find-the-neighbors of the picked cell from front-array
     neighbour = voisins(x, y, nx, ny);
+
+    // print("picked from frontarray to turn into cave: " + nextCav);
+    // print("voisins of "+ nextCav +" - "+ neighbour);
     // if neighbour cells are not in cave-array and not in front-array(already included) then 
     // add the neighbor cells to front-array
     for (var elemctr = 0 ;elemctr < neighbour.length ; elemctr++ ){
@@ -573,16 +578,22 @@ while ( cave.length != cellQtty){
 
     }
     
+    // print("before removing "+ nextCav+" front is  "+ front);
     // splice the picked cell from front array 
+    // print("eliminating "+ nextCav+" with index "+ arrayElementIndex(front,nextCav));
     front.splice(arrayElementIndex(front,nextCav),1) ; 
+
+    // print("after removing " +nextCav+ " front is " + front );
     // push the picked cell from front-array to cave-array 
     cave = ajouter(cave,nextCav);
+
+    // print("after adding " +nextCav+ " to to cave,cave is " + cave );
     // end if
 
     // breaks the wall to join the cells to grow the cave:
     // search neighbors in cave-array
     // to break the middle wall
-
+    arrCellToConnect=[];
     for (var itNeig = 0 ;itNeig < neighbour.length ; itNeig++ ){
         
         if(contient(cave, neighbour[itNeig])){
@@ -590,9 +601,11 @@ while ( cave.length != cellQtty){
             arrCellToConnect = ajouter(arrCellToConnect,neighbour[itNeig]);
 
         }
-    }
+    } // for
         //     if find more than one then
         //     randomly pick one
+        // print("cell to break a wall: " + nextCav + " her neighbors : " + neighbour);
+        // print("cells to connect to(neigbors already in the cave): "+arrCellToConnect);
         if (arrCellToConnect.length > 1){
             
             cellToJoin = arrCellToConnect[randomInt(arrCellToConnect.length)];
@@ -603,35 +616,21 @@ while ( cave.length != cellQtty){
 
         } // end if
 
-    
+    // print("connecting to the cell: "+ cellToJoin);
     // end create-the-cell-connection:    
-    
-            // arrMurs[0] mursH
-            // arrMurs[1]mursV
-            // arrPosCell [0]nx
-            // arrPosCell [1]x
-            // arrPosCell [2]y
-            // arrCav[0]-nextCav
-             // arrCav[1]-cavity
-    
+   
+             x = xVal(cellToJoin, nx);
+             y = yVal(cellToJoin, nx);
 
-
-    ecraseMur([mursH,mursV], [nextCav,cellToJoin], [nx,x,y]);
-    
+             arrtempResult = [];
+             // will received an array with murH and mursV
+             arrtempResult = ecraseMur([mursH,mursV], [nextCav,cellToJoin], [nx,x,y]);
+             mursH = arrtempResult[0];
+             mursV =  arrtempResult[1];
 }  // end todo
-
-//////////////////////////////////    
-    // Output
-    // var murs = Array(2);
-    // murs[0] = mursH;
-    // murs[1] = mursV;
-    
+ 
     return [mursH, mursV];
 };
-
-
-
-
 
 /* Draw the labyrinth
  * 
