@@ -313,6 +313,7 @@ var testRandomInt = function(){
 var ecraseMur = function (arrMurs, arrCav, arrPosCell  ){
 
     // arrMurs[0] mursH
+
     // arrMurs[1]mursV
     // arrPosCell [0]nx
     // arrPosCell [1]x
@@ -544,8 +545,13 @@ neighbour = [];
 var arrCellToConnect = [];
 var cellToJoin ;
 
+print("initialisation fornt: "+ front);
+print("initialisation cave: "+ cave);
+
 // Todo untill cave-array have all cell in the grid
 while ( cave.length != cellQtty){
+    print("cellQtty " + cellQtty);
+    print("cave.length = " + cave.length);
 
     // Pick random cell from front-array(to turn it into a cave)
     var nextCav = front[randomInt(front.length)];
@@ -584,7 +590,7 @@ while ( cave.length != cellQtty){
             arrCellToConnect = ajouter(arrCellToConnect,neighbour[itNeig]);
 
         }
-
+    }
         //     if find more than one then
         //     randomly pick one
         if (arrCellToConnect.length > 1){
@@ -597,7 +603,7 @@ while ( cave.length != cellQtty){
 
         } // end if
 
-    }
+    
     // end create-the-cell-connection:    
     
             // arrMurs[0] mursH
@@ -610,20 +616,17 @@ while ( cave.length != cellQtty){
     
 
 
-    // var ecraseMur = function ([mursH,mursV], []arrCav, [nx,x,y]  ){
-
-
-
+    ecraseMur([mursH,mursV], [nextCav,cellToJoin], [nx,x,y]);
     
 }  // end todo
 
 //////////////////////////////////    
     // Output
-    var murs = Array(2);
-    murs[0] = mursH;
-    murs[1] = mursV;
+    // var murs = Array(2);
+    // murs[0] = mursH;
+    // murs[1] = mursV;
     
-    return murs;
+    return [mursH, mursV];
 };
 
 
@@ -882,8 +885,10 @@ var laby = function(nx, ny, pas) {
     pas = pas === 0 ? pas : pas/pas * pas;
     pas = pas != pas ? 10 : pas;
     
+// eli-com
+// testing the version 2 of the function     
     // Generate the walls of the labyrinth
-    var murs = creerLaby(nx, ny);
+    var murs = creerLabyII(nx, ny);
     
     // No labyrinth without its visual representation
     afficherLaby(nx, ny, pas, murs);
@@ -895,7 +900,7 @@ var laby = function(nx, ny, pas) {
 // If we want to calculate an average number of steps per labyrinth
 // for (var i = 0; i < 100; i++)
 // We get 374 000 steps per labyrinth (without labysol) for:
-laby(10, 9, 20);
+laby(4, 4, 20);
 
 // laby(8, 4, 40);
 // laby(16, 9, 20);
