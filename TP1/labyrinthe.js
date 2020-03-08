@@ -76,29 +76,6 @@ var contient = function(tab, x) {
     return false;
 };
 
-/* Indicate if an array contains a number.
- * 
- * tab (array)     : array of numbers
- * x   (number)    : number
- * 
- * output (position): true if the array contains the number, false if not
- * 
- * contient([9, 2, 5], 2) = true
- * contient([9, 2, 5], 4) = false
- */
-var arrayElementIndex = function(tab, x) {
-    
-    var i = 0;
-    while (i < tab.length) {
-        if (tab[i++] == x) {
-            return i;
-        }
-    }
-    return -1;
-};
-
-
-
 // Unit test of the contient function
 var testContient = function(){
     assert( contient([9, 2, 5], 2) == true  );
@@ -191,10 +168,10 @@ var testRetirer = function(){
  */
 var voisins = function(x, y, nx, ny) {
     var output = [];
-    if (y > 0) {          // Top cell
+    if (y) {          // Top cell
         output.push(nx * (y-1) + x);
     }
-    if (x > 0) {          // Left cell
+    if (x) {          // Left cell
         output.push(nx * y + x - 1);
     }
     if (x < (nx-1)) { // Right cell
@@ -290,52 +267,7 @@ var testRandomInt = function(){
 
 // testRandomInt();
 
-// eli-com
-// function taken from creerlaby to 
-// improve readability
 
-/* Remove wall between cells
- * 
- * nx  (number) : number of columns
- * ny  (number) : number of lines
- * pas (number) : cell size
- * murs (array) : horizontal and vertical walls
- * 
- * output       : none
- * 
- */
-var ecraseMur = function (arrMurs, arrCav, arrPosCell  ){
-
-    // arrMurs[0] mursH
-
-    // arrMurs[1]mursV
-    // arrPosCell [0]nx
-    // arrPosCell [1]x
-    // arrPosCell [2]y
-    // arrCav[0]-nextCav
-     // arrCav[1]-cavity
-
-        // if (nextCav + nx == cavity) {        // nextCav is above
-        //     mursH = retirer(mursH, nx * y + x );
-        // } else if (nextCav + 1 == cavity) {  // nextCav is on the left
-        //     mursV = retirer(mursV, (nx+1) * y + x);
-        // } else if (cavity + 1 == nextCav ) { // nextCav is on the right
-        //     mursV = retirer(mursV, (nx+1) * y + x + 1 );
-        // } else if (cavity + nx == nextCav) { // nextCav is below
-        //     mursH = retirer(mursH, nx * (y+1) + x );
-        // }
-        if (arrCav[0] + arrPosCell[0] == arrCav[1]) {        // nextCav is above
-            arrMurs[0] = retirer(arrMurs[0], arrPosCell[0]  * arrPosCell[2] + arrPosCell[1] );
-        } else if (arrCav[0] + 1 == arrCav[1]) {  // nextCav is on the left
-            arrMurs[1] = retirer(arrMurs[1], (arrPosCell[0] +1) * arrPosCell[2] + arrPosCell[1]);
-        } else if (arrCav[1] + 1 == arrCav[0] ) { // nextCav is on the right
-            arrMurs[1] = retirer(arrMurs[1], (arrPosCell[0] +1) * arrPosCell[2] + arrPosCell[1] + 1 );
-        } else if (arrCav[1] + arrPosCell[0]  == arrCav[0]) { // nextCav is below
-            arrMurs[0] = retirer(arrMurs[0], arrPosCell[0]  * (arrPosCell[2]+1) + arrPosCell[1] );
-        }
-
- 
-};
 
 
 /* Generate the walls of the labyrinth
@@ -375,7 +307,6 @@ var creerLaby = function(nx, ny) {
         // All the adjacent cells of the new cavity
         var neighbour = voisins(x, y, nx, ny);
         
-
         // Cells that are not part of the cavity are added to front[]
         do {
             var cell = neighbour.pop();
@@ -385,8 +316,7 @@ var creerLaby = function(nx, ny) {
         } while (neighbour.length);
         
         if (front.length) { // There are still frontal cells
-            // eli--comm
-            // nextCav est declare ici mais accede dans la branche else
+            
             // Choice of a new cavity cell from the set of frontal cells
             var nextCav = front[randomInt(front.length)];
             
@@ -400,9 +330,6 @@ var creerLaby = function(nx, ny) {
             // Initialize the end of loop indicator for the following loop
             cavity = -1;
             
-// eli-comm
-// ce quoi frontal cell?
-//------------------------------------------
             // Among all the frontal cells of the cavity cell, which one is a
             // cavity cell?
             do {
@@ -426,14 +353,11 @@ var creerLaby = function(nx, ny) {
             } while (cavity == -1);
             
         } else { // No more frontal cells, the labyrinth is done, yay :-)
-            // eli-comm
-            // nextCav est declare dans la branche if
             nextCav = -1;
         }
         
         // Remove the wall between the two cavity cells
         if (nextCav != -1) {
-            // ecraseMur ()
             if (nextCav + nx == cavity) {        // nextCav is above
                 mursH = retirer(mursH, nx * y + x );
             } else if (nextCav + 1 == cavity) {  // nextCav is on the left
@@ -460,169 +384,6 @@ var creerLaby = function(nx, ny) {
     
     return murs;
 };
-
-
-// eli-com
-// changing the logic of the function
-
-/*
-intialisation
-add random cell to cave-array
-find-the-neighbors of the random cell and them to front-array 
-end intialisation
-
-Todo untill cave-array have all cell in the grid
-Pick random cell from front-array(to turn it into a cave)
-find-the-neighbors of the picked cell from front-array
-if neiggbor cell is not in cave-array and not in front-array(already included) then 
-add the neighbor cell to front-array
-
-create-the-cell-connection:
-    search neighbors in cave-array
-    if find more than one then
-    randomly pick on
-    else
-    take the only one 
-    en if
-    break-the-wall
-end create-the-cell-connection:    
-    
-splice the picked cell from front array 
-push the picked cell from front-array to cave-array 
-end if
-
-end todo
-*/
-
-
-var creerLabyII = function(nx, ny) {
-    
-    // Declaration of global variables to the loop
-    var mursH = iota(  nx    * (ny+1) - 1); // Set of horizontal walls - exit
-    var mursV = iota( (nx+1) *  ny       ); // Set of vertical walls
-    var cave = [];                          // Cells that are part of the cavity
-    var front = [];                         // Set of frontal cells
-    var cavity;                             // Next cell added to the cave[]
-
-    var cellQtty = nx * ny;
-    
-    // Remove the entrance wall
-    mursH = retirer(mursH, 0);
-    
-    // Initial cavity cell
-    cavity = randomInt(nx * ny);
-
-
-// intialisation
-// add random cell to cave-array
-cavity = randomInt(nx * ny);
-
-// cave.push(cavity);
-cave = ajouter(cave, cavity);
-
-// find-the-neighbors of the random cell and add them to front-array 
-
- // Coordinates needed to find neighbors
- var x = xVal(cavity, nx);
- var y = yVal(cavity, nx);
-
- var neighbour = voisins(x, y, nx, ny);
-//ajouter = function(tab, x) {
-for(var i = 0; i < neighbour.length;i++) {
-        // front.push(neighbour[i]);
-        front =  ajouter(front,neighbour[i]);
-} ;
-
-neighbour = [];
-// end intialisation
-
-var arrCellToConnect = [];
-var cellToJoin ;
-
-print("initialisation fornt: "+ front);
-print("initialisation cave: "+ cave);
-
-// Todo untill cave-array have all cell in the grid
-while ( cave.length != cellQtty){
-    print("cellQtty " + cellQtty);
-    print("cave.length = " + cave.length);
-
-    // Pick random cell from front-array(to turn it into a cave)
-    var nextCav = front[randomInt(front.length)];
-    
-    x = xVal(nextCav, nx);
-    y = yVal(nextCav, nx);
-
-    // find-the-neighbors of the picked cell from front-array
-    neighbour = voisins(x, y, nx, ny);
-    // if neighbour cells are not in cave-array and not in front-array(already included) then 
-    // add the neighbor cells to front-array
-    for (var elemctr = 0 ;elemctr < neighbour.length ; elemctr++ ){
-        
-        if(!contient(cave, neighbour[elemctr]) && !contient(front,  neighbour[elemctr])){
-
-            front = ajouter(front,neighbour[elemctr]);
-
-        }
-
-    }
-    
-    // splice the picked cell from front array 
-    front.splice(arrayElementIndex(front,nextCav),1) ; 
-    // push the picked cell from front-array to cave-array 
-    cave = ajouter(cave,nextCav);
-    // end if
-
-    // breaks the wall to join the cells to grow the cave:
-    // search neighbors in cave-array
-    // to break the middle wall
-
-    for (var itNeig = 0 ;itNeig < neighbour.length ; itNeig++ ){
-        
-        if(contient(cave, neighbour[itNeig])){
-
-            arrCellToConnect = ajouter(arrCellToConnect,neighbour[itNeig]);
-
-        }
-    }
-        //     if find more than one then
-        //     randomly pick one
-        if (arrCellToConnect.length > 1){
-            
-            cellToJoin = arrCellToConnect[randomInt(arrCellToConnect.length)];
-
-        }else {//     take the only one 
-
-            cellToJoin =  arrCellToConnect[0];
-
-        } // end if
-
-    
-    // end create-the-cell-connection:    
-    
-            // arrMurs[0] mursH
-            // arrMurs[1]mursV
-            // arrPosCell [0]nx
-            // arrPosCell [1]x
-            // arrPosCell [2]y
-            // arrCav[0]-nextCav
-             // arrCav[1]-cavity
-    
-
-
-    ecraseMur([mursH,mursV], [nextCav,cellToJoin], [nx,x,y]);
-    
-}  // end todo
-
-//////////////////////////////////    
-    // Output
-    // var murs = Array(2);
-    // murs[0] = mursH;
-    // murs[1] = mursV;
-    
-    return [mursH, mursV];
-};
-
 
 
 
@@ -795,13 +556,13 @@ var labySol = function(nx, ny, pas, murs) {
     
     // Turn right
     var turnRight = function() {
-        rt(90);
+        rt(90); 
         nbRot--;
     };
     
     // Turn left
     var turnLeft = function() {
-        lt(90);
+        lt(90); 
         if (++nbRot == 0) {
             along = false;
         }
@@ -879,10 +640,8 @@ var laby = function(nx, ny, pas) {
     pas = pas === 0 ? pas : pas/pas * pas;
     pas = pas != pas ? 10 : pas;
     
-// eli-com
-// testing the version 2 of the function     
     // Generate the walls of the labyrinth
-    var murs = creerLabyII(nx, ny);
+    var murs = creerLaby(nx, ny);
     
     // No labyrinth without its visual representation
     afficherLaby(nx, ny, pas, murs);
@@ -894,7 +653,7 @@ var laby = function(nx, ny, pas) {
 // If we want to calculate an average number of steps per labyrinth
 // for (var i = 0; i < 100; i++)
 // We get 374 000 steps per labyrinth (without labysol) for:
-laby(4, 4, 20);
+laby(10, 9, 20);
 
 // laby(8, 4, 40);
 // laby(16, 9, 20);
