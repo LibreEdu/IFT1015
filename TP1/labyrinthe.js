@@ -295,7 +295,7 @@ var creerLaby = function(nx, ny) {
     cavity = randomInt(nx * ny);
     
     // Until all the cells are part of the cavity
-    do {
+    while (true) {
         
         // Add the cell to the cavity
         cave.push(cavity);
@@ -316,7 +316,7 @@ var creerLaby = function(nx, ny) {
         } while (neighbour.length);
         
         // Next cell to be added to the cavity
-        var nextCav
+        var nextCav;
         
         if (front.length) { // There are still frontal cells
             
@@ -355,8 +355,8 @@ var creerLaby = function(nx, ny) {
                 }
             } while (cavity == -1);
             
-        } else { // No more frontal cells, the labyrinth is done, yay :-)
-            nextCav = -1;
+        } else {   // No more frontal cells, the labyrinth is done, yay :-)
+            break; // While exit
         }
         
         // Remove the wall between the two cavity cells
@@ -378,7 +378,7 @@ var creerLaby = function(nx, ny) {
         // Remove the cavity cell from the set of frontal cells
         front = retirer(front, cavity);
         
-    } while (cavity != -1);
+    } // End of the while
     
     // Output
     var murs = Array(2);
