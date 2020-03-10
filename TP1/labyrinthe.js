@@ -6,19 +6,19 @@
  * Library to draw labyrinth.
  * 
  * List of functions:
- * ioata(n)                  : return an array containing numbers from 0 to n-1
- * contient(tab, x)          : indicate if tab contains x
- * ajouter(tab, x)           : if x is not in tab, add it
- * retirer(tab, x)           : if x is in tab, remove it
- * voisins(x, y, nx, ny)     : return cells close to (x, y) in a (nx, ny) grid
- * xVal(cellNumber, nx)      : return cell abscissa in a grid of nx columns
- * yVal(cellNumber, nx)      : return cell y-intercept in a grid of nx columns
- * randomInt(max)            : return a natural number < max
+ * ioata(n)                   : return an array containing numbers from 0 to n-1
+ * contient(tab, x)           : indicate if tab contains x
+ * ajouter(tab, x)            : if x is not in tab, add it
+ * retirer(tab, x)            : if x is in tab, remove it
+ * voisins(x, y, nx, ny)      : return cells close to (x, y) in a (nx, ny) grid
+ * xVal(cellNumber, nx)       : return cell abscissa in a grid of nx columns
+ * yVal(cellNumber, nx)       : return cell y-intercept in a grid of nx columns
+ * randomInt(max)             : return a natural number < max
  * removeWall(cavity, nextCav, nx, walls): remove wall btw cavity and the cell
- * creerLaby(nx, ny)         : generate walls of a nx * ny labyrinth
- * afficherLaby(nx, ny, pas, murs): display the walls of the labyrinth
- * labySol(nx, ny, pas, murs): solve the labyrinth
- * laby(nx, ny, pas)         : a labyrinth and its solution
+ * creerLaby(nx, ny)          : generate walls of a nx * ny labyrinth
+ * afficherLaby(nx, ny, pas, walls): display the walls of the labyrinth
+ * labySol(nx, ny, pas, walls): solve the labyrinth
+ * laby(nx, ny, pas)          : a labyrinth and its solution
  */
 
 
@@ -428,21 +428,21 @@ var creerLaby = function(nx, ny) {
  * nx  (number) : number of columns
  * ny  (number) : number of lines
  * pas (number) : cell size
- * murs (array) : horizontal and vertical walls
+ * walls (array): horizontal and vertical walls
  * 
  * output       : none
  * 
  * afficherLaby(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
  */
-var afficherLaby = function(nx, ny, pas, murs) {
+var afficherLaby = function(nx, ny, pas, walls) {
     
     // Origin point of the labyrinth, top left
     var ox = - (nx * pas) / 2;
     var oy = (ny * pas) / 2;
     
     // Horizontal and vertical walls
-    var mursH = murs[0];
-    var mursV = murs[1];
+    var mursH = walls[0];
+    var mursV = walls[1];
     
     // Clear screen
     cs();
@@ -506,13 +506,13 @@ var afficherLaby = function(nx, ny, pas, murs) {
  * nx  (number) : number of columns
  * ny  (number) : number of lines
  * pas (number) : cell size
- * murs (array) : horizontal and vertical walls
+ * walls (array): horizontal and vertical walls
  * 
  * output       : none
  * 
  * labySol(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
  */
-var labySol = function(nx, ny, pas, murs) {
+var labySol = function(nx, ny, pas, walls) {
     // https://interstices.info/lalgorithme-de-pledge/
     
     // Declaration of variables
@@ -522,8 +522,8 @@ var labySol = function(nx, ny, pas, murs) {
     var along = false;      // Go along the wall
     
     // Horizontal and vertical walls
-    var mursH = murs[0];
-    var mursV = murs[1];
+    var mursH = walls[0];
+    var mursV = walls[1];
     
     // Origin point of the labyrinth, top left
     var ox = - (nx * pas) / 2;
