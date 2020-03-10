@@ -676,13 +676,13 @@ var laby = function(nx, ny, pas) {
     pas = pas != pas ? 10 : pas;
     
     // Generate the walls of the labyrinth
-    var murs = creerLaby(nx, ny);
+    var walls = creerLaby(nx, ny);
     
     // No labyrinth without its visual representation
-    afficherLaby(nx, ny, pas, murs);
+    afficherLaby(nx, ny, pas, walls);
     
     // No representation without a solution
-    // labySol(nx, ny, pas, murs);
+    // labySol(nx, ny, pas, walls);
 };
 
 // If we want to calculate an average number of steps per labyrinth
