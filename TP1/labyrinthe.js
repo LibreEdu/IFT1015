@@ -383,12 +383,9 @@ var creerLaby = function(nx, ny) {
             // The frontal cells of this cavity cell
             neighbour = voisins(x, y, nx, ny);
             
-            // Initialize the end of loop indicator for the following loop
-            cavity = -1;
-            
             // Among all the frontal cells of the cavity cell, which one is a
             // cavity cell?
-            do {
+            while(true) {
                 // From the adjacent cells, we randomly pick one of them
                 var cell = neighbour[randomInt(neighbour.length)];
                 
@@ -399,11 +396,14 @@ var creerLaby = function(nx, ny) {
                 if (contient(cave, cell)) {
                     // We're getting the cell number
                     cavity = cell;
+                    
+                    // It's time to come out of the small loop
+                    break;
                 }
-            } while (cavity == -1);
+            }
             
         } else {   // No more frontal cells, the labyrinth is done, yay :-)
-            break; // It's time to come out of the loop
+            break; // It's time to come out of the big loop
         }
         
         // Remove the wall between the cavity and the new cell
