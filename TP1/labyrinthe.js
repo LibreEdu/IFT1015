@@ -344,6 +344,11 @@ var creerLaby = function(nx, ny) {
     // All the walls of the labyrinth
     var walls = [mursH, mursV];
     
+    if (nx == 1 && ny == 1) {
+        // The labyrinth is already done
+        return walls;
+    }
+    
     // Initial cavity cell
     cavity = randomInt(nx * ny);
     
@@ -667,13 +672,18 @@ var labySol = function(nx, ny, pas, walls) {
  */
 var laby = function(nx, ny, pas) {
     
-    // Robustness of the arguments: laby("", "", "") => laby(2, 2, 10)
-    nx = Math.max( Math.round(Math.abs(nx)), 2 );
-    ny = Math.max( Math.round(Math.abs(ny)), 2 );
-    nx = nx != nx ? 2 : nx;
-    ny = ny != ny ? 2 : ny;
+    // Robustness of the arguments: laby("", "", "") => laby(0, 0, 0)
+    nx = Math.round(Math.abs(nx));
+    ny = Math.round(Math.abs(ny));
+    nx = nx != nx ? 0 : nx;
+    ny = ny != ny ? 0 : ny;
     pas = pas === 0 ? pas : pas/pas * pas;
-    pas = pas != pas ? 10 : pas;
+    pas = pas != pas ? 0 : pas;
+    
+    // A zero-dimensional labyrinth!
+    if (nx == 0 || ny == 0) {
+        return;
+    }
     
     // Generate the walls of the labyrinth
     var walls = creerLaby(nx, ny);
