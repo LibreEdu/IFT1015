@@ -662,8 +662,8 @@ var labySol = function(nx, ny, pas, walls) {
 
 /* Generate a labyrinth
  * 
- * nx  (number): number of columns, integer ≥ 2
- * ny  (number): number of lines,   integer ≥ 2
+ * nx  (number): number of columns
+ * ny  (number): number of lines
  * pas (number): cell size
  * 
  * output      : none
