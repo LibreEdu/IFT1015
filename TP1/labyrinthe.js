@@ -305,14 +305,14 @@ var removeWall = function(cavity, nextCav, nx, walls) {
 
 // Unit test of the removeWall function
 var testRemoveWall = function(){
-    assert( "" + removeWall(2, 0, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]) == "" +
-                                     [[1, 3,    4], [0, 1, 2, 3, 4, 5]] );
-    assert( "" + removeWall(1, 0, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]) == "" +
-                                     [[1, 2, 3, 4], [0,    2, 3, 4, 5]] );
-    assert( "" + removeWall(0, 1, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]) == "" +
-                                     [[1, 2, 3, 4], [0,    2, 3, 4, 5]] );
-    assert( "" + removeWall(0, 2, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]) == "" +
-                                     [[1, 3,    4], [0, 1, 2, 3, 4, 5]] );
+    assert( "" + removeWall(2, 0, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]])
+        ==  "" +                     [[1, 3,    4], [0, 1, 2, 3, 4, 5]] );
+    assert( "" + removeWall(1, 0, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]])
+        ==  "" +                     [[1, 2, 3, 4], [0,    2, 3, 4, 5]] );
+    assert( "" + removeWall(0, 1, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]])
+        ==  "" +                     [[1, 2, 3, 4], [0,    2, 3, 4, 5]] );
+    assert( "" + removeWall(0, 2, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]])
+        ==  "" +                     [[1, 3,    4], [0, 1, 2, 3, 4, 5]] );
 };
 
 // testRemoveWall();
@@ -464,7 +464,7 @@ var afficherLaby = function(nx, ny, pas, walls) {
         pd();
         
         // Draw the walls of a horizontal line
-        for (var i = 0; i <nx; i++) {
+        for (var i = 0; i < nx; i++) {
             if (contient(mursH, j*nx + i)) { // We have a wall
                 fd(pas);
             } else {                         // No wall
@@ -677,11 +677,11 @@ var laby = function(nx, ny, pas) {
     ny = Math.round(Math.abs(ny));
     nx = nx != nx ? 0 : nx;
     ny = ny != ny ? 0 : ny;
-    pas = pas === 0 ? pas : pas/pas * pas;
+    pas = pas/pas * pas;
     pas = pas != pas ? 0 : pas;
     
     // A zero-dimensional labyrinth!
-    if (nx == 0 || ny == 0) {
+    if (nx == 0 || ny == 0 || pas == 0) {
         return;
     }
     
@@ -692,7 +692,7 @@ var laby = function(nx, ny, pas) {
     afficherLaby(nx, ny, pas, walls);
     
     // No representation without a solution
-    // labySol(nx, ny, pas, walls);
+    labySol(nx, ny, pas, walls);
 };
 
 // If we want to calculate an average number of steps per labyrinth
