@@ -280,7 +280,7 @@ var testRandomInt = function(){
  * 
  * output  (array): the new walls array
  * 
- * removeWall(1, 0, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]])
+ * removeWall(0, 1, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]])
  */
 var removeWall = function(cavity, nextCav, nx, walls) {
     
