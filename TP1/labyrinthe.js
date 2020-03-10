@@ -14,6 +14,7 @@
  * xVal(cellNumber, nx)      : return cell abscissa in a grid of nx columns
  * yVal(cellNumber, nx)      : return cell y-intercept in a grid of nx columns
  * randomInt(max)            : return a natural number < max
+ * removeWall(cavity, nextCav, nx, walls): remove wall btw cavity and the cell
  * creerLaby(nx, ny)         : generate walls of a nx * ny labyrinth
  * afficherLaby(nx, ny, pas, murs): display the walls of the labyrinth
  * labySol(nx, ny, pas, murs): solve the labyrinth
@@ -270,6 +271,55 @@ var testRandomInt = function(){
 
 
 
+/* Remove the wall between the cavity and the new cell
+ * 
+ * cavity  (number): number of the cell of the cavity adjacent to the new cell
+ * nextCav (number): number of the cell that will join the cavity
+ * nx      (number): number of columns
+ * walls    (array): horizontal walls (array) + vertical walls (array)
+ * 
+ * output  (array): the new walls array
+ * 
+ * removeWall(1, 0, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]])
+ */
+var removeWall = function(cavity, nextCav, nx, walls) {
+    
+    // Get the coordinates of the cavity cell
+    var x = xVal(cavity, nx);
+    var y = yVal(cavity, nx);
+    
+    // Remove the wall between the two cavity cells
+    if (nextCav != -1) {
+        if (nextCav + nx == cavity) {                 // nextCav is above
+            walls[0] = retirer(walls[0], nx * y + x );         // mursH
+        } else if (nextCav + 1 == cavity) {           // nextCav is on the left
+            walls[1] = retirer(walls[1], (nx+1) * y + x);      // mursV
+        } else if (cavity + 1 == nextCav ) {          // nextCav is on the right
+            walls[1] = retirer(walls[1], (nx+1) * y + x + 1 ); // mursV
+        } else if (cavity + nx == nextCav) {          // nextCav is below
+            walls[0] = retirer(walls[0], nx * (y+1) + x );     // mursH
+        }
+    }
+    return walls;
+};
+
+// Unit test of the removeWall function
+var testRemoveWall = function(){
+    assert( "" + removeWall(2, 0, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]) == "" +
+                                     [[1, 3,    4], [0, 1, 2, 3, 4, 5]] );
+    assert( "" + removeWall(1, 0, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]) == "" +
+                                     [[1, 2, 3, 4], [0,    2, 3, 4, 5]] );
+    assert( "" + removeWall(0, 1, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]) == "" +
+                                     [[1, 2, 3, 4], [0,    2, 3, 4, 5]] );
+    assert( "" + removeWall(0, 2, 2, [[1, 2, 3, 4], [0, 1, 2, 3, 4, 5]]) == "" +
+                                     [[1, 3,    4], [0, 1, 2, 3, 4, 5]] );
+};
+
+// testRemoveWall();
+
+
+
+
 /* Generate the walls of the labyrinth
  * 
  * nx  (number)  : number of columns, integer ≥ 2
@@ -290,6 +340,9 @@ var creerLaby = function(nx, ny) {
     
     // Remove the entrance wall
     mursH = retirer(mursH, 0);
+    
+    // All the walls of the labyrinth
+    var walls = [mursH, mursV];
     
     // Initial cavity cell
     cavity = randomInt(nx * ny);
@@ -343,34 +396,18 @@ var creerLaby = function(nx, ny) {
                 neighbour = retirer(neighbour, cell);
                 
                 // Is this neighboring cell part of the cavity?
-                if (contient(cave, cell)) { // If yes
-                    
-                    // Get the coordinates of this cell, in order to remove the
-                    // wall, later.
-                    x = xVal(cell, nx);
-                    y = yVal(cell, nx);
-                    
-                    // It's time to exit the loop
+                if (contient(cave, cell)) {
+                    // We're getting the cell number
                     cavity = cell;
                 }
             } while (cavity == -1);
             
         } else {   // No more frontal cells, the labyrinth is done, yay :-)
-            break; // While exit
+            break; // It's time to come out of the loop
         }
         
-        // Remove the wall between the two cavity cells
-        if (nextCav != -1) {
-            if (nextCav + nx == cavity) {        // nextCav is above
-                mursH = retirer(mursH, nx * y + x );
-            } else if (nextCav + 1 == cavity) {  // nextCav is on the left
-                mursV = retirer(mursV, (nx+1) * y + x);
-            } else if (cavity + 1 == nextCav ) { // nextCav is on the right
-                mursV = retirer(mursV, (nx+1) * y + x + 1 );
-            } else if (cavity + nx == nextCav) { // nextCav is below
-                mursH = retirer(mursH, nx * (y+1) + x );
-            }
-        }
+        // Remove the wall between the cavity and the new cell
+        walls = removeWall(cavity, nextCav, nx, walls);
         
         // The new cavity cell for the next loop
         cavity = nextCav;
@@ -380,12 +417,7 @@ var creerLaby = function(nx, ny) {
         
     } // End of the while
     
-    // Output
-    var murs = Array(2);
-    murs[0] = mursH;
-    murs[1] = mursV;
-    
-    return murs;
+    return walls;
 };
 
 
