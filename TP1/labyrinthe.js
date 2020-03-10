@@ -415,7 +415,7 @@ var creerLaby = function(nx, ny) {
         // Remove the cavity cell from the set of frontal cells
         front = retirer(front, cavity);
         
-    } // End of the while
+    } // End of the while: all the cells are part of the cavity
     
     return walls;
 };
