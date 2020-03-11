@@ -760,7 +760,7 @@ var labySol = function(nx, ny, pas) {
     robotPath(nx, ny, pas, walls);
 };
 
-laby(10, 9, 20);
+labySol(10, 9, 20);
 
 // labySol(8, 4, 40);
 // labySol(16, 9, 20);
