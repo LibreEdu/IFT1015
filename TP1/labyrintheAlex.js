@@ -721,7 +721,12 @@ var labySol = function(nx, ny, pas) {
     }
     
     // Generate the walls of the labyrinth
-    var walls = creerLaby(nx, ny);
+    // var walls = creerLaby(nx, ny);
+    
+    // Set for laby(8, 4, x);
+    var mursH = [1,2,3,4,5,6,7,13,14,17,19,24,30,31,32,33,34,35,36,37,38];
+    var mursV = [0,1,3,4,8,9,11,12,14,16,17,18,20,21,22,23,24,26,27,29,32,35];
+    var walls = [mursH, mursV];
     
     // No labyrinth without its visual representation
     afficherLaby(nx, ny, pas, walls);
@@ -735,7 +740,7 @@ var labySol = function(nx, ny, pas) {
 // We get 374 000 steps per labyrinth (without labysol) for:
 // laby(10, 9, 20);
 
-labySol(10, 9, 20);
+labySol(8, 4, 40);
 
 // laby(8, 4, 40);
 // laby(16, 9, 20);
