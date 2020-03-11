@@ -21,7 +21,7 @@
  * naturalNumber(x)           : force x to be a natural number
  * number(x)                  : force x to be a number
  * laby(nx, ny, pas)          : draw a labyrinth
- * laby(nx, ny, pas)          : draw a labyrinth and its solution
+ * labySol(nx, ny, pas)       : draw a labyrinth and its solution
  */
 
 
