@@ -609,7 +609,7 @@ var robotPath = function(nx, ny, pas, walls) {
     };
     
     // Move the cursor inside the labyrinth, in the middle of the first cell
-    mv(ox + pas/2, oy);
+    mv(ox + (3/4)*pas, oy);
     
     // Close the entrance of the labyrinth: no return possible. Good luck :-)
     ajouter(mursH, 0);
@@ -621,7 +621,7 @@ var robotPath = function(nx, ny, pas, walls) {
     pd();
     
     // Moving from the edge to the centre of the cell, on the starting blocks
-    fd(pas/2);
+    fd((3/4)*pas);
     
     // Until we get to the exit
     while (cell != exit) {
