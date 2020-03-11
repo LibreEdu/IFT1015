@@ -621,7 +621,7 @@ var robotPath = function(nx, ny, pas, walls) {
     pd();
     
     // Moving from the edge to the centre of the cell, on the starting blocks
-    fd((3/4)*pas);
+    fd(pas/4);
     
     // Until we get to the exit
     while (cell != exit) {
