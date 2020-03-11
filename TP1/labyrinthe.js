@@ -515,9 +515,9 @@ var afficherLaby = function(nx, ny, pas, walls) {
  * 
  * output       : none
  * 
- * labySol(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
+ * robotPath(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
  */
-var labySol = function(nx, ny, pas, walls) {
+var robotPath = function(nx, ny, pas, walls) {
     // https://interstices.info/lalgorithme-de-pledge/
     
     // Declaration of variables
@@ -692,13 +692,50 @@ var laby = function(nx, ny, pas) {
     afficherLaby(nx, ny, pas, walls);
     
     // No representation without a solution
-    labySol(nx, ny, pas, walls);
+    // labySol(nx, ny, pas, walls);
+};
+
+/* Generate a labyrinth with a roboth path
+ * 
+ * nx  (number): number of columns
+ * ny  (number): number of lines
+ * pas (number): cell size
+ * 
+ * output      : none
+ * 
+ * labySol(16, 9, 20)
+ */
+var labySol = function(nx, ny, pas) {
+    
+    // Robustness of the arguments: laby("", "", "") => laby(0, 0, 0)
+    nx = Math.round(Math.abs(nx));
+    ny = Math.round(Math.abs(ny));
+    nx = nx != nx ? 0 : nx;
+    ny = ny != ny ? 0 : ny;
+    pas = pas/pas * pas;
+    pas = pas != pas ? 0 : pas;
+    
+    // A zero-dimensional labyrinth!
+    if (nx == 0 || ny == 0 || pas == 0) {
+        return;
+    }
+    
+    // Generate the walls of the labyrinth
+    var walls = creerLaby(nx, ny);
+    
+    // No labyrinth without its visual representation
+    afficherLaby(nx, ny, pas, walls);
+    
+    // No representation without a solution
+    robotPath(nx, ny, pas, walls);
 };
 
 // If we want to calculate an average number of steps per labyrinth
 // for (var i = 0; i < 100; i++)
 // We get 374 000 steps per labyrinth (without labysol) for:
 laby(10, 9, 20);
+
+// labySol(10, 9, 20);
 
 // laby(8, 4, 40);
 // laby(16, 9, 20);
