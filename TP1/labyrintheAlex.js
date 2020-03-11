@@ -17,7 +17,9 @@
  * removeWall(cavity, nextCav, nx, walls): remove wall btw cavity and the cell
  * creerLaby(nx, ny)          : generate walls of a nx * ny labyrinth
  * afficherLaby(nx, ny, pas, walls): display the walls of the labyrinth
- * pledge(nx, ny, pas)        : solve the labyrinth
+ * robotPath(nx, ny, pas)     : solve the labyrinth
+ * naturalNumber(x)           : force x to be a natural number
+ * number(x)                  : force x to be a number
  * laby(nx, ny, pas)          : draw a labyrinth
  * laby(nx, ny, pas)          : draw a labyrinth and its solution
  */
@@ -516,9 +518,9 @@ var afficherLaby = function(nx, ny, pas, walls) {
  * 
  * output       : none
  * 
- * pledge(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
+ * robotPath(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
  */
-var pledge = function(nx, ny, pas, walls) {
+var robotPath = function(nx, ny, pas, walls) {
     // https://interstices.info/lalgorithme-de-pledge/
     
     // Declaration of variables
@@ -682,18 +684,55 @@ var pledge = function(nx, ny, pas, walls) {
 
 
 
-estEntierNaturel = function(x) {
+/* Force the data to be a natural number
+ * 
+ * x (number): number to test
+ * 
+ * output    : return the rounding of the absolute value, 0 if not a number.
+ * 
+ * naturalNumber(3)
+ */
+var naturalNumber = function(x) {
     x = Math.round(Math.abs(x));
     return x != x ? 0 : x;
-}
+};
+
+// Unit test of the naturalNumber function
+var testNaturalNumber = function(){
+    assert( naturalNumber(2)   == 2 );
+    assert( naturalNumber(-2)  == 2 );
+    assert( naturalNumber(2.5) == 3 );
+    assert( naturalNumber("2") == 2 );
+    assert( naturalNumber("")  == 0 );
+};
+
+// testNaturalNumber();
 
 
 
 
-estNombre = function(x) {
+/* Force the data to be a number
+ * 
+ * x (number): number to test
+ * 
+ * output    : the number specified as a parameter, 0 if it is not one.
+ * 
+ * number(3.14)
+ */
+var number = function(x) {
     x = x/x * x;
     return x != x ? 0 : x;
-}
+};
+
+// Unit test of the isNumber function
+var testNumber = function(){
+    assert( number(1)     == 1    );
+    assert( number(-0.1)  == -0.1 );
+    assert( number("")    == 0    );
+    assert( number("2.1") == 2.1  );
+};
+
+// testNumber();
 
 
 
@@ -711,9 +750,9 @@ estNombre = function(x) {
 var laby = function(nx, ny, pas) {
     
     // Robustness of the arguments: laby("", "", "") => laby(0, 0, 0)
-    nx = estEntierNaturel(nx);
-    ny = estEntierNaturel(ny);
-    pas = estNombre(pas);
+    nx = naturalNumber(nx);
+    ny = naturalNumber(ny);
+    pas = number(pas);
     
     // A zero-dimensional labyrinth!
     if (nx == 0 || ny == 0 || pas == 0) {
@@ -752,9 +791,9 @@ var laby = function(nx, ny, pas) {
 var labySol = function(nx, ny, pas) {
     
     // Robustness of the arguments: laby("", "", "") => laby(0, 0, 0)
-    nx = estEntierNaturel(nx);
-    ny = estEntierNaturel(ny);
-    pas = estNombre(pas);
+    nx = naturalNumber(nx);
+    ny = naturalNumber(ny);
+    pas = number(pas);
     
     // A zero-dimensional labyrinth!
     if (nx == 0 || ny == 0 || pas == 0) {
@@ -768,7 +807,7 @@ var labySol = function(nx, ny, pas) {
     afficherLaby(nx, ny, pas, walls);
     
     // No representation without a solution
-    pledge(nx, ny, pas, walls);
+    robotPath(nx, ny, pas, walls);
 };
 
 // Examples of labyrinths to test
