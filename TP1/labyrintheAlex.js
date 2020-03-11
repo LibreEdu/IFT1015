@@ -17,9 +17,9 @@
  * removeWall(cavity, nextCav, nx, walls): remove wall btw cavity and the cell
  * creerLaby(nx, ny)          : generate walls of a nx * ny labyrinth
  * afficherLaby(nx, ny, pas, walls): display the walls of the labyrinth
- * robotPath(nx, ny, pas)     : solve the labyrinth
- * laby(nx, ny, pas)          : a labyrinth
- * laby(nx, ny, pas)          : a labyrinth and its solution
+ * pledge(nx, ny, pas)        : solve the labyrinth
+ * laby(nx, ny, pas)          : draw a labyrinth
+ * laby(nx, ny, pas)          : draw a labyrinth and its solution
  */
 
 
@@ -516,9 +516,9 @@ var afficherLaby = function(nx, ny, pas, walls) {
  * 
  * output       : none
  * 
- * robotPath(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
+ * pledge(2, 2, 20, [[1, 4], [0, 2, 3, 4, 5]])
  */
-var robotPath = function(nx, ny, pas, walls) {
+var pledge = function(nx, ny, pas, walls) {
     // https://interstices.info/lalgorithme-de-pledge/
     
     // Declaration of variables
@@ -630,12 +630,12 @@ var robotPath = function(nx, ny, pas, walls) {
     // In order to center the beginning of the path
     var first = true;;
     
-    // Until we get to the exit
-
     while (true) {
         
         // We just reached the cell below the exit
-        if (cell == exit + nx) break;
+        if (cell == exit + nx) {
+            break;
+        }
         
         if (along) {                      // Go along the wall
             if (exitCorner == true) {     // We're leaving the cell
@@ -682,6 +682,22 @@ var robotPath = function(nx, ny, pas, walls) {
 
 
 
+estEntierNaturel = function(x) {
+    x = Math.round(Math.abs(x));
+    return x != x ? 0 : x;
+}
+
+
+
+
+estNombre = function(x) {
+    x = x/x * x;
+    return x != x ? 0 : x;
+}
+
+
+
+
 /* Generate a labyrinth
  * 
  * nx  (number): number of columns
@@ -695,12 +711,9 @@ var robotPath = function(nx, ny, pas, walls) {
 var laby = function(nx, ny, pas) {
     
     // Robustness of the arguments: laby("", "", "") => laby(0, 0, 0)
-    nx = Math.round(Math.abs(nx));
-    ny = Math.round(Math.abs(ny));
-    nx = nx != nx ? 0 : nx;
-    ny = ny != ny ? 0 : ny;
-    pas = pas/pas * pas;
-    pas = pas != pas ? 0 : pas;
+    nx = estEntierNaturel(nx);
+    ny = estEntierNaturel(ny);
+    pas = estNombre(pas);
     
     // A zero-dimensional labyrinth!
     if (nx == 0 || ny == 0 || pas == 0) {
@@ -718,6 +731,7 @@ var laby = function(nx, ny, pas) {
 // We get 374 000 steps per labyrinth for:
 // laby(10, 9, 20);
 
+// Examples of labyrinths to test
 // laby(8, 4, 40);
 // laby(16, 9, 20);
 // laby(34, 18, 10);
@@ -725,7 +739,7 @@ var laby = function(nx, ny, pas) {
 
 
 
-/* Generate a labyrinth with a roboth path
+/* Generate a labyrinth with its solution
  * 
  * nx  (number): number of columns
  * ny  (number): number of lines
@@ -738,12 +752,9 @@ var laby = function(nx, ny, pas) {
 var labySol = function(nx, ny, pas) {
     
     // Robustness of the arguments: laby("", "", "") => laby(0, 0, 0)
-    nx = Math.round(Math.abs(nx));
-    ny = Math.round(Math.abs(ny));
-    nx = nx != nx ? 0 : nx;
-    ny = ny != ny ? 0 : ny;
-    pas = pas/pas * pas;
-    pas = pas != pas ? 0 : pas;
+    nx = estEntierNaturel(nx);
+    ny = estEntierNaturel(ny);
+    pas = estNombre(pas);
     
     // A zero-dimensional labyrinth!
     if (nx == 0 || ny == 0 || pas == 0) {
@@ -757,11 +768,11 @@ var labySol = function(nx, ny, pas) {
     afficherLaby(nx, ny, pas, walls);
     
     // No representation without a solution
-    robotPath(nx, ny, pas, walls);
+    pledge(nx, ny, pas, walls);
 };
 
-labySol(10, 9, 20);
-
+// Examples of labyrinths to test
 // labySol(8, 4, 40);
+labySol(10, 9, 20);
 // labySol(16, 9, 20);
 // labySol(34, 18, 10);
