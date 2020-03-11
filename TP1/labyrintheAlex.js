@@ -17,7 +17,8 @@
  * removeWall(cavity, nextCav, nx, walls): remove wall btw cavity and the cell
  * creerLaby(nx, ny)          : generate walls of a nx * ny labyrinth
  * afficherLaby(nx, ny, pas, walls): display the walls of the labyrinth
- * labySol(nx, ny, pas, walls): solve the labyrinth
+ * robotPath(nx, ny, pas)     : solve the labyrinth
+ * laby(nx, ny, pas)          : a labyrinth
  * laby(nx, ny, pas)          : a labyrinth and its solution
  */
 
@@ -525,6 +526,7 @@ var robotPath = function(nx, ny, pas, walls) {
     var exit = nx * ny - 1; // Exit position
     var nbRot = 0;          // Number of rotations
     var along = false;      // Go along the wall
+    var halfStep = pas/2;   // Half cell length
     
     // Horizontal and vertical walls
     var mursH = walls[0];
@@ -582,7 +584,6 @@ var robotPath = function(nx, ny, pas, walls) {
     
     // Go straight ahead
     var goAhead = function() {
-        fd(pas);
         if ( nbRot % 4 == 0 ) {         // We're heading south
             cell = cell + nx;           // New cell = south cell
         } else if ( nbRot % 4 == -1 ) { // We're heading west
@@ -609,7 +610,7 @@ var robotPath = function(nx, ny, pas, walls) {
     };
     
     // Move the cursor inside the labyrinth, in the middle of the first cell
-    mv(ox + pas/2, oy);
+    mv(ox + halfStep, oy);
     
     // Close the entrance of the labyrinth: no return possible. Good luck :-)
     ajouter(mursH, 0);
@@ -621,40 +622,61 @@ var robotPath = function(nx, ny, pas, walls) {
     pd();
     
     // Moving from the edge to the centre of the cell, on the starting blocks
-    fd(pas/2);
+    fd(3*pas/4);
+    
+    // When the next half-step we leave the cell, exitCorner = true
+    var exitCorner;
+    
+    // In order to center the beginning of the path
+    var first = true;;
     
     // Until we get to the exit
-    while (cell != exit) {
-        if (along) {                  // Go along the wall
-            if ( checkLeft() ) {      // There's a wall to the left
-                if ( checkFront() ) { // There's a wall in front
+
+    while (true) {
+        
+        // We just reached the cell below the exit
+        if (cell == exit + nx) break;
+        
+        if (along) {                      // Go along the wall
+            if (exitCorner == true) {     // We're leaving the cell
+                if ( checkFront() ) {     // There's a wall in front
                     turnRight();
-                } else {              // There's no wall in front
+                } else {
+                    fd(halfStep);
                     goAhead();
                 }
-            } else {                  // There's no wall to the left
-                turnLeft();
-                goAhead();
+                exitCorner = false;
+            } else {                      // We're moving from corner to corner
+                if ( checkLeft() ) {      // There's a wall to the left
+                    if ( checkFront() ) { // There's a wall in front
+                        fd(halfStep);
+                        turnRight();
+                        fd(halfStep);
+                    } else {              // There's no wall in front
+                        fd(halfStep);
+                    }
+                } else {                  // There's no wall to the left
+                    turnLeft();
+                }
+                exitCorner = true;
             }
-        } else {                      // Go straight ahead
-            if ( checkFront() ) {     // There's a wall in front
+        } else {                          // Go straight ahead
+            if ( checkFront() ) {         // There's a wall in front
                 turnRight();
-                along = true;         // Now, go along the wall
-            } else {                  // There's no wall in front
+                if (first == true) {
+                    fd(halfStep/2);
+                    first = false;
+                } else {
+                    fd(halfStep);
+                }
+                exitCorner = true;
+                along = true;
+            } else {                      // There's no wall in front
+                fd(pas);
                 goAhead();
             }
         }
     }
-    
-    // To have the cursor that points to the exit
-    rt(nbRot * 90);
-    
-    // Last Steps
-    fd(pas/2);
-    
-    // Move the cursor at the entrance to the labyrinth
-    pu();
-    mv(ox + pas/2, oy + 20);
 };
 
 
@@ -690,10 +712,18 @@ var laby = function(nx, ny, pas) {
     
     // No labyrinth without its visual representation
     afficherLaby(nx, ny, pas, walls);
-    
-    // No representation without a solution
-    // labySol(nx, ny, pas, walls);
 };
+// If we want to calculate an average number of steps per labyrinth
+// for (var i = 0; i < 100; i++)
+// We get 374 000 steps per labyrinth for:
+// laby(10, 9, 20);
+
+// laby(8, 4, 40);
+// laby(16, 9, 20);
+// laby(34, 18, 10);
+
+
+
 
 /* Generate a labyrinth with a roboth path
  * 
@@ -721,12 +751,7 @@ var labySol = function(nx, ny, pas) {
     }
     
     // Generate the walls of the labyrinth
-    // var walls = creerLaby(nx, ny);
-    
-    // Set for laby(8, 4, x);
-    var mursH = [1,2,3,4,5,6,7,13,14,17,19,24,30,31,32,33,34,35,36,37,38];
-    var mursV = [0,1,3,4,8,9,11,12,14,16,17,18,20,21,22,23,24,26,27,29,32,35];
-    var walls = [mursH, mursV];
+    var walls = creerLaby(nx, ny);
     
     // No labyrinth without its visual representation
     afficherLaby(nx, ny, pas, walls);
@@ -735,13 +760,8 @@ var labySol = function(nx, ny, pas) {
     robotPath(nx, ny, pas, walls);
 };
 
-// If we want to calculate an average number of steps per labyrinth
-// for (var i = 0; i < 100; i++)
-// We get 374 000 steps per labyrinth (without labysol) for:
-// laby(10, 9, 20);
+laby(10, 9, 20);
 
-labySol(8, 4, 40);
-
-// laby(8, 4, 40);
-// laby(16, 9, 20);
-// laby(34, 18, 10);
+// labySol(8, 4, 40);
+// labySol(16, 9, 20);
+// labySol(34, 18, 10);
