@@ -357,6 +357,8 @@ var creerLaby = function(nx, ny) {
     
     // Until all the cells are part of the cavity
     while (true) {
+        // ne cell is added to the cavity and its neighbours are added to the
+        // list of cells that are frontal to the cavity. 
         
         // Add the cell to the cavity
         cave.push(cavity);
@@ -379,6 +381,9 @@ var creerLaby = function(nx, ny) {
         // Next cell to be added to the cavity
         var nextCav;
         
+        // Of all the cells that are frontal to the cavity, one is randomly
+        // selected, added to the cavity, and the neighbouring cells (which are
+        // not part of the cavity) are added to the list of frontal cells.
         if (front.length) { // There are still frontal cells
             
             // Choice of a new cavity cell from the set of frontal cells
@@ -774,7 +779,7 @@ var laby = function(nx, ny, pas) {
     
     // A zero-dimensional labyrinth!
     if (nx == 0 || ny == 0 || pas == 0) {
-        return;
+        return; // Nature abhors a vacuum
     }
     
     // Generate the walls of the labyrinth
@@ -815,7 +820,7 @@ var labySol = function(nx, ny, pas) {
     
     // A zero-dimensional labyrinth!
     if (nx == 0 || ny == 0 || pas == 0) {
-        return;
+        return; // Nature abhors a vacuum
     }
     
     // Generate the walls of the labyrinth
