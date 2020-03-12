@@ -631,7 +631,8 @@ var robotPath = function(nx, ny, pas, walls) {
     // Moving from the edge to the centre of the cell, on the starting blocks
     fd(3*pas/4);
     
-    // When the next half-step we leave the cell, exitCorner = true
+    // When we have the possibility to leave the cell at the next half-step,
+    // exitCorner = true
     var exitCorner;
     
     // In order to center the beginning of the path
