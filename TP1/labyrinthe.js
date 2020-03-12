@@ -773,8 +773,8 @@ var testNumber = function(){
 var laby = function(nx, ny, pas) {
     
     // Robustness of the arguments: laby("", "", "") => laby(0, 0, 0)
-    nx = naturalNumber(nx);
-    ny = naturalNumber(ny);
+    nx  = naturalNumber(nx);
+    ny  = naturalNumber(ny);
     pas = number(pas);
     
     // A zero-dimensional labyrinth!
@@ -814,8 +814,8 @@ var laby = function(nx, ny, pas) {
 var labySol = function(nx, ny, pas) {
     
     // Robustness of the arguments: laby("", "", "") => laby(0, 0, 0)
-    nx = naturalNumber(nx);
-    ny = naturalNumber(ny);
+    nx  = naturalNumber(nx);
+    ny  = naturalNumber(ny);
     pas = number(pas);
     
     // A zero-dimensional labyrinth!
