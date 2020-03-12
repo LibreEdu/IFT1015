@@ -645,7 +645,7 @@ var robotPath = function(nx, ny, pas, walls) {
         }
         
         if (along) { // We're going along the wall
-            if (exitCorner == true) { // We're leaving the cell
+            if (exitCorner == true) { // We're ready to leave the cell
             
                 // We've done three-quarters of the cell. If there's a wall in
                 // front of us, we turn right, otherwise we move half a cell
