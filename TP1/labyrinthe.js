@@ -659,7 +659,8 @@ var robotPath = function(nx, ny, pas, walls) {
                 }
                 
                 exitCorner = false;
-            } else { // We're moving from one corner of the cell to the next.
+            } else { // We move from one corner of the cell to the other, from
+                     // one cell to the same cell.
             
                 // We're going along the wall, we're in the first quarter of the
                 // cell. If there's no wall on the left, we turn left.
