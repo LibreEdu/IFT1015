@@ -3,7 +3,7 @@
  * Authors: Alexandre Pachot and Eliecer Rodriguez Silva
  * Date: March 11, 2020
  * 
- * Library to draw labyrinth.
+ * Library to draw labyrinth
  * 
  * List of functions:
  * ioata(n)                   : return an array containing numbers from 0 to n-1
@@ -357,7 +357,7 @@ var creerLaby = function(nx, ny) {
     
     // Until all the cells are part of the cavity
     while (true) {
-        // ne cell is added to the cavity and its neighbours are added to the
+        // One cell is added to the cavity and its neighbours are added to the
         // list of cells that are frontal to the cavity. 
         
         // Add the cell to the cavity
