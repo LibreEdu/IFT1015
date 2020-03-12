@@ -639,44 +639,62 @@ var robotPath = function(nx, ny, pas, walls) {
             break;
         }
         
-        if (along) {                      // Go along the wall
-            if (exitCorner == true) {     // We're leaving the cell
-                if ( checkFront() ) {     // There's a wall in front
+        if (along) { // We're going along the wall
+            if (exitCorner == true) { // We're leaving the cell
+            
+                // We've done three-quarters of the cell. If there's a wall in
+                // front of us, we turn right, otherwise we move half a cell
+                // forward.
+                if ( checkFront() ) {
                     turnRight();
                 } else {
                     fd(halfStep);
                     goAhead();
                 }
+                
                 exitCorner = false;
-            } else {                      // We're moving from corner to corner
-                if ( checkLeft() ) {      // There's a wall to the left
+            } else { // We're moving from one corner of the cell to the next.
+            
+                // We're going along the wall, we're in the first quarter of the
+                // cell. If there's no wall on the left, we turn left.
+                // Otherwise, we move half a cell forward. There, if there's a
+                // wall in front of us, we turn right.
+                if ( checkLeft() ) { // There's a wall to the left
+                    fd(halfStep);
                     if ( checkFront() ) { // There's a wall in front
-                        fd(halfStep);
                         turnRight();
                         fd(halfStep);
-                    } else {              // There's no wall in front
-                        fd(halfStep);
                     }
-                } else {                  // There's no wall to the left
+                } else { // There's no wall to the left
                     turnLeft();
                 }
+                
                 exitCorner = true;
             }
-        } else {                          // Go straight ahead
-            if ( checkFront() ) {         // There's a wall in front
+        } else { // We're not going along the wall, we're going straight.
+        
+            // If there's no wall in front of us, we go straight ahead,
+            // otherwise we turn right.
+            if ( checkFront() ) { // There's a wall in front
                 turnRight();
+                
+                // When you turn right, you advance half a cell, except the very
+                // first time, you advance a quarter cell, because you started
+                // by being in the middle of the cell, not along the wall.
                 if (first == true) {
                     fd(halfStep/2);
                     first = false;
                 } else {
                     fd(halfStep);
                 }
+                
                 exitCorner = true;
                 along = true;
-            } else {                      // There's no wall in front
+            } else { // There's no wall in front
                 fd(pas);
                 goAhead();
             }
+            
         }
     }
 };
