@@ -131,10 +131,51 @@ var mixedCard = function(nbCards) {
 
 
 
+// 0..13 => A 1..10 J Q K
+var cardRank = function (cardValue) {
+  // The 0 is the ace, so the 1 is the 2.
+  if (cardValue > 0 && cardValue < 10) {
+    return cardValue + 1;
+  }
+  
+  switch (cardValue) {
+    case  0 : return 'A'; // Ace
+    case 10 : return 'J'; // Jack
+    case 11 : return 'Q'; // Queen
+    case 12 : return 'K'; // King
+  }
+}
+
+
+
+
+// 0..13 => A 1..10 J Q K
+var cardSuit = function (cardValue) {
+  switch (cardValue) {
+    case 0 : return 'C'; // Clubs
+    case 1 : return 'D'; // Diamonds
+    case 2 : return 'H'; // Hearts
+    case 3 : return 'S'; // Spades
+  }
+}
+
+
+// 0..51 => AC AD AH AS 1C... 
+var cardValue = function(cardNumber) {
+  var rank = cardRank(cardNumber >> 2);
+  var suit = cardSuit(cardNumber & 3);
+  return rank + suit;
+}
+
+
+
+
 var init = function () {
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
-  //document.getElementById("0").style.backgroundColor = "lime";
   
   var cards = mixedCard(51);
-  console.log(cards);
+  
+  for(i=0; i<52; i++) {
+    console.log(cardValue(cards[i]));
+  }
 };
