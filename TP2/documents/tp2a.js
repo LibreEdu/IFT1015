@@ -197,16 +197,13 @@ var highlight = function(id) {
 
 
 // Click on the deck evenement
-var deck = function(innerHTML, backgroundColor) {
+var deck = function() {
   var element = document.getElementById(deckId);
-  if (innerHTML == '<img src="cards/back.svg">') { 
-    
+  if (element.innerHTML == htmlImg('back')) { 
     // We turn over a new card
     element.innerHTML = htmlImg(cardValue(cards.pop()));
-    
-  } else {
-    
   }
+  
   highlight(deckId);
 }
 
@@ -214,16 +211,23 @@ var deck = function(innerHTML, backgroundColor) {
 
 
 // Click on the deck evenement
-var game = function(innerHTML, backgroundColor) {
-  var element = document.getElementById(deckId);
-  if (innerHTML == '<img src="cards/back.svg">') { 
-    
-    // We turn over a new card
-    element.innerHTML = htmlImg(cardValue(cards.pop()));
-    highlight(deckId);
+var game = function(id) {
+  //console.log("game");
+  if (focus === "") {
+    // No card is highlited, there's nothing we can do.
+    return;
+  }
+  //console.log("focus OK");
+  var element = document.getElementById(id);
+  if (element.innerHTML == htmlImg('empty')) {
+    //console.log("if");
+    element.innerHTML = document.getElementById(focus).innerHTML;
+    document.getElementById(deckId).innerHTML = htmlImg('back');
   } else {
     
   }
+  
+  highlight(deckId);
 }
 
 
@@ -231,12 +235,13 @@ var game = function(innerHTML, backgroundColor) {
 
 // Clic dispatcher
 var clic = function(id) {
-  var element = document.getElementById(id);
   if ( id == deckId) {
-    deck(element.innerHTML, element.style.backgroundColor);
+    //var element = document.getElementById(id);
+    //deck(element.innerHTML, element.style.backgroundColor);
+    deck();
     //return;
   } else {
-    game(element.innerHTML, element.style.backgroundColor);
+    game(id);
   }
 }
 
