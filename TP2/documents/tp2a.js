@@ -7,7 +7,8 @@
 
 
 
-var highlight = "lime";
+var highlightColor = "lime";
+var transparent = "rgba(191, 255, 0, 0)"; // lime color + opacity = 0
 var focus; // Indicate which element has the focus
 var nbColumns = 5;
 var nbLines = 5;
@@ -94,7 +95,7 @@ var htmlGame = function() {
     }
     
     // Total column
-    innerTR += htmlTd('R'+i, '', '');
+    innerTR += htmlTd('R' + i, '', '');
     
     innerTable += htmlTr(innerTR);
   }
@@ -103,7 +104,7 @@ var htmlGame = function() {
   
   //Totals line
   for(var j = 0; j < nbColumns; j++) {
-    innerTR += htmlTd('C'+j, '', '');
+    innerTR += htmlTd('C' + j, '', '');
   }
   
   // Big total
@@ -182,8 +183,14 @@ var cardValue = function(cardNumber) {
 
 // Highlight a card
 var highlight = function(id) {
-  document.getElementById(id).style.backgroundColor = highlight;
-  focus = id;
+  var element = document.getElementById(id);
+  if ( element.style.backgroundColor == highlightColor) {
+    element.style.backgroundColor = transparent;
+    focus = '';
+  } else {
+    element.style.backgroundColor = highlightColor;
+    focus = id;
+  }
 }
 
 
@@ -191,6 +198,23 @@ var highlight = function(id) {
 
 // Click on the deck evenement
 var deck = function(innerHTML, backgroundColor) {
+  var element = document.getElementById(deckId);
+  if (innerHTML == '<img src="cards/back.svg">') { 
+    
+    // We turn over a new card
+    element.innerHTML = htmlImg(cardValue(cards.pop()));
+    
+  } else {
+    
+  }
+  highlight(deckId);
+}
+
+
+
+
+// Click on the deck evenement
+var game = function(innerHTML, backgroundColor) {
   var element = document.getElementById(deckId);
   if (innerHTML == '<img src="cards/back.svg">') { 
     
@@ -210,9 +234,9 @@ var clic = function(id) {
   var element = document.getElementById(id);
   if ( id == deckId) {
     deck(element.innerHTML, element.style.backgroundColor);
-    return;
+    //return;
   } else {
-    
+    game(element.innerHTML, element.style.backgroundColor);
   }
 }
 
@@ -226,7 +250,7 @@ var init = function() {
   //document.getElementById("25").style.backgroundColor = "lime";
   
   for(i=0; i<cards.length; i++) {
-    console.log(cardValue(cards[i]));
+    //console.log(cardValue(cards[i]));
   }
 };
 
