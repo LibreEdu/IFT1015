@@ -212,11 +212,6 @@ var deck = function() {
 
 // Click on the deck evenement
 var game = function(id) {
-  if (focus === "") {
-    // No card is highlited, there's nothing we can do.
-    //return;
-  }
-
   var element = document.getElementById(id);
   
   // If we click on an empty location, then we bring the card there which is
