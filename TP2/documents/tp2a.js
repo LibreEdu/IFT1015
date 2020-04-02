@@ -13,13 +13,14 @@ var focus; // Indicate which element has the focus
 var nbColumns = 5;
 var nbLines = 5;
 var deckId = nbColumns * nbLines;
+var gameCards = Array(deckId + 1);
 
 
 
 // Return the html code of an array
 var htmlTable = function(inner) {
   return '<table>\n\t<tbody>\n' + inner + '\t</tbody>\n</table>\n';
-}
+};
 
 
 
@@ -27,7 +28,7 @@ var htmlTable = function(inner) {
 // Return the html code of a row
 var htmlTr = function(inner) {
   return '\t\t<tr>\n' + inner + '\t\t</tr>\n';
-}
+};
 
 
 
@@ -37,7 +38,7 @@ var htmlTd = function(id, js, inner) {
   var id = (id === '') ? '' : ' id="' + id + '"';
   var js = (js == '') ? '' : ' ' + js;
   return '\t\t\t<td' + id + js + '>' + inner + '</td>\n';
-}
+};
 
 
 
@@ -45,7 +46,7 @@ var htmlTd = function(id, js, inner) {
 // Return the html code of an onclick cell
 var htmlTdOnclick = function(id, inner) {
   return htmlTd(id, 'onclick="clic(' + id + ');"', inner);
-}
+};
 
 
 
@@ -53,7 +54,7 @@ var htmlTdOnclick = function(id, inner) {
 // Return the html code of an image
 var htmlImg = function(img) {
   return '<img src="cards/' + img + '.svg">'
-}
+};
 
 
 
@@ -75,7 +76,7 @@ var htmlDeck = function() {
   var innerTable = htmlTr(innerTR);
   
   return htmlTable(innerTable);
-}
+};
 
 
 
@@ -113,7 +114,7 @@ var htmlGame = function() {
   innerTable += htmlTr(innerTR);
   
   return htmlTable(innerTable);
-}
+};
 
 
 
@@ -135,7 +136,7 @@ var mixedCard = function(nbCards) {
   }
   
   return cards;
-}
+};
 
 
 
@@ -153,7 +154,7 @@ var cardRank = function (cardValue) {
     case 11 : return 'Q'; // Queen
     case 12 : return 'K'; // King
   }
-}
+};
 
 
 
@@ -166,7 +167,7 @@ var cardSuit = function (cardValue) {
     case 2 : return 'H'; // Hearts
     case 3 : return 'S'; // Spades
   }
-}
+};
 
 
 
@@ -176,7 +177,7 @@ var cardValue = function(cardNumber) {
   var rank = cardRank(cardNumber >> 2);
   var suit = cardSuit(cardNumber & 3);
   return rank + suit;
-}
+};
 
 
 
@@ -191,7 +192,7 @@ var highlight = function(id) {
     element.style.backgroundColor = highlightColor;
     focus = id;
   }
-}
+};
 
 
 
@@ -201,11 +202,14 @@ var deck = function() {
   var element = document.getElementById(deckId);
   if (element.innerHTML == htmlImg('back')) { 
     // We turn over a new card
-    element.innerHTML = htmlImg(cardValue(cards.pop()));
+    var newCard = cards.pop();
+    element.innerHTML = htmlImg(cardValue(newCard));
+    gameCards[deckId] = newCard;
+    //console.log(gameCards);
   }
   
   highlight(deckId);
-}
+};
 
 
 
@@ -214,20 +218,53 @@ var deck = function() {
 var game = function(id) {
   var element = document.getElementById(id);
   
-  // If we click on an empty location, then we bring the card there which is
-  // highlighted, else we switch the highlight of the card.
   if (element.innerHTML == htmlImg('empty')) {
+    // Click on an empty cell
+
     if (focus === "") {
+      // No cell has the focus, there's nothing to do.
       return;
     }
+    
+    // One cell has the focus, we get his image 
     element.innerHTML = document.getElementById(focus).innerHTML;
-    var image = (focus == deckId) ? 'back' : 'empty';
+    
+    // Operation to do, depending on the origin of the focus
+    if (focus == deckId) {
+      var image = 'back';
+      //gameCards[id]= gameCards[deckId];
+    } else {
+      var image = 'empty';
+      //gameCards[id]= gameCards[deckId];
+    }
+    //console.log(gameCards);
+    
+    // Change the focus image
     document.getElementById(focus).innerHTML = htmlImg(image);
     highlight(focus);
+    
   } else {
-    highlight(id);
+    // We click on a cell that is not empty
+    
+    if (element.style.backgroundColor == highlightColor) {
+      // The cell's hightlighted, we remove the hightlight
+      highlight(id);
+    } else {
+      // The cell's not hightlighted
+      
+      if (focus === "") {
+        // No cell has focus, we hightlight the cell
+        highlight(id);
+      } else {
+        // Switch 
+        var temp = element.innerHTML;
+        element.innerHTML = document.getElementById(focus).innerHTML;
+        document.getElementById(focus).innerHTML = temp;
+        highlight(focus);
+      }
+    }
   }
-}
+};
 
 
 
@@ -239,7 +276,25 @@ var clic = function(id) {
   } else {
     game(id);
   }
-}
+};
+
+
+
+
+// Calculation of points earned
+var points = function(id) {
+  
+  var sum = 0;
+  
+  // Calculation of the points of each line
+  for(var i = 0; i < nbLines; i++) {
+  }
+  
+  // Calculation of the points of each column
+  for(var j = 0; j < nbColumns; j++) {
+
+  }
+};
 
 
 
