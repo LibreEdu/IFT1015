@@ -184,7 +184,7 @@ var cardValue = function(cardNumber) {
 // Highlight a card
 var highlight = function(id) {
   var element = document.getElementById(id);
-  if ( element.style.backgroundColor == highlightColor) {
+  if ( element.style.backgroundColor == highlightColor ) {
     element.style.backgroundColor = transparent;
     focus = '';
   } else {
@@ -212,22 +212,26 @@ var deck = function() {
 
 // Click on the deck evenement
 var game = function(id) {
-  //console.log("game");
   if (focus === "") {
     // No card is highlited, there's nothing we can do.
-    return;
+    //return;
   }
-  //console.log("focus OK");
+
   var element = document.getElementById(id);
-  if (element.innerHTML == htmlImg('empty')) {
-    //console.log("if");
-    element.innerHTML = document.getElementById(focus).innerHTML;
-    document.getElementById(deckId).innerHTML = htmlImg('back');
-  } else {
-    
-  }
   
-  highlight(deckId);
+  // If we click on an empty location, then we bring the card there which is
+  // highlighted, else we switch the highlight of the card.
+  if (element.innerHTML == htmlImg('empty')) {
+    if (focus === "") {
+      return;
+    }
+    element.innerHTML = document.getElementById(focus).innerHTML;
+    var image = (focus == deckId) ? 'back' : 'empty';
+    document.getElementById(focus).innerHTML = htmlImg(image);
+    highlight(focus);
+  } else {
+    highlight(id);
+  }
 }
 
 
@@ -236,10 +240,7 @@ var game = function(id) {
 // Clic dispatcher
 var clic = function(id) {
   if ( id == deckId) {
-    //var element = document.getElementById(id);
-    //deck(element.innerHTML, element.style.backgroundColor);
     deck();
-    //return;
   } else {
     game(id);
   }
