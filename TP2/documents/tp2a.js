@@ -11,8 +11,8 @@
 // In order to have a more easily configurable program
 var highlightColor = "lime";
 var nbColumns = 5;
-var nbLines = 5;
-var deckId = nbColumns * nbLines;
+var nbRows = 5;
+var deckId = nbColumns * nbRows;
 
 // Indicate which element is highlighted
 var highlighted = '';
@@ -66,7 +66,7 @@ var htmlDeck = function() {
   var button = '<button onclick="init();" style="float: left;">';
   button += 'Nouvelle partie</button';
   
-  // Contents of the first line
+  // Contents of the first row
   var innerTR = htmlTd('', '', button);
   innerTR += htmlTd('', '', '');
   innerTR += htmlTdOnclick(25, htmlImg('back'));
@@ -80,13 +80,13 @@ var htmlDeck = function() {
 
 
 
-// Table on the right (table nbColumns x nbLines)
+// Table on the right (table nbColumns x nbRows)
 var htmlGame = function() {
   
   var innerTable = '';
   
-  // The first nbLines lines
-  for(var i = 0; i < nbLines; i++) {
+  // The first nbRows rows
+  for(var i = 0; i < nbRows; i++) {
     var innerTR = '';
     
     // nbColumns columns of cards
@@ -102,7 +102,7 @@ var htmlGame = function() {
   
   var innerTR = '';
   
-  //Totals line
+  //Totals row
   for(var j = 0; j < nbColumns; j++) {
     innerTR += htmlTd('C' + j, '', '');
   }
@@ -259,7 +259,7 @@ var sequentialRank = function(hand) {
     }
   }
   return sequential;
-}
+};
 
 
 
@@ -273,7 +273,7 @@ var royalStraight = function(hand) {
   } else {
     return false;
   }
-}
+};
 
 
 
@@ -287,7 +287,7 @@ var straight = function(hand) {
   } else {
     return royalStraight(hand);
   }
-}
+};
 
 
 
@@ -306,26 +306,45 @@ var points = function(hand) {
 
 
 
+// Update game sums
+var sumUpdate = function(id, row, sum) {
+  switch (id) {
+    case 'T':
+      document.getElementById(id).innerHTML = sum;
+      break;
+    default:
+      document.getElementById(id + row).innerHTML = (sum == 0) ? '' : sum;
+  }
+};
+
+
+
 // Calculation of points earned
 var calculatePoints = function() {
   
   var sum = 0;
   
-  // Calculation of the points of each line
-  for(var i = 0; i < nbLines; i++) {
-    sum += points(gameCards.slice(nbColumns * i, nbColumns * (i+1) ));
+  // Calculation of the points of each row
+  for(var i = 0; i < nbRows; i++) {
+    var rowSum = points(gameCards.slice(nbColumns * i, nbColumns * (i+1) ));
+    sumUpdate('R', i, rowSum);
+    sum += rowSum;
   }
   
   // Calculation of the points of each column
   for(var i = 0; i < nbColumns; i++) {
-    var column = Array(nbLines);
-    for(var j = 0; j < nbLines; j++) {
+    var column = Array(nbRows);
+    for(var j = 0; j < nbRows; j++) {
       column[j] = gameCards[nbColumns * j + i]
     }
+    var columnSum = points(column);
+    sumUpdate('C', i, columnSum);
+    sum += columnSum;
     //sum += rowPoints(column);
   }
   
   console.log(sum);
+  sumUpdate('T', '', sum);
 };
 
 
