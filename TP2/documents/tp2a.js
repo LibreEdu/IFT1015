@@ -10,7 +10,6 @@
 
 // In order to have a more easily configurable program
 var highlightColor = "lime";
-var transparent = "rgba(191, 255, 0, 0)"; // any color (lime) + opacity = 0
 var nbColumns = 5;
 var nbLines = 5;
 var deckId = nbColumns * nbLines;
@@ -182,7 +181,7 @@ var highlightSwitch = function(id) {
   var element = document.getElementById(id);
   
   if ( element.style.backgroundColor == highlightColor ) {
-    element.style.backgroundColor = transparent;
+    element.style.backgroundColor = "transparent";
     highlighted = '';
   } else {
     element.style.backgroundColor = highlightColor;
