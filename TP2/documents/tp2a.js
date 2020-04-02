@@ -231,6 +231,22 @@ var deck = function() {
 };
 
 
+// Moves a card from oldSlot to newSlot (switchCard = false), or switche them
+// (switchCard = true)
+var saveCards = function(newSlot, oldSlot, switchCard) {
+  if (switchCard) {
+    var temp = gameCards[newSlot];
+    gameCards[newSlot] = gameCards[oldSlot];
+    gameCards[oldSlot] = temp;
+  } else {
+    gameCards[newSlot] = gameCards[oldSlot];
+    gameCards[oldSlot] = -1;
+  }
+  console.log(gameCards);
+}
+
+
+
 
 
 // We are on the game, the right table
@@ -254,19 +270,13 @@ var game = function(id) {
     // We just moved a card into an empty slot. The card that was highlighted,
     // if it's from the deck, the card underneath is the back of a card.
     // Otherwise, it's an empty slot in the game.
-    if (highlighted == deckId) {
-      var image = 'back';
-      gameCards[id] = gameCards[deckId];
-      gameCards[deckId] = -1;
-    } else {
-      var image = 'empty';
-      gameCards[id] = gameCards[highlighted];
-      gameCards[highlighted] = -1;
-    }
-    console.log(gameCards);
+    image = ( highlighted == deckId ) ? 'back' : empty;
     
     // We're changing the image of the card that was highlighted
     document.getElementById(highlighted).innerHTML = htmlImg(image);
+    
+    // We move the card from highlighted to id
+    saveCards(id, highlighted, false);
     
     // And we remove the highlight
     highlightSwitch(highlighted);
@@ -300,19 +310,16 @@ var game = function(id) {
           // We highlight where we are
           highlightSwitch(id);
           
-          gameCards[id] = gameCards[deckId];
-          gameCards[deckId] = -1;
-          console.log(gameCards);
+          // We move the card from highlighted to id
+          saveCards(id, highlighted, false);
           
         } else { // Switching the two cards
             var temp = element.innerHTML;
             element.innerHTML = document.getElementById(highlighted).innerHTML;
             document.getElementById(highlighted).innerHTML = temp;
             
-            var temp = gameCards[id];
-            gameCards[id] = gameCards[highlighted];
-            gameCards[highlighted] = temp;
-            console.log(gameCards);
+            // We switch the two cards
+            saveCards(id, highlighted, true);
             
             // We remove the highlight from the old slot
             highlightSwitch(highlighted);
