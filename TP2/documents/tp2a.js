@@ -6,7 +6,6 @@
 
 
 
-
 // Global variables. See also at the very bottom, at the end of the program.
 
 // In order to have a more easily configurable program
@@ -24,7 +23,6 @@ var gameCards = Array(deckId + 1).fill(-1);
 
 
 
-
 // Return the html code of an array
 var htmlTable = function(inner) {
   return '<table>\n\t<tbody>\n' + inner + '\t</tbody>\n</table>\n';
@@ -32,12 +30,10 @@ var htmlTable = function(inner) {
 
 
 
-
 // Return the html code of a row
 var htmlTr = function(inner) {
   return '\t\t<tr>\n' + inner + '\t\t</tr>\n';
 };
-
 
 
 
@@ -50,7 +46,6 @@ var htmlTd = function(id, js, inner) {
 
 
 
-
 // Return the html code of an onclick cell
 var htmlTdOnclick = function(id, inner) {
   return htmlTd(id, 'onclick="clic(' + id + ');"', inner);
@@ -58,12 +53,10 @@ var htmlTdOnclick = function(id, inner) {
 
 
 
-
 // Return the html code of an image
 var htmlImg = function(img) {
   return '<img src="cards/' + img + '.svg">'
 };
-
 
 
 
@@ -85,7 +78,6 @@ var htmlDeck = function() {
   
   return htmlTable(innerTable);
 };
-
 
 
 
@@ -126,7 +118,6 @@ var htmlGame = function() {
 
 
 
-
 // Generate a random array of numbers from 0 to nbCards
 var mixedCard = function(nbCards) {
   
@@ -148,7 +139,6 @@ var mixedCard = function(nbCards) {
 
 
 
-
 // Rank of the card
 var cardRank = function (cardValue) {
   // The 0 is the ace, so the 1 is the 2.
@@ -166,7 +156,6 @@ var cardRank = function (cardValue) {
 
 
 
-
 // Suit of the card
 var cardSuit = function (cardValue) {
   switch (cardValue) {
@@ -179,14 +168,12 @@ var cardSuit = function (cardValue) {
 
 
 
-
 // Rank and suit of the card
 var cardValue = function(cardNumber) {
   var rank = cardRank(cardNumber >> 2);
   var suit = cardSuit(cardNumber & 3);
   return rank + suit;
 };
-
 
 
 
@@ -206,7 +193,6 @@ var highlightSwitch = function(id) {
 
 
 
-
 // We are on the deck, the left table
 var deck = function() {
   var element = document.getElementById(deckId);
@@ -218,7 +204,6 @@ var deck = function() {
     var newCard = cards.pop();
     element.innerHTML = htmlImg(cardValue(newCard));
     gameCards[deckId] = newCard;
-    console.log(gameCards);
   }
   
   // If a card from the right is highlighted, the highlight is removed
@@ -229,6 +214,121 @@ var deck = function() {
   // We switch the highlight of the deck
   highlightSwitch(deckId);
 };
+
+
+
+// Check if all cards are from the same suit
+var nbCard = function(hand) {
+  var nbCard = 0;
+  hand.map(function (card) {
+    nbCard += (card == -1) ? 0 : 1;
+  });
+  return nbCard;
+};
+
+
+
+// Check if all cards are from the same suit
+var flush = function(hand) {
+  for (var i = 1; i < hand.length; i++) {
+    if (hand[i-1] & 3 != hand[i-1] & 3) {
+      return false;
+    }
+  }
+  return true;
+};
+
+
+
+// Check to see if there's an ace. Hand must be sorted.
+var hasAce = function(hand) {
+  return (hand[0] >> 2 == 0) ? true : false;
+};
+
+
+
+// Check if the cards are in a sequential rank. Hand must be sorted.
+var sequentialRank = function(hand) {
+  var sequential = true;
+  for (var i = 1; i < hand.length; i++) {
+    if ( (hand[i-1] >> 2) + 1 == hand[i] >> 2 ) {
+      // The two cards follow each other
+      sequential = sequential && true;
+    } else {
+      // The two cards do not follow each other
+      sequential = sequential && false;
+    }
+  }
+  return sequential;
+}
+
+
+
+// Check if we have a royal straight. Hand must be sorted.
+var royalStraight = function(hand) {
+  if (hasAce(hand)) {
+    // We take the ace (the first card), we put it at the end, in order to test
+    // if there is a sequence
+    hand.push(hand.shift() + 52);
+    return sequentialRank(hand);
+  } else {
+    return false;
+  }
+}
+
+
+
+// Check if the cards are in a sequential rank, ace at the extremities. Cards
+// must be sorted.
+var straight = function(hand) {
+  var sequential = sequentialRank(hand);
+  if (sequential == true) {
+    // The cards are in sequence
+    return true;
+  } else {
+    return royalStraight(hand);
+  }
+}
+
+
+
+// Calculates the points of a simple array
+var points = function(hand) {
+  var hand = hand.sort();
+  switch(nbCard(hand)) {
+    case 5 :
+      if ( flush(hand) && royalStraight(hand) ) { // Royal Straight Flush
+        return 100;
+      }
+    default :
+      return 0;
+  }
+};
+
+
+
+// Calculation of points earned
+var calculatePoints = function() {
+  
+  var sum = 0;
+  
+  // Calculation of the points of each line
+  for(var i = 0; i < nbLines; i++) {
+    sum += points(gameCards.slice(nbColumns * i, nbColumns * (i+1) ));
+  }
+  
+  // Calculation of the points of each column
+  for(var i = 0; i < nbColumns; i++) {
+    var column = Array(nbLines);
+    for(var j = 0; j < nbLines; j++) {
+      column[j] = gameCards[nbColumns * j + i]
+    }
+    //sum += rowPoints(column);
+  }
+  
+  console.log(sum);
+};
+
 
 
 // Moves a card from oldSlot to newSlot (switchCard = false), or switche them
@@ -242,10 +342,10 @@ var saveCards = function(newSlot, oldSlot, switchCard) {
     gameCards[newSlot] = gameCards[oldSlot];
     gameCards[oldSlot] = -1;
   }
-  console.log(gameCards);
+  //console.clear();
+  calculatePoints();
+  //calculatePoints();
 }
-
-
 
 
 
@@ -270,7 +370,7 @@ var game = function(id) {
     // We just moved a card into an empty slot. The card that was highlighted,
     // if it's from the deck, the card underneath is the back of a card.
     // Otherwise, it's an empty slot in the game.
-    image = ( highlighted == deckId ) ? 'back' : empty;
+    image = ( highlighted == deckId ) ? 'back' : 'empty';
     
     // We're changing the image of the card that was highlighted
     document.getElementById(highlighted).innerHTML = htmlImg(image);
@@ -310,9 +410,6 @@ var game = function(id) {
           // We highlight where we are
           highlightSwitch(id);
           
-          // We move the card from highlighted to id
-          saveCards(id, highlighted, false);
-          
         } else { // Switching the two cards
             var temp = element.innerHTML;
             element.innerHTML = document.getElementById(highlighted).innerHTML;
@@ -334,6 +431,7 @@ var game = function(id) {
 
 // Clic dispatcher
 var clic = function(id) {
+  console.log();
   if ( id === deckId) {
     deck();
   } else {
@@ -344,37 +442,25 @@ var clic = function(id) {
 
 
 
-// Calculation of points earned
-var points = function(id) {
-  
-  var sum = 0;
-  
-  // Calculation of the points of each line
-  for(var i = 0; i < nbLines; i++) {
-  }
-  
-  // Calculation of the points of each column
-  for(var j = 0; j < nbColumns; j++) {
-
-  }
-};
-
-
-
-
 // Initialization of the page
 var init = function() {
-  //console.log("init");
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
-  //document.getElementById("25").style.backgroundColor = "lime";
-  
-  for(i=0; i<cards.length; i++) {
-    //console.log(cardValue(cards[i]));
-  }
 };
 
 
 
 
 // Cards to be drawn
-var cards = mixedCard(51);
+// var cards = mixedCard(51);
+
+//var cards = Array(52).fill(0).map( function(card, i) {
+//  return i;
+//});
+//for(i=0; i<cards.length; i++) {
+  //console.log(i + " : " + cardValue(i));
+//}
+
+var cards = Array(52).fill(0);
+cards = cards.slice(0, -5);
+cards = cards.concat([36, 40, 44, 48, 0 ]);
+console.log(cards);
