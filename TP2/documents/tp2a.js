@@ -20,7 +20,7 @@ var deckId = nbColumns * nbLines;
 var highlighted = '';
 
 // To know which card is where in order to calculate the points
-var gameCards = Array(deckId + 1); 
+var gameCards = Array(deckId + 1).fill(-1); 
 
 
 
@@ -218,6 +218,7 @@ var deck = function() {
     var newCard = cards.pop();
     element.innerHTML = htmlImg(cardValue(newCard));
     gameCards[deckId] = newCard;
+    console.log(gameCards);
   }
   
   // If a card from the right is highlighted, the highlight is removed
@@ -255,11 +256,14 @@ var game = function(id) {
     // Otherwise, it's an empty slot in the game.
     if (highlighted == deckId) {
       var image = 'back';
-      //gameCards[id]= gameCards[deckId];
+      gameCards[id] = gameCards[deckId];
+      gameCards[deckId] = -1;
     } else {
       var image = 'empty';
-      //gameCards[id]= gameCards[deckId];
+      gameCards[id] = gameCards[highlighted];
+      gameCards[highlighted] = -1;
     }
+    console.log(gameCards);
     
     // We're changing the image of the card that was highlighted
     document.getElementById(highlighted).innerHTML = htmlImg(image);
@@ -293,13 +297,22 @@ var game = function(id) {
           // We remove the highlight from the deck
           highlightSwitch(deckId);
           
-          // We're highlighting where we are
+          // We highlight where we are
           highlightSwitch(id);
+          
+          gameCards[id] = gameCards[deckId];
+          gameCards[deckId] = -1;
+          console.log(gameCards);
           
         } else { // Switching the two cards
             var temp = element.innerHTML;
             element.innerHTML = document.getElementById(highlighted).innerHTML;
             document.getElementById(highlighted).innerHTML = temp;
+            
+            var temp = gameCards[id];
+            gameCards[id] = gameCards[highlighted];
+            gameCards[highlighted] = temp;
+            console.log(gameCards);
             
             // We remove the highlight from the old slot
             highlightSwitch(highlighted);
