@@ -131,7 +131,7 @@ var mixedCard = function(nbCards) {
 
 
 
-// 0..13 => A 1..10 J Q K
+// Rank of the card
 var cardRank = function (cardValue) {
   // The 0 is the ace, so the 1 is the 2.
   if (cardValue > 0 && cardValue < 10) {
@@ -149,7 +149,7 @@ var cardRank = function (cardValue) {
 
 
 
-// 0..13 => A 1..10 J Q K
+// Suit of the card
 var cardSuit = function (cardValue) {
   switch (cardValue) {
     case 0 : return 'C'; // Clubs
@@ -160,7 +160,9 @@ var cardSuit = function (cardValue) {
 }
 
 
-// 0..51 => AC AD AH AS 1C... 
+
+
+// Rank and suit of the card
 var cardValue = function(cardNumber) {
   var rank = cardRank(cardNumber >> 2);
   var suit = cardSuit(cardNumber & 3);
@@ -170,12 +172,43 @@ var cardValue = function(cardNumber) {
 
 
 
-var init = function () {
+// Click on the deck evenement
+var deck = function(innerHTML, backgroundColor) {
+  if (innerHTML == '<img src="cards/back.svg">') {
+    document.getElementById("25").innerHTML
+      = htmlImg(cardValue(cards.pop()));
+  }
+}
+
+
+
+
+// Clic dispatcher
+var clic = function(id) {
+  var element = document.getElementById(id);
+  if ( id == 25) {
+    deck(element.innerHTML, element.style.backgroundColor);
+    return;
+  }
+}
+
+
+
+
+// Initialization of the page
+var init = function() {
+  console.log("init");
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
+  //document.getElementById("25").style.backgroundColor = "lime";
   
-  var cards = mixedCard(51);
-  
-  for(i=0; i<52; i++) {
+  for(i=0; i<cards.length; i++) {
+    
     console.log(cardValue(cards[i]));
   }
 };
+
+
+
+
+// Cards to be drawn
+var cards = mixedCard(51);
