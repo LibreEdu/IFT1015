@@ -7,6 +7,14 @@
 
 
 
+var highlight = "lime";
+var focus; // Indicate which element has the focus
+var nbColumns = 5;
+var nbLines = 5;
+var deckId = nbColumns * nbLines;
+
+
+
 // Return the html code of an array
 var htmlTable = function(inner) {
   return '<table>\n\t<tbody>\n' + inner + '\t</tbody>\n</table>\n';
@@ -77,12 +85,12 @@ var htmlGame = function() {
   var innerTable = '';
   
   // The first five lines
-  for(var i = 0; i < 5; i++) {
+  for(var i = 0; i < nbLines; i++) {
     var innerTR = '';
     
     // Five columns of cards
-    for(var j = 0; j < 5; j++) {
-      innerTR += htmlTdOnclick(5*i + j, htmlImg('empty'));
+    for(var j = 0; j < nbColumns; j++) {
+      innerTR += htmlTdOnclick(nbColumns * i + j, htmlImg('empty'));
     }
     
     // Total column
@@ -94,7 +102,7 @@ var htmlGame = function() {
   var innerTR = '';
   
   //Totals line
-  for(var j = 0; j < 5; j++) {
+  for(var j = 0; j < nbColumns; j++) {
     innerTR += htmlTd('C'+j, '', '');
   }
   
@@ -172,11 +180,25 @@ var cardValue = function(cardNumber) {
 
 
 
+// Highlight a card
+var highlight = function(id) {
+  document.getElementById(id).style.backgroundColor = highlight;
+  focus = id;
+}
+
+
+
+
 // Click on the deck evenement
 var deck = function(innerHTML, backgroundColor) {
-  if (innerHTML == '<img src="cards/back.svg">') {
-    document.getElementById("25").innerHTML
-      = htmlImg(cardValue(cards.pop()));
+  var element = document.getElementById(deckId);
+  if (innerHTML == '<img src="cards/back.svg">') { 
+    
+    // We turn over a new card
+    element.innerHTML = htmlImg(cardValue(cards.pop()));
+    highlight(deckId);
+  } else {
+    
   }
 }
 
@@ -186,9 +208,11 @@ var deck = function(innerHTML, backgroundColor) {
 // Clic dispatcher
 var clic = function(id) {
   var element = document.getElementById(id);
-  if ( id == 25) {
+  if ( id == deckId) {
     deck(element.innerHTML, element.style.backgroundColor);
     return;
+  } else {
+    
   }
 }
 
@@ -197,12 +221,11 @@ var clic = function(id) {
 
 // Initialization of the page
 var init = function() {
-  console.log("init");
+  //console.log("init");
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
   //document.getElementById("25").style.backgroundColor = "lime";
   
   for(i=0; i<cards.length; i++) {
-    
     console.log(cardValue(cards[i]));
   }
 };
