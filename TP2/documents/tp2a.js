@@ -192,30 +192,6 @@ var highlightSwitch = function(id) {
 
 
 
-// We are on the deck, the left table
-var deck = function() {
-  var element = document.getElementById(deckId);
-  
-  // If the deck image is the backside image of a card
-  if (element.innerHTML == htmlImg('back')) { 
-
-    // We flip the card to get a new card
-    var newCard = cards.pop();
-    element.innerHTML = htmlImg(cardValue(newCard));
-    gameCards[deckId] = newCard;
-  }
-  
-  // If a card from the right is highlighted, the highlight is removed
-  if (highlighted !== "" && highlighted < deckId) {
-    highlightSwitch(highlighted);
-  }
-  
-  // We switch the highlight of the deck
-  highlightSwitch(deckId);
-};
-
-
-
 // Check if all cards are from the same suit
 var nbCard = function(hand) {
   var nbCard = 0;
@@ -340,10 +316,8 @@ var calculatePoints = function() {
     var columnSum = points(column);
     sumUpdate('C', i, columnSum);
     sum += columnSum;
-    //sum += rowPoints(column);
   }
   
-  console.log(sum);
   sumUpdate('T', '', sum);
 };
 
@@ -360,10 +334,32 @@ var saveCards = function(newSlot, oldSlot, switchCard) {
     gameCards[newSlot] = gameCards[oldSlot];
     gameCards[oldSlot] = -1;
   }
-  //console.clear();
   calculatePoints();
-  //calculatePoints();
 }
+
+
+
+// We are on the deck, the left table
+var deck = function() {
+  var element = document.getElementById(deckId);
+  
+  // If the deck image is the backside image of a card
+  if (element.innerHTML == htmlImg('back')) { 
+
+    // We flip the card to get a new card
+    var newCard = cards.pop();
+    element.innerHTML = htmlImg(cardValue(newCard));
+    gameCards[deckId] = newCard;
+  }
+  
+  // If a card from the right is highlighted, the highlight is removed
+  if (highlighted !== "" && highlighted < deckId) {
+    highlightSwitch(highlighted);
+  }
+  
+  // We switch the highlight of the deck
+  highlightSwitch(deckId);
+};
 
 
 
@@ -446,17 +442,24 @@ var game = function(id) {
 
 
 
+var theEnd = function() {
+  if ( cards.length == 52 - deckId - 1 ) {
+    alert('Votre pointage final est ' + document.getElementById('T').innerHTML);
+    location.reload();
+  }
+};
+
+
 
 // Clic dispatcher
 var clic = function(id) {
-  console.log();
   if ( id === deckId) {
     deck();
   } else {
     game(id);
   }
+  theEnd();
 };
-
 
 
 
@@ -469,16 +472,11 @@ var init = function() {
 
 
 // Cards to be drawn
-// var cards = mixedCard(51);
+var cards = mixedCard(51);
 
-//var cards = Array(52).fill(0).map( function(card, i) {
-//  return i;
-//});
-//for(i=0; i<cards.length; i++) {
-  //console.log(i + " : " + cardValue(i));
-//}
-
+/*
 var cards = Array(52).fill(0);
 cards = cards.slice(0, -5);
 cards = cards.concat([36, 40, 44, 48, 0 ]);
 console.log(cards);
+//*/
