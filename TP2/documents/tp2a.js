@@ -441,11 +441,16 @@ var game = function(id) {
 };
 
 
-
+/*
+https://stackoverflow.com/questions/40724697/javascript-do-something-before-alert
+*/
 var theEnd = function() {
-  if ( cards.length == 52 - deckId - 1 ) {
-    alert('Votre pointage final est ' + document.getElementById('T').innerHTML);
-    location.reload();
+  var sum = document.getElementById('T').innerHTML;
+  if ( cards.length == 52 - deckId - 1) {
+      setTimeout(function() {
+      alert('Votre pointage final est ' + sum);
+      location.reload();
+    },100)
   }
 };
 
@@ -457,8 +462,8 @@ var clic = function(id) {
     deck();
   } else {
     game(id);
+    theEnd();
   }
-  theEnd();
 };
 
 
