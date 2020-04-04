@@ -222,19 +222,20 @@ var hasAce = function(hand) {
 
 
 
-// Check if the cards are in a sequential rank. Hand must be sorted.
-var sequentialRank = function(hand) {
-  var sequential = true;
+// Check if the cards are in a sequential (sequential = 1) or
+// same (sequential = 0) rank. Hand must be sorted.
+var rank = function(hand, sequential) {
+  var isSequential = true;
   for (var i = 1; i < hand.length; i++) {
-    if ( (hand[i-1] >> 2) + 1 == hand[i] >> 2 ) {
+    if ( (hand[i-1] >> 2) + sequential == hand[i] >> 2 ) {
       // The two cards follow each other
-      sequential = sequential && true;
+      isSequential = isSequential && true;
     } else {
       // The two cards do not follow each other
-      sequential = sequential && false;
+      isSequential = isSequential && false;
     }
   }
-  return sequential;
+  return isSequential;
 };
 
 
@@ -245,7 +246,7 @@ var royalStraight = function(hand) {
     // We take the ace (the first card), we put it at the end, in order to test
     // if there is a sequence
     hand.push(hand.shift() + 52);
-    return sequentialRank(hand);
+    return rank(hand, 1);
   } else {
     return false;
   }
@@ -256,13 +257,20 @@ var royalStraight = function(hand) {
 // Check if the cards are in a sequential rank, ace at the extremities. Cards
 // must be sorted.
 var straight = function(hand) {
-  var sequential = sequentialRank(hand);
+  var sequential = rank(hand, 1);
   if (sequential == true) {
     // The cards are in sequence
     return true;
   } else {
     return royalStraight(hand);
   }
+};
+
+
+
+// CCheck if there are four cards of the same rank. Cards must be sorted.
+var fourOfAKind = function(hand) {
+  return rank( hand.slice(0,4), 0 ) || rank( hand.slice(1), 0 );
 };
 
 
@@ -274,6 +282,13 @@ var points = function(hand) {
     case 5 :
       if ( flush(hand) && royalStraight(hand) ) { // Royal Straight Flush
         return 100;
+      }
+      if ( flush(hand) && straight(hand) ) {      // Straight Flush
+        return 75;
+      }
+    case 4 :
+      if ( fourOfAKind(hand) ) {                  // Four of a kind
+        return 50;
       }
     default :
       return 0;
@@ -441,16 +456,17 @@ var game = function(id) {
 };
 
 
+
 /*
 https://stackoverflow.com/questions/40724697/javascript-do-something-before-alert
 */
 var theEnd = function() {
   var sum = document.getElementById('T').innerHTML;
   if ( cards.length == 52 - deckId - 1) {
-      setTimeout(function() {
+    setTimeout(function() {
       alert('Votre pointage final est ' + sum);
       location.reload();
-    },100)
+    },100);
   }
 };
 
@@ -475,13 +491,12 @@ var init = function() {
 
 
 
-
 // Cards to be drawn
-var cards = mixedCard(51);
+//var cards = mixedCard(51);
 
-/*
+//*
 var cards = Array(52).fill(0);
 cards = cards.slice(0, -5);
-cards = cards.concat([36, 40, 44, 48, 0 ]);
+cards = cards.concat([33, 32, 36, 40, 44, 48, 0, 3, 2, 1]);
 console.log(cards);
 //*/
