@@ -244,9 +244,11 @@ var rank = function(hand, sequential) {
 var royalStraight = function(hand) {
   if (hasAce(hand)) {
     // We take the ace (the first card), we put it at the end, in order to test
-    // if there is a sequence
-    hand.push(hand.shift() + 52);
-    return rank(hand, 1);
+    // if there is a sequence. A copy of the table is made in order not to
+    // change the table by reference.
+    
+    var aceEnd = hand.slice(1).concat( hand[0] + 52);
+    return rank(aceEnd, 1);
   } else {
     return false;
   }
@@ -508,6 +510,7 @@ var clic = function(id) {
 var init = function() {
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
   //for(var i = 0; i < cards.length; i++) console.log(cardValue(cards[i]))
+  //console.log(points([0, 48,44,40,36]));
 };
 
 
@@ -515,5 +518,5 @@ var init = function() {
 // Cards to be drawn
 //var cards = mixedCard(51);
 
-cards = [33,3,2,1,32,36,40,44,48,0];
+cards = [33,3,2,1,32,0,48,44,40,36];
 //console.clear();
