@@ -298,6 +298,9 @@ var points = function(hand) {
       if ( fullHouse(hand) ) {                    // Full House
         return 25;
       }
+      if ( flush(hand) ) {                        // Flush
+        return 20;
+      }
     case 4 :
       if ( fourOfAKind(hand) ) {                  // Four of a kind
         return 50;
@@ -509,6 +512,6 @@ var init = function() {
 //*
 var cards = Array(52).fill(0);
 cards = cards.slice(0, -5);
-cards = cards.concat([33, 32, 36, 40, 44, 48, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+cards = cards.concat([33, 32, 36, 40, 44, 48, 7, 6, 5, 3, 2, 1, 16, 12, 8, 4, 0]);
 console.log(cards);
 //*/
