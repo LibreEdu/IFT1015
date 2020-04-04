@@ -268,9 +268,18 @@ var straight = function(hand) {
 
 
 
-// CCheck if there are four cards of the same rank. Cards must be sorted.
+// Check if there are four cards of the same rank. Cards must be sorted.
 var fourOfAKind = function(hand) {
   return rank( hand.slice(0,4), 0 ) || rank( hand.slice(1), 0 );
+};
+
+
+
+// Check if there are four cards of the same rank. Cards must be sorted.
+var fullHouse = function(hand) {
+  var threeAndTwo = rank( hand.slice(0,3), 0 ) && rank( hand.slice(3), 0 );
+  var twoAndThree = rank( hand.slice(0,2), 0 ) && rank( hand.slice(2), 0 );
+  return threeAndTwo || twoAndThree;
 };
 
 
@@ -285,6 +294,9 @@ var points = function(hand) {
       }
       if ( flush(hand) && straight(hand) ) {      // Straight Flush
         return 75;
+      }
+      if ( fullHouse(hand) ) {                    // Full House
+        return 25;
       }
     case 4 :
       if ( fourOfAKind(hand) ) {                  // Four of a kind
@@ -497,6 +509,6 @@ var init = function() {
 //*
 var cards = Array(52).fill(0);
 cards = cards.slice(0, -5);
-cards = cards.concat([33, 32, 36, 40, 44, 48, 0, 3, 2, 1]);
+cards = cards.concat([33, 32, 36, 40, 44, 48, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
 console.log(cards);
 //*/
