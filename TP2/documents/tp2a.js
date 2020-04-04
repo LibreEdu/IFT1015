@@ -206,7 +206,7 @@ var nbCard = function(hand) {
 // Check if all cards are from the same suit
 var flush = function(hand) {
   for (var i = 1; i < hand.length; i++) {
-    if (hand[i-1] & 3 != hand[i-1] & 3) {
+    if ( (hand[i-1] & 3) != (hand[i] & 3) ) {
       return false;
     }
   }
@@ -286,7 +286,9 @@ var fullHouse = function(hand) {
 
 // Calculates the points of a simple array
 var points = function(hand) {
-  var hand = hand.sort();
+  var hand = hand.sort( function (x, y) {
+    return x - y;
+  });
   switch(nbCard(hand)) {
     case 5 :
       if ( flush(hand) && royalStraight(hand) ) { // Royal Straight Flush
@@ -300,6 +302,9 @@ var points = function(hand) {
       }
       if ( flush(hand) ) {                        // Flush
         return 20;
+      }
+      if ( straight(hand) ) {                     // Straight
+        return 15;
       }
     case 4 :
       if ( fourOfAKind(hand) ) {                  // Four of a kind
@@ -502,6 +507,7 @@ var clic = function(id) {
 // Initialization of the page
 var init = function() {
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
+  //for(var i = 0; i < cards.length; i++) console.log(cardValue(cards[i]))
 };
 
 
@@ -509,9 +515,5 @@ var init = function() {
 // Cards to be drawn
 //var cards = mixedCard(51);
 
-//*
-var cards = Array(52).fill(0);
-cards = cards.slice(0, -5);
-cards = cards.concat([33, 32, 36, 40, 44, 48, 7, 6, 5, 3, 2, 1, 16, 12, 8, 4, 0]);
-console.log(cards);
-//*/
+cards = [33,3,2,1,32,36,40,44,48,0];
+//console.clear();
