@@ -296,8 +296,8 @@ var twoCards = function(hand) {
 var twoPair = function(hand) {
   var pair = twoCards(hand);
   var firstTwo = xOfAKind(2, pair[0]) && xOfAKind(2, pair[2]);
-  var lastTwo = xOfAKind(2, pair[1]) && xOfAKind(2, pair[3]);
-  var twoEnds =  xOfAKind(2, pair[0]) && xOfAKind(2, pair[3]);
+  var lastTwo  = xOfAKind(2, pair[1]) && xOfAKind(2, pair[3]);
+  var twoEnds  = xOfAKind(2, pair[0]) && xOfAKind(2, pair[3]);
   return firstTwo || lastTwo || twoEnds;
 };
 
@@ -560,8 +560,6 @@ var clic = function(id) {
 // Initialization of the page
 var init = function() {
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
-  //for(var i = 0; i < cards.length; i++) console.log(cardValue(cards[i]))
-  //console.log(points([0, 1, 2,32]));
 };
 
 
