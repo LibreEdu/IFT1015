@@ -568,7 +568,7 @@ var init = function() {
 // Cards to be drawn
 var cards = mixedCard(52);
 
-//* Test
+/* Test
 cards = Array(27).fill(-1).concat([31,0,40,33,2,35,37,41,49,45,32,36,44,48,0,38,
   42,46,50,34,39,43,47,51,3]);
 //*/
