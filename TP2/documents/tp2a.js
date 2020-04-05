@@ -8,7 +8,9 @@
 
 // Global variables. See also at the very bottom, at the end of the program.
 
-// In order to have a more easily configurable program
+// In order to have a more easily configurable program. The number of columns
+// and rows can be reduced, the program works.  When the number of columns or
+// rows is increased, there are bugs
 var highlightColor = "lime";
 var nbColumns = 5;
 var nbRows = 5;
@@ -69,7 +71,7 @@ var htmlDeck = function() {
   // Contents of the first row
   var innerTR = htmlTd('', '', button);
   innerTR += htmlTd('', '', '');
-  innerTR += htmlTdOnclick(25, htmlImg('back'));
+  innerTR += htmlTdOnclick(deckId, htmlImg('back'));
   innerTR += htmlTd('', '', '');
   
   // Contents of the array
