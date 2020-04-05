@@ -269,14 +269,49 @@ var straight = function(hand) {
 
 
 
-// Check if there are x cards of the same rank. Cards must be sorted.
-var xOfAKind = function(x, hand) {
-  console.log("x = " + x);
+// Check if there are x cards of the same rank. Cards must be sorted. The 
+// parameter must not be called hand, otherwise it refers to the full hand.
+var xOfAKind = function(x, partHand) {
   var is = false;
-  for (var i = 0; i <= 5 - x; i++) {
-    is = is || rank( hand.slice(i,i+x), 0 );
+  for (var i = 0; i <= partHand.length - x; i++) {
+    is = is || rank( partHand.slice(i,i+x), 0 );
   }
   return is;
+};
+
+
+
+// 
+var twoCards = function(hand) {
+  var twoCards = Array(4);
+  for(i = 0; i < 4; i++) {
+    twoCards[i] = hand.slice(i, i+2);
+  }
+  return twoCards;
+};
+
+
+
+// 
+var twoPair = function(hand) {
+  var pair = twoCards(hand);
+  var firstTwo = xOfAKind(2, pair[0]) && xOfAKind(2, pair[2]);
+  var lastTwo = xOfAKind(2, pair[1]) && xOfAKind(2, pair[3]);
+  var twoEnds =  xOfAKind(2, pair[0]) && xOfAKind(2, pair[3]);
+  return firstTwo || lastTwo || twoEnds;
+};
+
+
+
+// 
+var onePair = function(hand) {
+  var pair = twoCards(hand);
+  for(i = 0; i < pair.length; i++) {
+    if ( pair[i][0] != -1 && pair[i][1] != -1 && xOfAKind(2, pair[i]) ) {
+      return true;
+    } 
+  }
+  return false;
 };
 
 
@@ -316,9 +351,16 @@ var points = function(hand) {
       if ( xOfAKind(4, hand) ) {                  // Four of a kind
         return 50;
       }
+      if ( twoPair(hand) ) {                      // Two pair
+        return 5;
+      }
     case 3 :
       if ( xOfAKind(3, hand) ) {                  // Three of a kind
         return 10;
+      }
+    case 2 :
+      if ( onePair(hand) ) {                      // One pair
+        return 2;
       }
     default :
       return 0;
@@ -492,7 +534,7 @@ https://stackoverflow.com/questions/40724697/javascript-do-something-before-aler
 */
 var theEnd = function() {
   var sum = document.getElementById('T').innerHTML;
-  if ( cards.length == 52 - deckId - 1) {
+  if ( cards.length == 52 - deckId) {
     setTimeout(function() {
       alert('Votre pointage final est ' + sum);
       location.reload();
@@ -524,7 +566,9 @@ var init = function() {
 
 
 // Cards to be drawn
-//var cards = mixedCard(51);
+var cards = mixedCard(52);
 
-cards = [33,48,44,40,36,3,32,2,1,0];
-//console.clear();
+//* Test
+cards = Array(27).fill(-1).concat([31,0,40,33,2,35,37,41,49,45,32,36,44,48,0,38,
+  42,46,50,34,39,43,47,51,3]);
+//*/
