@@ -281,7 +281,8 @@ var xOfAKind = function(x, partHand) {
 
 
 
-// 
+// All combinations of two cards that follow each other: cards 0 and 1, cards 1 
+// and 2...
 var twoCards = function(hand) {
   var twoCards = Array(4);
   for(i = 0; i < 4; i++) {
@@ -292,7 +293,7 @@ var twoCards = function(hand) {
 
 
 
-// 
+// Check if there is two pairs of cards in the hand. Cards must be sorted.
 var twoPair = function(hand) {
   var pair = twoCards(hand);
   var firstTwo = xOfAKind(2, pair[0]) && xOfAKind(2, pair[2]);
@@ -303,13 +304,17 @@ var twoPair = function(hand) {
 
 
 
-// 
+// Check if there is a pair of cards in the hand. Cards must be sorted.
 var onePair = function(hand) {
   var pair = twoCards(hand);
   for(i = 0; i < pair.length; i++) {
+    
+    // Flipped cards (-1) are not considered, otherwise [-1, -1] is considered
+    // to be as a peer.
     if ( pair[i][0] != -1 && pair[i][1] != -1 && xOfAKind(2, pair[i]) ) {
       return true;
-    } 
+    }
+    
   }
   return false;
 };
@@ -327,9 +332,13 @@ var fullHouse = function(hand) {
 
 // Calculates the points of a simple array
 var points = function(hand) {
+  
+  // By default, the sort() function sorts in ASCII order. To sort in numerical
+  // order, you must define the sort function
   var hand = hand.sort( function (x, y) {
     return x - y;
   });
+  
   switch(nbCard(hand)) {
     case 5 :
       if ( flush(hand) && royalStraight(hand) ) { // Royal Straight Flush
