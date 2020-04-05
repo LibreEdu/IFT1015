@@ -246,7 +246,6 @@ var royalStraight = function(hand) {
     // We take the ace (the first card), we put it at the end, in order to test
     // if there is a sequence. A copy of the table is made in order not to
     // change the table by reference.
-    
     var aceEnd = hand.slice(1).concat( hand[0] + 52);
     return rank(aceEnd, 1);
   } else {
@@ -270,9 +269,14 @@ var straight = function(hand) {
 
 
 
-// Check if there are four cards of the same rank. Cards must be sorted.
-var fourOfAKind = function(hand) {
-  return rank( hand.slice(0,4), 0 ) || rank( hand.slice(1), 0 );
+// Check if there are x cards of the same rank. Cards must be sorted.
+var xOfAKind = function(x, hand) {
+  console.log("x = " + x);
+  var is = false;
+  for (var i = 0; i <= 5 - x; i++) {
+    is = is || rank( hand.slice(i,i+x), 0 );
+  }
+  return is;
 };
 
 
@@ -309,8 +313,12 @@ var points = function(hand) {
         return 15;
       }
     case 4 :
-      if ( fourOfAKind(hand) ) {                  // Four of a kind
+      if ( xOfAKind(4, hand) ) {                  // Four of a kind
         return 50;
+      }
+    case 3 :
+      if ( xOfAKind(3, hand) ) {                  // Three of a kind
+        return 10;
       }
     default :
       return 0;
@@ -510,7 +518,7 @@ var clic = function(id) {
 var init = function() {
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
   //for(var i = 0; i < cards.length; i++) console.log(cardValue(cards[i]))
-  //console.log(points([0, 48,44,40,36]));
+  //console.log(points([0, 1, 2,32]));
 };
 
 
@@ -518,5 +526,5 @@ var init = function() {
 // Cards to be drawn
 //var cards = mixedCard(51);
 
-cards = [33,3,2,1,32,0,48,44,40,36];
+cards = [33,48,44,40,36,3,32,2,1,0];
 //console.clear();
