@@ -533,8 +533,9 @@ var game = function(id) {
 https://stackoverflow.com/questions/40724697/javascript-do-something-before-alert
 */
 var theEnd = function() {
-  var sum = document.getElementById('T').innerHTML;
-  if ( cards.length == 52 - deckId) {
+  var element = document.getElementById(deckId);
+  if ( cards.length == 52 - deckId && element.innerHTML == htmlImg('back')) {
+    var sum = document.getElementById('T').innerHTML;
     setTimeout(function() {
       alert('Votre pointage final est ' + sum);
       location.reload();
