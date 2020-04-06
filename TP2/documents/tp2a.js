@@ -58,11 +58,31 @@ var highlighted = '';
 // To know which card is where in order to calculate the points
 var gameCards = Array(deckId + 1).fill(-1);
 
+// The assert module provides a set of assertion functions for verifying
+// invariants.
+//var assert = require("assert");
 
-// Return the html code of a table
-var htmlTable = function(inner) {
-  return '<table>\n\t<tbody>\n' + inner + '\t</tbody>\n</table>\n';
+
+/* Return the html code of a table
+ *
+ * content (string): HTML content between the two tags
+ *
+ * output (string) : HTML code of the table
+ */
+var htmlTable = function(content) {
+  return '<table>\n\t<tbody>\n' + content + '\t</tbody>\n</table>\n';
 };
+
+var testHtmlTable = function() {
+  assert( htmlTable('') ==
+    "<table>\n" +
+    "\t<tbody>\n" +
+	  "\t</tbody>\n" +
+    "</table>");
+}
+
+//console.log(htmlTable(''));
+//testHtmlTable();
 
 
 // Return the html code of a table row
