@@ -40,7 +40,7 @@
  * init           : initialization of the page
  */
 
- 
+
 // Global variables. See also at the very bottom, at the end of the program.
 
 // In order to have a more easily configurable program. The number of columns
@@ -572,7 +572,6 @@ var clic = function(id) {
 var init = function() {
   document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
 };
-
 
 
 // Cards to be drawn
