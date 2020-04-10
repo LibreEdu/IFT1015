@@ -58,10 +58,6 @@ var highlighted = '';
 // To know which card is where in order to calculate the points
 var gameCards = Array(deckId + 1).fill(-1);
 
-// The assert module provides a set of assertion functions for verifying
-// invariants.
-//var assert = require("assert");
-
 
 /* Return the html code of a table
  *
