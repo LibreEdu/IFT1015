@@ -1,6 +1,6 @@
 /* File: tp2a.js
  *
- * Authors: Alexandre Pachot and Eliecer Rodriguez Silva
+ * Authors: Jeanne Laflamme and Alexandre Pachot
  * Date: April 22, 2020
  *
  * List of functions
@@ -70,14 +70,27 @@ var htmlTable = function(content) {
 };
 
 var testHtmlTable = function() {
+  var f = "htmlTable();";
+
+  var t = "empty content"
   console.assert( htmlTable('') ==
     "<table>\n" +
     "\t<tbody>\n" +
-	  "\t</tbody>\n" +
-    "</table>\n");
-}
+    "\t</tbody>\n" +
+    "</table>\n", f, t);
 
-//console.log(htmlTable(''));
+  t = "space, tab and newline"
+  console.assert( htmlTable(' \t\n') ==
+    "<table>\n" +
+    "\t<tbody>\n" +
+    " \t\n" +
+    "\t</tbody>\n" +
+    "</table>\n", f, t);
+  }
+  
+  t = "Hello, World!"
+
+//console.log(htmlTable('   '));
 
 
 // Return the html code of a table row
@@ -559,6 +572,7 @@ var game = function(id) {
 
 /* The game's over
 https://stackoverflow.com/questions/40724697/javascript-do-something-before-alert
+https://stackoverflow.com/questions/33955650/what-is-settimeout-doing-when-set-to-0-milliseconds
 */
 var theEnd = function() {
   var element = document.getElementById(deckId);
@@ -567,7 +581,7 @@ var theEnd = function() {
     setTimeout(function() {
       alert('Votre pointage final est ' + sum);
       init();
-    },100);
+    },0);
   }
 };
 
