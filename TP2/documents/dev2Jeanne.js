@@ -1,291 +1,140 @@
-/* Fonctions pour le tp2 */
 
-
-var random = function(n) {
-
-    return Math.floor(Math.random()*n);
-    
-};
-
-var shuffle = function() {
-
-    var paquet = Array(52).fill(0).map(function(x,i) { return i; });
-
-    for(var i = 51; i > 0; i--) {
-
-	var j = random(i); // indice de la carte Ã  dÃ©placer
-	
-	var t = paquet[j];
-	paquet[j] = paquet[i];
-	paquet[i] = t;
-	
+// Check if all cards are from the same suit
+var flush = function(hand) {
+  for (var i = 1; i < hand.length; i++) {
+    if ( ((hand[i-1] & 3) != (hand[i] & 3)) || hand[i] == 52 ) {
+      return false;
     }
+  }
+  return true;
+};
 
-    return paquet;
+
+// Check if there's an ace. Hand must be sorted
+var hasAce = function(hand) {
+  return (hand[0] >> 2 == 0) ? true : false;
+};
+
+
+// Check if the cards are in a sequential (sequential = 1) or
+// same (sequential = 0) rank. Cards must be sorted
+var rank = function(cards, sequential) {
+  if(cards[cards.length - 1] == 52) return false;
     
+  for (var i = 1; i < cards.length; i++) {
+    if ( (cards[i-1] >> 2) + sequential != cards[i] >> 2 ) {
+      return false;
+    } 
+  }
+  return true;
 };
 
-var memeCoul = function(cartes) {
 
-    for (var i = 1; i < cartes.length; i++) {
+// Check if we have a royal straight. Hand must be sorted.
+var royalStraight = function(hand) {
+  
+    if (hand[0]>>2 != 0 || hand[1]>>2 != 9) return false;
 
-	if(cartes[i]&3 != cartes[0]&3) return false;
+    return rank(hand.slice(1,5),1);
+};
 
-    }
 
-    return true;
+
+
+// Check if there are x cards of the same rank. Cards must be sorted. The
+// parameter must not be called hand, otherwise it refers to the full hand.
+var xOfAKind = function(x, hand) {
+  for (var i = 0; i <= hand.length - x; i++) {
+    var partHand = hand.slice(i,i+x); 
+  	if(rank(partHand, 0 ) && partHand[0] != 52) return true;
+  }
+  return false;
+};
+
+
+// Return combinations of two cards that follow each other: cards 0 and 1,
+// cards 1 and 2...
+var twoCards = function(hand) {
+  var twoCards = Array(4);
+  for(var i = 0; i < 4; i++) {
+    twoCards[i] = hand.slice(i, i+2);
+  }
+  return twoCards;
+};
+
+
+// Check if there is two pairs of cards in the hand. Cards must be sorted.
+var twoPair = function(hand) {
+  var pair = twoCards(hand);
+  var firstTwo = rank(pair[0],0) && rank(pair[2],0);
+  var lastTwo  = rank(pair[1],0) && rank(pair[3],0);
+  var twoEnds  = rank(pair[0],0) && rank(pair[3],0);
+  return firstTwo || lastTwo || twoEnds;
+};
+
+
+
+// Check if there are four cards of the same rank. Cards must be sorted.
+var fullHouse = function(hand) {
+  var threeAndTwo = rank( hand.slice(0,3), 0 ) && rank( hand.slice(3), 0 );
+  var twoAndThree = rank( hand.slice(0,2), 0 ) && rank( hand.slice(2), 0 );
+  return threeAndTwo || twoAndThree;
+};
+
+
+// Calculate the points of the hand
+var points = function(hand) {
+  // By default, the sort() function sorts in ASCII order. To sort in numerical
+  // order, you must define the sort function
+  var hand = hand.sort( function (x, y) {
+    return x - y;
+  });
+
     
-};
-
-var memeVal = function(cartes) {
-
-    for (var i = 1; i < cartes.length; i++) {
-
-	if(cartes[i]>>2 != cartes[0]>>2) return false;
-
-    }
-    
-    return true;
-    
-};
-
-var suite = function(cartes) {
-
-    cartes = cartes.sort();
-            
-    for(var i = 1; i < cartes.length; i++) {
-
-	if(cartes[i-1]>>2 != cartes[i]>>2 - 1) return true;
-
-    }
-
-    return false;
- 
-};
-
-var suiteRoyale = function(cartes) {
-
-    cartes = cartes.sort();
-
-    if(cartes[0]>>2 != 0) return false;
-
-    for(var i = 1; i < cartes.length; i++) {
-	
-	if(cartes[i]>>2 != 32 + i*4) return false;
-
-    }
-
-    return true;
-    
-};
-
-
-// Cette fonction prend en paramètre un tableau de 5 chiffres (main)
-// et retourne un enregistrement qui contient une liste (deux) avec
-// tous les sous-ensembles de 2éléments de main et une autre (trois)
-// qui contient tous les sous-ensembles de trois éléments
-
-var subsets = function(main) {
-
-    var subs = {deux: [], trois: []}
-
-    for(var i = 0; i < main.length -1; i++) {
-	for(var j = i+1; j < main.length; j++) {
-
-	    // Trois contient un sous-ensemble de 3 cartes de main et
-	    // deux contient un sous-ensemble de 2 cartes de main
-	    
-	    trois = main.slice();
-
-	    deux = trois.splice(i,1);
-	    deux = deux.concat(trois.splice(j-1,1));
-
-	    subs.deux.push(deux);
-	    subs.trois.push(trois);
-
-	}
-    }
-
-    return subs;
-        
-};
-
-
-var quinteFlushRoyale = function(main) {
-
-    return (suiteRoyale(main) && memeCoul(main));
-    
-};
-
-var quinteFlush = function(main) {
-    
-    return (memeCoul(main) && suite(main));
+      if ( flush(hand) && royalStraight(hand) ) {  // Royal Straight Flush
+        return 100;
+      }
+      if ( flush(hand) && rank(hand,1) ) {         // Straight Flush
+        return 75;
+      }
+      if ( xOfAKind(4, hand) ) {                   // Four of a kind
+        return 50;
+      }
+      if ( fullHouse(hand) ) {                     // Full House
+        return 25;
+      }
+      if ( flush(hand) ) {                         // Flush
+        return 20;
+      }
+      if ( rank(hand,1) || royalStraight(hand) ) { // Straight
+        return 15;
+      }
+      if ( xOfAKind(3, hand) ) {                   // Three of a kind
+        return 10;
+      }
+      if ( twoPair(hand) ) {                       // Two pair
+        return 5;
+      }
+      if ( xOfAKind(2,hand) ) {                    // One pair
+        return 2;
+      } else return 0;
 
 };
 
-var carre = function(main) {
+var testPoints = function() {
 
-    for(var i = 0; i < main.length; i++) {
-
-	var cartes = main.slice();
-
-	cartes.splice(i,1);
-		
-	if(memeVal(cartes)) return true;
-	
-    };
-
-    return false;
-};
-
-var fullHouse = function(main) {
-
-    var subs = subsets(main);
-       
-    var triple = false; // true si main contient trois cartes de meme valeur
-    var pair = false; // true si main contient deux cartes de meme valeur différente de triple
-
-    var tripleVal = -1; // Contient la valeur du triple s'il existe
-    
-    subs.trois.forEach(function(x) {
-	                   if(memeVal(x)) triple = true, tripleVal = x[0]>>2; });
-
-    subs.deux.forEach(function(x) {
-	                  if(memeVal(x) && x[0]>>2 != tripleVal) pair = true; }); 
-    
-    if(triple && pair) return true; else return false;
+    assert(points([36,0,40,48,44]) == 100);
+    assert(points([9,13,17,21,25]) == 75);
+    assert(points([36,37,38,7,39]) == 50);
+    assert(points([5,16,6,17,18]) == 25);
+    assert(points([8,16,32,12]) == 20);
+    assert(points([4,10,13,16,23]) == 15);
+    assert(points([13,14,15,52,43]) == 10);
+    assert(points([8,9,16,17,23]) == 5);
+    assert(points([0,4,16,12,52]) == 0);
+    assert(points([52,12,52,52,52]) == 0);
+    assert(points([52,52,52,52,52]) == 0);
 
 };
 
-var flush = function(main) {
-
-    return memeCoul(main);
-};
-
-
-var quinte = function(main) {
-
-    return (suiteRoyale(main) || suite(main));
-
-};
-
-var brelan = function(main) {
-    
-    var subs = subsets(main);
-
-    for(var i = 0; i < subs.trois.length; i++) {
-
-	if(memeVal(subs.trois[i])) return true;
-	
-    }
-
-    return false;
-    
-};
-
-var doublePaire = function(main) {
-
-    var subs = subsets(main);
-
-    var paires = 0; // Nombres de paires de cartes trouvés dans la main
-
-    var paireVal = -1; // Valeur de la dernière paire trouvé
-
-    subs.deux.forEach(function(x) { if(memeVal(x) && x[0]>>2 != paireVal) paires += 1; });
-
-    return paires == 2;
-    
-};
-
-var paire = function(main) {
-
-    var subs = subsets(main);
-
-    for(var i = 0; i < subs.deux.length; i++) {
-
-	if(memeVal(subs.deux.length[i])) return true;
-	
-    }
-
-    return false;
-    
-};
-
-var pointsMain = function(main) {
-
-    if(quinteFlushRoyale(main))	return 100;
-
-    else if(quinteFlush(main)) return 75;
-
-    else if(carre(main)) return 50;
-
-    else if(fullHouse(main)) return 25;
-
-    else if(flush(main)) return 20;
-
-    else if(quinte(main)) return 15;
-
-    else if(brelan(main)) return 10;
-
-    else if(doublePaire(main)) return 5;
-
-    else if(paire(main)) return 2;
-
-    else return 0;
-    
-};
-
-var numToCard = function(n) {
-
-    var val = "";
-    var coul = "";
-
-    // Trouver la valeur
-
-    switch(n>>2) {
-
-    case 0:
-	val = "A";
-	break;
-    case 10:
-	val = "J";
-	break;
-    case 11:
-	val = "Q";
-	break;
-    case 12:
-	val = "K";
-	break;
-    default:
-	val = n>>2  + 1;
-    }
-
-    // Trouver la couleur
-
-    switch(n&3) {
-
-    case 0:
-	coul = "C";
-	break;
-    case 1:
-	coul = "D";
-	break;
-    case 2:
-	coul = "H";
-	break;
-    case 3:
-	coul = "S";
-
-    }
-
-    return val + coul;
-};
-
-
-
-
-
-
-
-
-
+testPoints();
