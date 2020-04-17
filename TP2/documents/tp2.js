@@ -69,6 +69,7 @@ var htmlTable = function(content) {
   return '<table>\n\t<tbody>\n' + content + '\t</tbody>\n</table>\n';
 };
 
+// Unit tests
 var testHtmlTable = function() {
   var f = "htmlTable() with";
 
@@ -110,8 +111,21 @@ var testHtmlTable = function() {
     "\t</tbody>\n" +
     "</table>\n", f, t);
 
-    //t = "a number";
-    //console.log(htmlTable(2));
+  t = "a number";
+  console.assert( htmlTable(0) ==
+    "<table>\n" +
+    "\t<tbody>\n" +
+    "0" +
+    "\t</tbody>\n" +
+    "</table>\n", f, t);
+
+  t = "a boolean";
+  console.assert( htmlTable(false) ==
+    "<table>\n" +
+    "\t<tbody>\n" +
+    "false" +
+    "\t</tbody>\n" +
+    "</table>\n", f, t);
 }
 
 
@@ -120,19 +134,110 @@ var htmlTr = function(inner) {
   return '\t\t<tr>\n' + inner + '\t\t</tr>\n';
 };
 
+// Unit tests
+var testHtmTr = function() {
+  var f = "htmlTr() with";
+
+  var t = "empty content"
+  console.assert( htmlTr('') ==
+    "\t\t<tr>\n" +
+    "\t\t</tr>\n", f, t);
+
+  t = "space, tab and newline"
+  console.assert( htmlTr(' \t\n') ==
+    "\t\t<tr>\n" +
+    " \t\n" +
+    "\t\t</tr>\n", f, t);
+
+  t = "w3schools example"
+  var tableContent = "  <th>Month</th>\n";
+  tableContent += "  <th>Savings</th>\n";
+  console.assert( htmlTr(tableContent) ==
+    "\t\t<tr>\n" +
+    "  <th>Month</th>\n" +
+    "  <th>Savings</th>\n" +
+    "\t\t</tr>\n", f, t);
+
+  t = "a number";
+  console.assert( htmlTr(0) ==
+    "\t\t<tr>\n" +
+    "0" +
+    "\t\t</tr>\n", f, t);
+
+  t = "a boolean";
+  console.assert( htmlTr(false) ==
+    "\t\t<tr>\n" +
+    "false" +
+    "\t\t</tr>\n", f, t);
+}
+
 
 // Return the html code of a table cell
 var htmlTd = function(id, js, inner) {
   var id = (id === '') ? '' : ' id="' + id + '"';
-  var js = (js == '') ? '' : ' ' + js;
+  var js = (js === '') ? '' : ' ' + js;
   return '\t\t\t<td' + id + js + '>' + inner + '</td>\n';
 };
+
+// Unit tests
+var testHtmTd = function() {
+  var f = "htmlTd() with";
+
+  var t = "empty content"
+  console.assert( htmlTd('', '', '') ==
+    "\t\t\t<td></td>\n", f, t);
+
+  t = "space, tab and newline"
+  console.assert( htmlTd(' \t\n', ' \t\n', ' \t\n') ==
+    "\t\t\t<td id=\" \t\n\"  \t\n> \t\n</td>\n", f, t);
+
+  t = "id, js and inner"
+  console.assert( htmlTd(0, 'onclick="clic(0);"', '<img src="cards/empty.svg">')
+    == "\t\t\t<td id=\"0\" onclick=\"clic(0);\"><img src=\"cards/empty.svg\">" +
+      "</td>\n", f, t);
+
+  t = "numbers";
+  console.assert( htmlTd(0, 1, 2) ==
+    "\t\t\t<td id=\"0\" 1>2</td>\n", f, t);
+
+  t = "booleans";
+  console.assert( htmlTd(false, false, false) ==
+    "\t\t\t<td id=\"false\" false>false</td>\n", f, t);
+}
 
 
 // Return the html code of an onclick table cell
 var htmlTdOnclick = function(id, inner) {
   return htmlTd(id, 'onclick="clic(' + id + ');"', inner);
 };
+
+// Unit tests
+var testHtmlTdOnclick  = function() {
+  var f = "htmlTdOnclick() with";
+
+  var t = "empty content"
+  console.assert( htmlTdOnclick('', '') ==
+    "\t\t\t<td></td>\n", f, t);
+
+  t = "space, tab and newline"
+  console.assert( htmlTdOnclick(' \t\n', ' \t\n', ' \t\n') ==
+    "\t\t\t<td id=\" \t\n\"  \t\n> \t\n</td>\n", f, t);
+
+  t = "id, js and inner"
+  console.assert( htmlTdOnclick(0, 'onclick="clic(0);"', '<img src="cards/empty.svg">')
+    == "\t\t\t<td id=\"0\" onclick=\"clic(0);\"><img src=\"cards/empty.svg\">" +
+      "</td>\n", f, t);
+
+  t = "numbers";
+    console.assert( htmlTdOnclick(0, 1, 2) ==
+    "\t\t\t<td id=\"0\" 1>2</td>\n", f, t);
+
+  t = "booleans";
+    console.assert( htmlTdOnclick(false, false, false) ==
+    "\t\t\t<td id=\"false\" false>false</td>\n", f, t);
+
+  console.log(htmlTdOnclick('', ''));
+}
 
 
 // Return the html code of an image
@@ -628,6 +733,9 @@ var init = function() {
 // Unit tests
 var unitTests = function() {
   testHtmlTable();
+  testHtmTr();
+  testHtmTd();
+  testHtmlTdOnclick();
 }
 
 
