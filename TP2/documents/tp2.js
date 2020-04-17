@@ -70,7 +70,7 @@ var htmlTable = function(content) {
 };
 
 var testHtmlTable = function() {
-  var f = "htmlTable();";
+  var f = "htmlTable() with";
 
   var t = "empty content"
   console.assert( htmlTable('') ==
@@ -86,11 +86,33 @@ var testHtmlTable = function() {
     " \t\n" +
     "\t</tbody>\n" +
     "</table>\n", f, t);
-  }
-  
-  t = "Hello, World!"
 
-//console.log(htmlTable('   '));
+  t = "w3schools example"
+  var tableContent = "    <tr>\n";
+  tableContent += "      <td>January</td>\n";
+  tableContent += "      <td>$100</td>\n";
+  tableContent += "    </tr>\n";
+  tableContent += "    <tr>\n";
+  tableContent += "      <td>February</td>\n";
+  tableContent += "      <td>$80</td>\n";
+  tableContent += "    </tr>\n";
+  console.assert( htmlTable(tableContent) ==
+    "<table>\n" +
+    "\t<tbody>\n" +
+    "    <tr>\n" +
+    "      <td>January</td>\n" +
+    "      <td>$100</td>\n" +
+    "    </tr>\n" +
+    "    <tr>\n" +
+    "      <td>February</td>\n" +
+    "      <td>$80</td>\n" +
+    "    </tr>\n" +
+    "\t</tbody>\n" +
+    "</table>\n", f, t);
+
+    //t = "a number";
+    //console.log(htmlTable(2));
+}
 
 
 // Return the html code of a table row
@@ -331,7 +353,7 @@ var xOfAKind = function(x, partHand) {
 // cards 1 and 2...
 var twoCards = function(hand) {
   var twoCards = Array(4);
-  for(i = 0; i < 4; i++) {
+  for(var i = 0; i < 4; i++) {
     twoCards[i] = hand.slice(i, i+2);
   }
   return twoCards;
@@ -351,7 +373,7 @@ var twoPair = function(hand) {
 // Check if there is a pair of cards in the hand. Cards must be sorted.
 var onePair = function(hand) {
   var pair = twoCards(hand);
-  for(i = 0; i < pair.length; i++) {
+  for(var i = 0; i < pair.length; i++) {
     // Flipped cards (-1) are not considered, otherwise [-1, -1] is considered
     // to be as a peer.
     if ( pair[i][0] != -1 && pair[i][1] != -1 && xOfAKind(2, pair[i]) ) {
