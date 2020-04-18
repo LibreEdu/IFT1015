@@ -121,6 +121,9 @@ var points = function(hand) {
 
 };
 
+
+
+
 var testPoints = function() {
 
     assert(points([36,0,40,48,44]) == 100);
@@ -137,4 +140,4 @@ var testPoints = function() {
 
 };
 
-testPoints();
+//testPoints();

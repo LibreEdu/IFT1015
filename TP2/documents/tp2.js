@@ -56,7 +56,7 @@ var deckId = nbColumns * nbRows;
 var highlighted = '';
 
 // To know which card is where in order to calculate the points
-var gameCards = Array(deckId + 1).fill(-1);
+var gameCards = Array(deckId + 1).fill(52);
 
 
 /* Return the html code of a table
@@ -175,58 +175,93 @@ var htmlGame = function() {
 };
 
 
-// Generate a random array of numbers from 0 to nbCards
-var mixedCard = function(nbCards) {
+// This function takes an integer n >= 1 and returns a random integer m
+// such that 0 <= m < n
 
-  // Array from 0 to nbCards
-  var cards = Array(nbCards).fill(0).map( function(card, i) {
-    return i;
-  });
+var random = function(n) {
 
-  // Mix the cards
-  for(var i = nbCards - 1; i > 0; i--) {
-    var temp = cards[i];
-    var random = Math.floor(Math.random() * i);
-    cards[i] = cards[random];
-    cards[random] = temp;
-  }
+    return Math.floor(Math.random()*n);
+    
+};
 
-  return cards;
+// This function returns an array containing the numbers from 0 to 51 in
+// a random order
+
+var shuffle = function() {
+
+    var deck = Array(52).fill(0).map(function(x,i) { return i; });
+
+    for(var i = 51; i > 0; i--) {
+
+	var j = random(i); // index of the next card to be switched
+	
+	var t = deck[j];
+	deck[j] = deck[i];
+	deck[i] = t;
+	
+    }
+
+    return deck;
+    
 };
 
 
-// Return the rank of the card
-var cardRank = function (cardValue) {
-  // The 0 is the ace, so the 1 is the 2.
-  if (cardValue > 0 && cardValue < 10) {
-    return cardValue + 1;
-  }
+// This function takes an integer between 0 and 51  which represents a card
+// and returns the rank of the card
 
-  switch (cardValue) {
+var cardRank = function (cardNum) {
+
+  switch (cardNum >> 2) {
     case  0 : return 'A'; // Ace
     case 10 : return 'J'; // Jack
     case 11 : return 'Q'; // Queen
     case 12 : return 'K'; // King
+    default: return (cardNum >> 2) + 1;
   }
+  
 };
 
 
-// Return the suit of the card
-var cardSuit = function (cardValue) {
-  switch (cardValue) {
+// This function takes an integer between 0 and 51  which represents a card
+// and returns the first letter of the card's suit
+
+var cardSuit = function (cardNum) {
+    
+  switch (cardNum & 3) {
     case 0 : return 'C'; // Clubs
     case 1 : return 'D'; // Diamonds
     case 2 : return 'H'; // Hearts
     case 3 : return 'S'; // Spades
   }
+  
 };
 
 
-// Return the rank and suit of the card
-var cardValue = function(cardNumber) {
-  var rank = cardRank(cardNumber >> 2);
-  var suit = cardSuit(cardNumber & 3);
+// This function takes an integer between 0 and 51  which represents a card
+// and returns the rank of the card followed by the first letter of its suit
+
+var cardValue = function(cardNum) {
+    
+  var rank = cardRank(cardNum);
+  var suit = cardSuit(cardNum);
+  
   return rank + suit;
+  
+};
+
+// Unit tests
+
+var testCardValue = function() {
+    
+    assert(cardValue(0) == "AC");
+    assert(cardValue(51) == "KS");
+    assert(cardValue(45) == "QD");
+    assert(cardValue(42) == "JH");
+    assert(cardValue(16) == "5C");
+    assert(cardValue(25) == "7D");
+    assert(cardValue(38) == "10H");
+    assert(cardValue(7) == "2S");
+    
 };
 
 
@@ -245,169 +280,194 @@ var highlightSwitch = function(id) {
 };
 
 
-// Return the number of cards in the hand
+// This function takes an array of 5 numbers between 0 and 52 (hand) where
+// the numbers between 0 and 51 represent cards and 52 represents a missing
+// card and returns the number of cards in the hand
+
 var nbCard = function(hand) {
+    
   var nbCard = 0;
-  hand.map(function (card) {
-    nbCard += (card == -1) ? 0 : 1;
-  });
+  
+  hand.map(function (card) { nbCard += (card == 52) ? 0 : 1; });
+  
   return nbCard;
 };
 
 
-// Check if all cards are from the same suit
+// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
+// where the numbers between 0 and 51 represent cards and 52 represents an
+// empty card. It returns true if the hand contains an ace and false otherwise
+
+var hasAce = function(hand) {
+    
+  return (hand[0] >> 2 == 0) ? true : false;
+  
+};
+
+// This function takes an array of 5 numbers between 0 and 52 (hand) where
+// the numbers between 0 and 51 represent cards and 52 represents an empty
+// card. It returns true if all cards are from the same suit and false
+// otherwise
+
 var flush = function(hand) {
+    
   for (var i = 1; i < hand.length; i++) {
-    if ( (hand[i-1] & 3) != (hand[i] & 3) ) {
+      
+    if ( ((hand[i-1] & 3) != (hand[i] & 3)) || hand[i] == 52 ) {
+        
       return false;
+      
     }
   }
+  
   return true;
 };
 
 
-// Check if there's an ace. Hand must be sorted
-var hasAce = function(hand) {
-  return (hand[0] >> 2 == 0) ? true : false;
-};
+// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
+// where the numbers between 0 and 51 represent cards and 52 represents an
+// empty card and a binary value (seq).  If seq = 0, it returns true if and
+// only if all the cards in the hand have the same rank. If seq = 1, it
+// returns true if and only if the cards are in a sequential order.
 
-
-// Check if the cards are in a sequential (sequential = 1) or
-// same (sequential = 0) rank. Hand must be sorted
-var rank = function(hand, sequential) {
-  var isSequential = true;
-  for (var i = 1; i < hand.length; i++) {
-    if ( (hand[i-1] >> 2) + sequential == hand[i] >> 2 ) {
-      // The two cards follow each other
-      isSequential = isSequential && true;
-    } else {
-      // The two cards do not follow each other
-      isSequential = isSequential && false;
-    }
+var rank = function(cards, seq) {
+    
+  if(cards[cards.length - 1] == 52) return false;
+    
+  for (var i = 1; i < cards.length; i++) {
+      
+    if ( (cards[i-1] >> 2) + seq != cards[i] >> 2 ) {
+        
+      return false;
+      
+    } 
   }
-  return isSequential;
+  
+  return true;
 };
 
 
-// Check if we have a royal straight. Hand must be sorted.
+// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
+// where the numbers between 0 and 51 represent cards and 52 represents an
+// empty card. It returns true if the hand is a royal straight false otherwise
+
 var royalStraight = function(hand) {
-  if (hasAce(hand)) {
-    // We take the ace (the first card), we put it at the end, in order to test
-    // if there is a sequence. A copy of the table is made in order not to
-    // change the table by reference.
-    var aceEnd = hand.slice(1).concat( hand[0] + 52);
-    return rank(aceEnd, 1);
-  } else {
-    return false;
-  }
+  
+    if (hand[0]>>2 != 0 || hand[1]>>2 != 9) return false;
+
+    return rank(hand.slice(1,5),1);
 };
 
 
-// Check if the cards are in a sequential rank, aces can be at the extremities.
-// Cards must be sorted.
-var straight = function(hand) {
-  var sequential = rank(hand, 1);
-  if (sequential == true) {
-    // The cards are in sequence
-    return true;
-  } else {
-    return royalStraight(hand);
+// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
+// where the numbers between 0 and 51 represent cards and 52 represents an
+// empty card and an integer x >= 1. returns true if and
+// only if the hand contains x cards of the same rank
+
+var xOfAKind = function(hand,x) {
+    
+  for (var i = 0; i <= hand.length - x; i++) {
+      
+    var partHand = hand.slice(i,i+x); 
+    
+  	if(rank(partHand, 0 ) && partHand[0] != 52) return true;
+    
   }
-};
-
-
-// Check if there are x cards of the same rank. Cards must be sorted. The
-// parameter must not be called hand, otherwise it refers to the full hand.
-var xOfAKind = function(x, partHand) {
-  var is = false;
-  for (var i = 0; i <= partHand.length - x; i++) {
-    is = is || rank( partHand.slice(i,i+x), 0 );
-  }
-  return is;
-};
-
-
-// Return combinations of two cards that follow each other: cards 0 and 1,
-// cards 1 and 2...
-var twoCards = function(hand) {
-  var twoCards = Array(4);
-  for(i = 0; i < 4; i++) {
-    twoCards[i] = hand.slice(i, i+2);
-  }
-  return twoCards;
-};
-
-
-// Check if there is two pairs of cards in the hand. Cards must be sorted.
-var twoPair = function(hand) {
-  var pair = twoCards(hand);
-  var firstTwo = xOfAKind(2, pair[0]) && xOfAKind(2, pair[2]);
-  var lastTwo  = xOfAKind(2, pair[1]) && xOfAKind(2, pair[3]);
-  var twoEnds  = xOfAKind(2, pair[0]) && xOfAKind(2, pair[3]);
-  return firstTwo || lastTwo || twoEnds;
-};
-
-
-// Check if there is a pair of cards in the hand. Cards must be sorted.
-var onePair = function(hand) {
-  var pair = twoCards(hand);
-  for(i = 0; i < pair.length; i++) {
-    // Flipped cards (-1) are not considered, otherwise [-1, -1] is considered
-    // to be as a peer.
-    if ( pair[i][0] != -1 && pair[i][1] != -1 && xOfAKind(2, pair[i]) ) {
-      return true;
-    }
-  }
+  
   return false;
 };
 
 
-// Check if there are four cards of the same rank. Cards must be sorted.
+// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
+// where the numbers between 0 and 51 represent cards and 52 represents an
+// empty card. It returns an array of arrays of length 2 containing the cards 
+// that follow each other: cards 0 and 1, cards 1 and 2...
+
+var twoCards = function(hand) {
+    
+  var twoCards = Array(4);
+  
+  for(var i = 0; i < 4; i++) {
+      
+    twoCards[i] = hand.slice(i, i+2);
+    
+  }
+  
+  return twoCards;
+};
+
+
+// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
+// where the numbers between 0 and 51 represent cards and 52 represents an
+// empty card. It returns true if the hand contains two pairs of cards with
+// the same rank and false otherwise
+
+var twoPair = function(hand) {
+    
+  var pair = twoCards(hand);
+  
+  var firstTwo = rank(pair[0],0) && rank(pair[2],0);
+  var lastTwo  = rank(pair[1],0) && rank(pair[3],0);
+  var twoEnds  = rank(pair[0],0) && rank(pair[3],0);
+  
+  return firstTwo || lastTwo || twoEnds;
+};
+
+
+
+// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
+// where the numbers between 0 and 51 represent cards and 52 represents an
+// empty card. It returns true if the hand is a fullHouse and false otherwise
+
 var fullHouse = function(hand) {
+    
   var threeAndTwo = rank( hand.slice(0,3), 0 ) && rank( hand.slice(3), 0 );
   var twoAndThree = rank( hand.slice(0,2), 0 ) && rank( hand.slice(2), 0 );
+  
   return threeAndTwo || twoAndThree;
 };
 
 
-// Calculate the points of the hand
+// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
+// where the numbers between 0 and 51 represent cards and 52 represents an
+// empty card. It returns the number of points of the hand
+
 var points = function(hand) {
-  // By default, the sort() function sorts in ASCII order. To sort in numerical
-  // order, you must define the sort function
-  var hand = hand.sort( function (x, y) {
-    return x - y;
-  });
+    
+  // Sort hand in numerical order
+  
+  var hand = hand.sort( function (x, y) { return x - y; }); 
 
   switch(nbCard(hand)) {
     case 5 :
-      if ( flush(hand) && royalStraight(hand) ) { // Royal Straight Flush
+      if ( flush(hand) && royalStraight(hand) ) {   // Royal Straight Flush
         return 100;
       }
-      if ( flush(hand) && straight(hand) ) {      // Straight Flush
+      if ( flush(hand) && rank(hand,1) ) {          // Straight Flush
         return 75;
       }
-      if ( fullHouse(hand) ) {                    // Full House
+      if ( fullHouse(hand) ) {                      // Full House
         return 25;
       }
-      if ( flush(hand) ) {                        // Flush
+      if ( flush(hand) ) {                          // Flush
         return 20;
       }
-      if ( straight(hand) ) {                     // Straight
+      if ( rank(hand,1) || royalStraight(hand) ) {  // Straight
         return 15;
       }
     case 4 :
-      if ( xOfAKind(4, hand) ) {                  // Four of a kind
+      if ( xOfAKind(hand,4) ) {                     // Four of a kind
         return 50;
       }
-      if ( twoPair(hand) ) {                      // Two pair
+      if ( twoPair(hand) ) {                        // Two pair
         return 5;
       }
     case 3 :
-      if ( xOfAKind(3, hand) ) {                  // Three of a kind
+      if ( xOfAKind(hand,3) ) {                     // Three of a kind
         return 10;
       }
     case 2 :
-      if ( onePair(hand) ) {                      // One pair
+      if ( xOfAKind(hand,2) ) {                     // One pair
         return 2;
       }
     default :
@@ -463,7 +523,7 @@ var saveCards = function(newSlot, oldSlot, switchCard) {
     gameCards[oldSlot] = temp;
   } else {
     gameCards[newSlot] = gameCards[oldSlot];
-    gameCards[oldSlot] = -1;
+    gameCards[oldSlot] = 52;
   }
   calculatePoints();
 }
@@ -580,7 +640,7 @@ var theEnd = function() {
     var sum = document.getElementById('T').innerHTML;
     setTimeout(function() {
       alert('Votre pointage final est ' + sum);
-      init();
+      location.reload();
     },0);
   }
 };
@@ -613,9 +673,9 @@ unitTests();
 
 
 // Cards to be drawn
-var deckCards = mixedCard(52);
+var deckCards = shuffle();
 
 /* Test
-deckCards = Array(27).fill(-1).concat([31,0,40,33,2,35,37,41,49,45,32,36,44,48,
+deckCards = Array(27).fill(52).concat([31,0,40,33,2,35,37,41,49,45,32,36,44,48,
   0,38,42,46,50,34,39,43,47,51,3]);
 //*/
