@@ -4,9 +4,9 @@
  * Date: April 22, 2020
  *
  * List of functions
- * htmlTable      : return the html code of a table
- * htmlTr         : return the html code of a table row
- * htmlTd         : return the html code of a table cell
+ * htmlTable      : return the html code of a table tag
+ * htmlTr         : return the html code of a tr tag
+ * htmlTd         : return the html code of a td tag
  * htmlTdOnclick  : return the html code of an onclick table cell
  * htmlImg        : return the html code of an image
  * htmlDeck       : return the html code of the table containing the deck
@@ -60,7 +60,7 @@ var highlighted = '';
 var gameCards = Array(deckId + 1).fill(-1);
 
 
-/* Return the html code of a table
+/* Return the html code of a table tag
  *
  * content (string): HTML content between the two tags
  *
@@ -177,8 +177,14 @@ var testHtmTr = function() {
     '\t\t</tr>\n', f, t);
 }
 
-
-// Return the html code of a table cell
+/* Return the html code of a td tag
+ *
+ * id (string): id of the td tag
+ * js (string): javascript code of the td tag
+ * inner (string): inner HTML of the td tag
+ *
+ * output (string) : HTML code of the td tag
+ */
 var htmlTd = function(id, js, inner) {
   var id = (id === '') ? '' : ' id="' + id + '"';
   var js = (js === '') ? '' : ' ' + js;
