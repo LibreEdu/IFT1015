@@ -28,7 +28,8 @@
  * twoCards       : return combinations of two cards that follow each other
  * twoPair        : check if there is two pairs of cards
  * onePair        : check if there is a pair of cards
- * fullHouse      : check if there are four cards of the same rank
+ * fullHouse      : Check if there are three cards of one rank and two cards of
+ *                  another rank.
  * points         : calculate the points of the hand
  * sumUpdate      : update game sums
  * calculatePoints: calculate points earned
@@ -622,7 +623,8 @@ var onePair = function(hand) {
 };
 
 
-// Check if there are four cards of the same rank. Cards must be sorted.
+// Check if there are three cards of one rank and two cards of another rank.
+// Cards must be sorted.
 var fullHouse = function(hand) {
   var threeAndTwo = rank( hand.slice(0,3), 0 ) && rank( hand.slice(3), 0 );
   var twoAndThree = rank( hand.slice(0,2), 0 ) && rank( hand.slice(2), 0 );
