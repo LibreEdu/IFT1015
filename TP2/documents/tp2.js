@@ -4,13 +4,13 @@
  * Date: April 22, 2020
  *
  * List of functions
- * htmlTable      : return the html code of a table tag
- * htmlTr         : return the html code of a tr tag
- * htmlTd         : return the html code of a td tag
- * htmlTdOnclick  : return the html code of an onclick table cell
- * htmlImg        : return the html code of an image
- * htmlDeck       : return the html code of the table containing the deck
- * htmlGame       : return the html code of the table containing the cards of
+ * htmlTable      : return the HTML code of a table
+ * htmlTr         : return the HTML code of a tr
+ * htmlTd         : return the HTML code of a td
+ * htmlTdOnclick  : return the HTML code of a td with onclick javascript
+ * htmlImg        : return the HTML code of an image
+ * htmlDeck       : return the HTML code of the table containing the deck
+ * htmlGame       : return the HTML code of the table containing the cards of
  *                  the game
  * mixedCard      : generate a random array of numbers from 0 to nbCards
  * cardRank       : return the rank of the card
@@ -60,9 +60,9 @@ var highlighted = '';
 var gameCards = Array(deckId + 1).fill(-1);
 
 
-/* Return the html code of a table tag
+/* Return the HTML code of a table
  *
- * content (string): HTML content between the two tags
+ * content (string): HTML content between the two table tags
  *
  * output (string) : HTML code of the table
  */
@@ -130,11 +130,11 @@ var testHtmlTable = function() {
 }
 
 
-/* Return the html code of a tr tag
+/* Return the html code of a tr
  *
  * inner (string): inner HTML of the tr tag
  *
- * output (string) : HTML code of the tr tag
+ * output (string) : tr tag + inner HTML
  */
 var htmlTr = function(inner) {
   return '\t\t<tr>\n' + inner + '\t\t</tr>\n';
@@ -177,13 +177,13 @@ var testHtmTr = function() {
     '\t\t</tr>\n', f, t);
 }
 
-/* Return the html code of a td tag
+/* Return the HTML code of a td tag
  *
  * id (string): id of the td tag
  * js (string): javascript code of the td tag
  * inner (string): inner HTML of the td tag
  *
- * output (string) : HTML code of the td tag
+ * output (string) : td tag + inner HTML
  */
 var htmlTd = function(id, js, inner) {
   var id = (id === '') ? '' : ' id="' + id + '"';
@@ -218,7 +218,13 @@ var testHtmTd = function() {
 }
 
 
-// Return the html code of an onclick table cell
+/* Return the HTML code of a td with onclick javascript
+ *
+ * id (string): id of the td tag
+ * inner (string): inner HTML of the td tag
+ *
+ * output (string) : the td tag with onclick javascript + inner HTML
+ */
 var htmlTdOnclick = function(id, inner) {
   return htmlTd(id, 'onclick="clic(' + id + ');"', inner);
 };
@@ -250,7 +256,12 @@ var testHtmlTdOnclick  = function() {
 }
 
 
-// Return the html code of an image
+/* Return the HTML code of an image
+ *
+ * img (string): image name, without extension
+ *
+ * output (string) : HTML code of the image
+ */
 var htmlImg = function(img) {
   return '<img src="cards/' + img + '.svg">'
 };
@@ -281,7 +292,10 @@ var testHtmlImg  = function() {
 }
 
 
-// Return the html code of the table containing the deck
+/* Return the HTML code of the table containing the deck
+ *
+ * output (string) : HTML code of the table containing the deck
+ */
 var htmlDeck = function() {
 
   // New game button
@@ -320,7 +334,10 @@ var testHtmlDeck  = function() {
     '</table>\n', f, t);
 }
 
-// Return the html code of the table containing the cards of the game
+/* Return the HTML code of the table containing the cards of the game
+ *
+ * output (string) : HTML code of the table containing the cards of the game
+ */
 var htmlGame = function() {
 
   var innerTable = '';
