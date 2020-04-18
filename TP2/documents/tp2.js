@@ -4,13 +4,13 @@
  * Date: April 22, 2020
  *
  * List of functions
- * htmlTable      : return the html code of a table
- * htmlTr         : return the html code of a table row
- * htmlTd         : return the html code of a table cell
- * htmlTdOnclick  : return the html code of an onclick table cell
- * htmlImg        : return the html code of an image
- * htmlDeck       : return the html code of the table containing the deck
- * htmlGame       : return the html code of the table containing the cards of
+ * htmlTable      : return the HTML code of a table
+ * htmlTr         : return the HTML code of a tr
+ * htmlTd         : return the HTML code of a td
+ * htmlTdOnclick  : return the HTML code of a td with onclick javascript
+ * htmlImg        : return the HTML code of an image
+ * htmlDeck       : return the HTML code of the table containing the deck
+ * htmlGame       : return the HTML code of the table containing the cards of
  *                  the game
  * mixedCard      : generate a random array of numbers from 0 to nbCards
  * cardRank       : return the rank of the card
@@ -28,7 +28,8 @@
  * twoCards       : return combinations of two cards that follow each other
  * twoPair        : check if there is two pairs of cards
  * onePair        : check if there is a pair of cards
- * fullHouse      : check if there are four cards of the same rank
+ * fullHouse      : Check if there are three cards of one rank and two cards of
+ *                  another rank.
  * points         : calculate the points of the hand
  * sumUpdate      : update game sums
  * calculatePoints: calculate points earned
@@ -47,7 +48,7 @@
 // and rows can be reduced, the program works.  When the number of columns or
 // rows is increased, there are bugs. To correct this, the functions that
 // calculate the number of points should be made more complex.
-var highlightColor = "lime";
+var highlightColor = 'lime';
 var nbColumns = 5;
 var nbRows = 5;
 var deckId = nbColumns * nbRows;
@@ -59,9 +60,9 @@ var highlighted = '';
 var gameCards = Array(deckId + 1).fill(52);
 
 
-/* Return the html code of a table
+/* Return the HTML code of a table
  *
- * content (string): HTML content between the two tags
+ * content (string): HTML content between the two table tags
  *
  * output (string) : HTML code of the table
  */
@@ -69,57 +70,232 @@ var htmlTable = function(content) {
   return '<table>\n\t<tbody>\n' + content + '\t</tbody>\n</table>\n';
 };
 
+// htmlTable unit tests
 var testHtmlTable = function() {
-  var f = "htmlTable();";
+  var f = 'htmlTable() with';
 
-  var t = "empty content"
+  var t = 'empty content'
   console.assert( htmlTable('') ==
-    "<table>\n" +
-    "\t<tbody>\n" +
-    "\t</tbody>\n" +
-    "</table>\n", f, t);
+    '<table>\n' +
+    '\t<tbody>\n' +
+    '\t</tbody>\n' +
+    '</table>\n', f, t);
 
-  t = "space, tab and newline"
+  t = 'space, tab and newline'
   console.assert( htmlTable(' \t\n') ==
-    "<table>\n" +
-    "\t<tbody>\n" +
-    " \t\n" +
-    "\t</tbody>\n" +
-    "</table>\n", f, t);
-  }
-  
-  t = "Hello, World!"
+    '<table>\n' +
+    '\t<tbody>\n' +
+    ' \t\n' +
+    '\t</tbody>\n' +
+    '</table>\n', f, t);
 
-//console.log(htmlTable('   '));
+  t = 'w3schools example'
+  var tableContent = '    <tr>\n';
+  tableContent += '      <td>January</td>\n';
+  tableContent += '      <td>$100</td>\n';
+  tableContent += '    </tr>\n';
+  tableContent += '    <tr>\n';
+  tableContent += '      <td>February</td>\n';
+  tableContent += '      <td>$80</td>\n';
+  tableContent += '    </tr>\n';
+  console.assert( htmlTable(tableContent) ==
+    '<table>\n' +
+    '\t<tbody>\n' +
+    '    <tr>\n' +
+    '      <td>January</td>\n' +
+    '      <td>$100</td>\n' +
+    '    </tr>\n' +
+    '    <tr>\n' +
+    '      <td>February</td>\n' +
+    '      <td>$80</td>\n' +
+    '    </tr>\n' +
+    '\t</tbody>\n' +
+    '</table>\n', f, t);
+
+  t = 'a number';
+  console.assert( htmlTable(0) ==
+    '<table>\n' +
+    '\t<tbody>\n' +
+    '0' +
+    '\t</tbody>\n' +
+    '</table>\n', f, t);
+
+  t = 'a boolean';
+  console.assert( htmlTable(false) ==
+    '<table>\n' +
+    '\t<tbody>\n' +
+    'false' +
+    '\t</tbody>\n' +
+    '</table>\n', f, t);
+}
 
 
-// Return the html code of a table row
+/* Return the html code of a tr
+ *
+ * inner (string): inner HTML of the tr tag
+ *
+ * output (string) : tr tag + inner HTML
+ */
 var htmlTr = function(inner) {
   return '\t\t<tr>\n' + inner + '\t\t</tr>\n';
 };
 
+// htmlTr unit tests
+var testHtmTr = function() {
+  var f = 'htmlTr() with';
 
-// Return the html code of a table cell
+  var t = 'empty content'
+  console.assert( htmlTr('') ==
+    '\t\t<tr>\n' +
+    '\t\t</tr>\n', f, t);
+
+  t = 'space, tab and newline'
+  console.assert( htmlTr(' \t\n') ==
+    '\t\t<tr>\n' +
+    ' \t\n' +
+    '\t\t</tr>\n', f, t);
+
+  t = 'w3schools example'
+  var tableContent = '  <th>Month</th>\n';
+  tableContent += '  <th>Savings</th>\n';
+  console.assert( htmlTr(tableContent) ==
+    '\t\t<tr>\n' +
+    '  <th>Month</th>\n' +
+    '  <th>Savings</th>\n' +
+    '\t\t</tr>\n', f, t);
+
+  t = 'a number';
+  console.assert( htmlTr(0) ==
+    '\t\t<tr>\n' +
+    '0' +
+    '\t\t</tr>\n', f, t);
+
+  t = 'a boolean';
+  console.assert( htmlTr(false) ==
+    '\t\t<tr>\n' +
+    'false' +
+    '\t\t</tr>\n', f, t);
+}
+
+/* Return the HTML code of a td tag
+ *
+ * id (string): id of the td tag
+ * js (string): javascript code of the td tag
+ * inner (string): inner HTML of the td tag
+ *
+ * output (string) : td tag + inner HTML
+ */
 var htmlTd = function(id, js, inner) {
   var id = (id === '') ? '' : ' id="' + id + '"';
-  var js = (js == '') ? '' : ' ' + js;
+  var js = (js === '') ? '' : ' ' + js;
   return '\t\t\t<td' + id + js + '>' + inner + '</td>\n';
 };
 
+// htmlTd unit tests
+var testHtmTd = function() {
+  var f = 'htmlTd() with';
 
-// Return the html code of an onclick table cell
+  var t = 'empty content'
+  console.assert( htmlTd('', '', '') ==
+    '\t\t\t<td></td>\n', f, t);
+
+  t = 'space, tab and newline'
+  console.assert( htmlTd(' \t\n', ' \t\n', ' \t\n') ==
+    '\t\t\t<td id=" \t\n"  \t\n> \t\n</td>\n', f, t);
+
+  t = 'id, js and inner'
+  console.assert( htmlTd(0, 'onclick="clic(0);"', '<img src="cards/empty.svg">')
+    == '\t\t\t<td id="0" onclick="clic(0);"><img src="cards/empty.svg">' +
+      '</td>\n', f, t);
+
+  t = 'numbers';
+  console.assert( htmlTd(0, 1, 2) ==
+    '\t\t\t<td id="0" 1>2</td>\n', f, t);
+
+  t = 'booleans';
+  console.assert( htmlTd(false, false, false) ==
+    '\t\t\t<td id="false" false>false</td>\n', f, t);
+}
+
+
+/* Return the HTML code of a td with onclick javascript
+ *
+ * id (string): id of the td tag
+ * inner (string): inner HTML of the td tag
+ *
+ * output (string) : the td tag with onclick javascript + inner HTML
+ */
 var htmlTdOnclick = function(id, inner) {
   return htmlTd(id, 'onclick="clic(' + id + ');"', inner);
 };
 
+// htmlTdOnclick unit tests
+var testHtmlTdOnclick  = function() {
+  var f = 'htmlTdOnclick() with';
 
-// Return the html code of an image
+  var t = 'empty content'
+  console.assert( htmlTdOnclick('', '') ==
+    '\t\t\t<td onclick="clic();"></td>\n', f, t);
+
+  t = 'space, tab and newline'
+  console.assert( htmlTdOnclick(' \t\n', ' \t\n') ==
+    '\t\t\t<td id=" \t\n" onclick="clic( \t\n);"> \t\n</td>\n', f, t);
+
+  t = 'id and inner'
+  console.assert( htmlTdOnclick(0, '<img src="cards/empty.svg">')
+    == '\t\t\t<td id="0" onclick="clic(0);"><img src="cards/empty.svg">' +
+      '</td>\n', f, t);
+
+  t = 'numbers';
+    console.assert( htmlTdOnclick(0, 1) ==
+    '\t\t\t<td id="0" onclick="clic(0);">1</td>\n', f, t);
+
+  t = 'booleans';
+  console.assert( htmlTdOnclick(false, false) ==
+    '\t\t\t<td id="false" onclick="clic(false);">false</td>\n', f, t);
+}
+
+
+/* Return the HTML code of an image
+ *
+ * img (string): image name, without extension
+ *
+ * output (string) : HTML code of the image
+ */
 var htmlImg = function(img) {
   return '<img src="cards/' + img + '.svg">'
 };
 
+// htmlImg unit tests
+var testHtmlImg  = function() {
+  var f = 'htmlImg() with';
 
-// Return the html code of the table containing the deck
+  var t = 'empty content'
+  console.assert( htmlImg('') ==
+    '<img src="cards/.svg">', f, t);
+
+  t = 'space, tab and newline'
+  console.assert( htmlImg(' \t\n') ==
+  '<img src="cards/ \t\n.svg">', f, t);
+
+  t = 'an image name'
+  console.assert( htmlImg('empty')
+    == '<img src="cards/empty.svg">', f, t);
+
+  t = 'number';
+  console.assert( htmlImg(0) ==
+    '<img src="cards/0.svg">', f, t);
+
+  t = 'boolean';
+  console.assert( htmlImg(false) ==
+    '<img src="cards/false.svg">', f, t);
+}
+
+
+/* Return the HTML code of the table containing the deck
+ *
+ * output (string) : HTML code of the table containing the deck
+ */
 var htmlDeck = function() {
 
   // New game button
@@ -138,8 +314,30 @@ var htmlDeck = function() {
   return htmlTable(innerTable);
 };
 
+// htmlDeck unit tests
+var testHtmlDeck  = function() {
+  var f = 'htmlDeck() with';
 
-// Return the html code of the table containing the cards of the game
+  var t = 'no parameters'
+  console.assert( htmlDeck() ==
+    '<table>\n' +
+    '\t<tbody>\n' +
+    '\t\t<tr>\n' +
+    '\t\t\t<td><button onclick="init();" style="float: left;">' +
+      'Nouvelle partie</button</td>\n' +
+    '\t\t\t<td></td>\n' +
+    '\t\t\t<td id="25" onclick="clic(25);">' +
+      '<img src="cards/back.svg"></td>\n' +
+    '\t\t\t<td></td>\n' +
+    '\t\t</tr>\n' +
+    '\t</tbody>\n' +
+    '</table>\n', f, t);
+}
+
+/* Return the HTML code of the table containing the cards of the game
+ *
+ * output (string) : HTML code of the table containing the cards of the game
+ */
 var htmlGame = function() {
 
   var innerTable = '';
@@ -173,6 +371,93 @@ var htmlGame = function() {
 
   return htmlTable(innerTable);
 };
+
+
+// htmlDeck unit tests
+var testHtmlGame  = function() {
+  var f = 'htmlGame() with';
+
+  var t = 'no parameters'
+  console.assert( htmlGame() ==
+    '<table>\n' +
+    '\t<tbody>\n' +
+    '\t\t<tr>\n' +
+    '\t\t\t<td id="0" onclick="clic(0);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="1" onclick="clic(1);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="2" onclick="clic(2);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="3" onclick="clic(3);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="4" onclick="clic(4);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="R0"></td>\n' +
+    '\t\t</tr>\n' +
+    '\t\t<tr>\n' +
+    '\t\t\t<td id="5" onclick="clic(5);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="6" onclick="clic(6);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="7" onclick="clic(7);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="8" onclick="clic(8);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="9" onclick="clic(9);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="R1"></td>\n' +
+    '\t\t</tr>\n' +
+    '\t\t<tr>\n' +
+    '\t\t\t<td id="10" onclick="clic(10);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="11" onclick="clic(11);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="12" onclick="clic(12);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="13" onclick="clic(13);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="14" onclick="clic(14);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="R2"></td>\n' +
+    '\t\t</tr>\n' +
+    '\t\t<tr>\n' +
+    '\t\t\t<td id="15" onclick="clic(15);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="16" onclick="clic(16);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="17" onclick="clic(17);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="18" onclick="clic(18);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="19" onclick="clic(19);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="R3"></td>\n' +
+    '\t\t</tr>\n' +
+    '\t\t<tr>\n' +
+    '\t\t\t<td id="20" onclick="clic(20);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="21" onclick="clic(21);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="22" onclick="clic(22);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="23" onclick="clic(23);">' +
+      '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="24" onclick="clic(24);">' +
+     '<img src="cards/empty.svg"></td>\n' +
+    '\t\t\t<td id="R4"></td>\n' +
+    '\t\t</tr>\n' +
+    '\t\t<tr>\n' +
+    '\t\t\t<td id="C0"></td>\n' +
+    '\t\t\t<td id="C1"></td>\n' +
+    '\t\t\t<td id="C2"></td>\n' +
+    '\t\t\t<td id="C3"></td>\n' +
+    '\t\t\t<td id="C4"></td>\n' +
+    '\t\t\t<td id="T">0</td>\n' +
+    '\t\t</tr>\n' +
+    '\t</tbody>\n' +
+    '</table>\n', f, t);
+}
+
 
 
 // This function takes an integer n >= 1 and returns a random integer m
@@ -270,7 +555,7 @@ var highlightSwitch = function(id) {
   var element = document.getElementById(id);
 
   if ( element.style.backgroundColor == highlightColor ) {
-    element.style.backgroundColor = "transparent";
+    element.style.backgroundColor = 'transparent';
     highlighted = '';
   } else {
     element.style.backgroundColor = highlightColor;
@@ -385,15 +670,15 @@ var xOfAKind = function(hand,x) {
 
 var twoCards = function(hand) {
     
-  var twoCards = Array(4);
-  
+  var twos = Array(4);
+
   for(var i = 0; i < 4; i++) {
-      
-    twoCards[i] = hand.slice(i, i+2);
+
+    twos[i] = hand.slice(i, i+2);
     
   }
   
-  return twoCards;
+  return twos;
 };
 
 
@@ -543,7 +828,7 @@ var deck = function() {
   }
 
   // If a card from the right is highlighted, the highlight is removed
-  if (highlighted !== "" && highlighted < deckId) {
+  if (highlighted !== '' && highlighted < deckId) {
     highlightSwitch(highlighted);
   }
 
@@ -560,7 +845,7 @@ var game = function(id) {
   if (element.innerHTML == htmlImg('empty')) {
 
     // And that no card is highlighted
-    if (highlighted === "") {
+    if (highlighted === '') {
 
       // There's nothing to be done
       return;
@@ -596,7 +881,7 @@ var game = function(id) {
       // The slot isn't highlighted
 
       // Is there a slot, elsewhere, that's highlighted?
-      if (highlighted === "") {
+      if (highlighted === '') {
 
         // No slot is highlighted, we hightlight the slot
         highlightSwitch(id);
@@ -659,13 +944,19 @@ var clic = function(id) {
 
 // Initialization of the page
 var init = function() {
-  document.getElementById("b").innerHTML = htmlDeck() + htmlGame();
+  document.getElementById('b').innerHTML = htmlDeck() + htmlGame();
 };
 
 
-// Unit tests
+// Global unit tests
 var unitTests = function() {
   testHtmlTable();
+  testHtmTr();
+  testHtmTd();
+  testHtmlTdOnclick();
+  testHtmlImg();
+  testHtmlDeck();
+  testHtmlGame();
 }
 
 
