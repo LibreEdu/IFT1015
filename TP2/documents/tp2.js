@@ -129,7 +129,12 @@ var testHtmlTable = function() {
 }
 
 
-// Return the html code of a table row
+/* Return the html code of a tr tag
+ *
+ * inner (string): inner HTML of the tr tag
+ *
+ * output (string) : HTML code of the tr tag
+ */
 var htmlTr = function(inner) {
   return '\t\t<tr>\n' + inner + '\t\t</tr>\n';
 };
@@ -428,6 +433,7 @@ var testHtmlGame  = function() {
     '\t</tbody>\n' +
     '</table>\n', f, t);
 }
+
 
 // Generate a random array of numbers from 0 to nbCards
 var mixedCard = function(nbCards) {
