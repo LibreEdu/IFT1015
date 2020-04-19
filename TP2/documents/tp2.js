@@ -65,6 +65,8 @@ var gameCards = Array(deckId + 1).fill(52);
  * content (string): HTML content between the two table tags
  *
  * output (string) : HTML code of the table
+ *
+ * htmlTable('<tr><td>Test</td></tr>')
  */
 var htmlTable = function(content) {
   return '<table>\n\t<tbody>\n' + content + '\t</tbody>\n</table>\n';
@@ -135,6 +137,8 @@ var testHtmlTable = function() {
  * inner (string): inner HTML of the tr tag
  *
  * output (string) : tr tag + inner HTML
+ *
+ * htmlTr('<td>Test</td>')
  */
 var htmlTr = function(inner) {
   return '\t\t<tr>\n' + inner + '\t\t</tr>\n';
@@ -184,6 +188,8 @@ var testHtmTr = function() {
  * inner (string): inner HTML of the td tag
  *
  * output (string) : td tag + inner HTML
+ *
+ * htmlTd('Test')
  */
 var htmlTd = function(id, js, inner) {
   var id = (id === '') ? '' : ' id="' + id + '"';
@@ -224,6 +230,8 @@ var testHtmTd = function() {
  * inner (string): inner HTML of the td tag
  *
  * output (string) : the td tag with onclick javascript + inner HTML
+ *
+ * htmlTdOnclick('0', 'Test')
  */
 var htmlTdOnclick = function(id, inner) {
   return htmlTd(id, 'onclick="clic(' + id + ');"', inner);
@@ -261,6 +269,8 @@ var testHtmlTdOnclick  = function() {
  * img (string): image name, without extension
  *
  * output (string) : HTML code of the image
+ *
+ * htmlImg('2C')
  */
 var htmlImg = function(img) {
   return '<img src="cards/' + img + '.svg">'
@@ -295,6 +305,8 @@ var testHtmlImg  = function() {
 /* Return the HTML code of the table containing the deck
  *
  * output (string) : HTML code of the table containing the deck
+ *
+ * htmlDeck()
  */
 var htmlDeck = function() {
 
@@ -337,6 +349,8 @@ var testHtmlDeck  = function() {
 /* Return the HTML code of the table containing the cards of the game
  *
  * output (string) : HTML code of the table containing the cards of the game
+ *
+ * htmlGame()
  */
 var htmlGame = function() {
 
