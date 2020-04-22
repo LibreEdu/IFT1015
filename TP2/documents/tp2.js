@@ -59,6 +59,9 @@ var highlighted = '';
 // To know which card is where in order to calculate the points
 var gameCards = Array(deckId + 1).fill(52);
 
+// Cards to be drawn
+var deckCards = Array(52).fill(52);
+
 
 /* Return the HTML code of a table
  *
@@ -969,7 +972,7 @@ var theEnd = function() {
     var sum = document.getElementById('T').innerHTML;
     setTimeout(function() {
       alert('Votre pointage final est ' + sum);
-      location.reload();
+      init();
     },0);
   }
 };
@@ -988,7 +991,9 @@ var clic = function(id) {
 
 // Initialization of the page
 var init = function() {
-  document.getElementById('b').innerHTML = htmlDeck() + htmlGame();
+    gameCards = Array(deckId + 1).fill(52);
+    deckCards = shuffle();
+    document.getElementById('b').innerHTML = htmlDeck() + htmlGame();
 };
 
 
@@ -1008,9 +1013,6 @@ var unitTests = function() {
 
 //unitTests();
 
-
-// Cards to be drawn
-var deckCards = shuffle();
 
 /* Test
 deckCards = Array(27).fill(52).concat([31,0,40,33,2,35,37,41,49,45,32,36,44,48,
