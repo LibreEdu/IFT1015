@@ -551,15 +551,19 @@ var cardValue = function(cardNum) {
 // Unit tests
 
 var testCardValue = function() {
+    
+    var f = 'testCardValue() with';
 
-    assert(cardValue(0) == "AC");
-    assert(cardValue(51) == "KS");
-    assert(cardValue(45) == "QD");
-    assert(cardValue(42) == "JH");
-    assert(cardValue(16) == "5C");
-    assert(cardValue(25) == "7D");
-    assert(cardValue(38) == "10H");
-    assert(cardValue(7) == "2S");
+    var t = 'empty content'
+
+    console.assert(cardValue(0) == "AC",f,t);
+    console.assert(cardValue(51) == "KS",f,t);
+    console.assert(cardValue(45) == "QD",f,t);
+    console.assert(cardValue(42) == "JH",f,t);
+    console.assert(cardValue(16) == "5C",f,t);
+    console.assert(cardValue(25) == "7D",f,t);
+    console.assert(cardValue(38) == "10H",f,t);
+    console.assert(cardValue(7) == "2S",f,t);
 
 };
 
@@ -777,20 +781,26 @@ var points = function(hand) {
 // Unit tests
 
 var testPoints = function() {
+    
+    var f = 'testCardValue() with';
 
-    assert(points([36,0,40,48,44]) == 100);  // Royal Straight Flush
-    assert(points([9,13,17,21,25]) == 75);   // Straight Flush
-    assert(points([36,37,38,7,39]) == 50);   // Four of a kind
-    assert(points([5,16,6,17,18]) == 25);    // Full House
-    assert(points([8,16,32,12,28]) == 20);   // Flush
-    assert(points([4,10,13,16,23]) == 15);   // Straight
-    assert(points([13,14,15,52,43]) == 10);  // Three of a kind
-    assert(points([8,9,16,17,23]) == 5);     // Two pair
-    assert(points([8,52,52,9,52]) == 2);     // One pair
-    assert(points([0,51,45,9,47]) == 2); 
-    assert(points([0,4,16,12,52]) == 0);
-    assert(points([52,12,52,52,52]) == 0);
-    assert(points([52,52,52,52,52]) == 0);
+    var t = 'empty content'
+
+    console.assert(points([36,0,40,48,44]) == 100,f,t);  // Royal Straight Flush
+    console.assert(points([9,13,17,21,25]) == 75,f,t);   // Straight Flush
+    console.assert(points([36,37,38,7,39]) == 50,f,t);   // Four of a kind
+    console.assert(points([5,16,6,17,18]) == 25,f,t);    // Full House
+    console.assert(points([8,16,32,12,28]) == 20,f,t);   // Flush
+    console.assert(points([4,10,13,16,23]) == 15,f,t);   // Straight
+    console.assert(points([39,1,40,50,45]) == 15,f,t);
+    console.assert(points([4,1,10,13,19]) == 15,f,t);
+    console.assert(points([13,14,15,52,43]) == 10,f,t);  // Three of a kind
+    console.assert(points([8,9,16,17,23]) == 5,f,t);     // Two pair
+    console.assert(points([8,52,52,9,52]) == 2,f,t);     // One pair
+    console.assert(points([0,51,45,9,47]) == 2,f,t); 
+    console.assert(points([0,4,16,12,52]) == 0,f,t);
+    console.assert(points([52,12,52,52,52]) == 0,f,t);
+    console.assert(points([52,52,52,52,52]) == 0,f,t);
 
 };
 
@@ -996,7 +1006,7 @@ var unitTests = function() {
 }
 
 
-unitTests();
+//unitTests();
 
 
 // Cards to be drawn
