@@ -782,21 +782,21 @@ var testPoints = function() {
     
     var f = 'testPoints() with';
 
-    console.assert(points([36,0,40,48,44]) == 100, f , "Royal Straight Flush" );  // Royal Straight Flush
-    console.assert(points([9,13,17,21,25]) == 75,f, "Straight Flush" );   // Straight Flush
-    console.assert(points([36,37,38,7,39]) == 50,f, "Four of a kind" );   // Four of a kind
-    console.assert(points([5,16,6,17,18]) == 25,f, "Full House" );    // Full House
-    console.assert(points([8,16,32,12,28]) == 20,f, "Flush" );   // Flush
-    console.assert(points([4,10,13,16,23]) == 15,f, "Straight" );   // Straight
-    console.assert(points([39,1,40,50,45]) == 15,f, "Straight" );
-    console.assert(points([4,1,10,13,19]) == 15,f, "Straight" );
-    console.assert(points([13,14,15,52,43]) == 10,f, "Three of a kind" );  // Three of a kind
-    console.assert(points([8,9,16,17,23]) == 5,f, "Two pair" );     // Two pair
-    console.assert(points([8,52,52,9,52]) == 2,f, "One pair" );     // One pair
-    console.assert(points([0,51,45,9,47]) == 2,f, "One pair" ); 
-    console.assert(points([0,4,16,12,52]) == 0,f, "No points");
-    console.assert(points([52,12,52,52,52]) == 0,f, "No points");
-    console.assert(points([52,52,52,52,52]) == 0,f, "Empty hand");
+    console.assert(points([36,0,40,48,44]) == 100, f ,"Royal Straight Flush");
+    console.assert(points([9,13,17,21,25]) == 75,f,"Straight Flush");
+    console.assert(points([36,37,38,7,39]) == 50,f,"Four of a kind");
+    console.assert(points([5,16,6,17,18]) == 25,f,"Full House");
+    console.assert(points([8,16,32,12,28]) == 20,f,"Flush");
+    console.assert(points([4,10,13,16,23]) == 15,f,"Straight no As");
+    console.assert(points([39,1,40,50,45]) == 15,f,"Straight as last");
+    console.assert(points([4,1,10,13,19]) == 15,f,"Straight as first");
+    console.assert(points([13,14,15,52,43]) == 10,f,"Three of a kind");
+    console.assert(points([8,9,16,17,23]) == 5,f,"Two pair"); 
+    console.assert(points([8,52,52,9,52]) == 2,f,"One pair and empty cards");
+    console.assert(points([0,51,45,9,47]) == 2,f,"One pair"); 
+    console.assert(points([0,4,16,12,52]) == 0,f,"No points");
+    console.assert(points([52,12,52,52,52]) == 0,f,"No points");
+    console.assert(points([52,52,52,52,52]) == 0,f,"Empty hand");
 
 };
 
