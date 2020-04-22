@@ -774,6 +774,26 @@ var points = function(hand) {
   }
 };
 
+// Unit tests
+
+var testPoints = function() {
+
+    assert(points([36,0,40,48,44]) == 100);  // Royal Straight Flush
+    assert(points([9,13,17,21,25]) == 75);   // Straight Flush
+    assert(points([36,37,38,7,39]) == 50);   // Four of a kind
+    assert(points([5,16,6,17,18]) == 25);    // Full House
+    assert(points([8,16,32,12,28]) == 20);   // Flush
+    assert(points([4,10,13,16,23]) == 15);   // Straight
+    assert(points([13,14,15,52,43]) == 10);  // Three of a kind
+    assert(points([8,9,16,17,23]) == 5);     // Two pair
+    assert(points([8,52,52,9,52]) == 2);     // One pair
+    assert(points([0,51,45,9,47]) == 2); 
+    assert(points([0,4,16,12,52]) == 0);
+    assert(points([52,12,52,52,52]) == 0);
+    assert(points([52,52,52,52,52]) == 0);
+
+};
+
 
 // Update game sums
 var sumUpdate = function(id, row, sum) {
@@ -971,6 +991,8 @@ var unitTests = function() {
   testHtmlImg();
   testHtmlDeck();
   testHtmlGame();
+  testCardValue();
+  testPoints();
 }
 
 
