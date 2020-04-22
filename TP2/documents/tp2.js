@@ -22,12 +22,9 @@
  * hasAce         : check if there's an ace
  * rank           : check if the cards are in a sequential or same rank
  * royalStraight  : check if we have a royal straight
- * straight       : check if the cards are in a sequential rank, aces can be at
- *                  the extremities
  * xOfAKind       : check if there are x cards of the same rank
  * twoCards       : return combinations of two cards that follow each other
  * twoPair        : check if there is two pairs of cards
- * onePair        : check if there is a pair of cards
  * fullHouse      : Check if there are three cards of one rank and two cards of
  *                  another rank.
  * points         : calculate the points of the hand
@@ -557,16 +554,14 @@ var testCardValue = function() {
     
     var f = 'testCardValue() with';
 
-    var t = 'empty content'
-
-    console.assert(cardValue(0) == "AC",f,t);
-    console.assert(cardValue(51) == "KS",f,t);
-    console.assert(cardValue(45) == "QD",f,t);
-    console.assert(cardValue(42) == "JH",f,t);
-    console.assert(cardValue(16) == "5C",f,t);
-    console.assert(cardValue(25) == "7D",f,t);
-    console.assert(cardValue(38) == "10H",f,t);
-    console.assert(cardValue(7) == "2S",f,t);
+    console.assert(cardValue(0) == "AC",f, "AC" );
+    console.assert(cardValue(51) == "KS",f, "KS" );
+    console.assert(cardValue(45) == "QD",f,"QD" );
+    console.assert(cardValue(42) == "JH",f, "JH" );
+    console.assert(cardValue(16) == "5C",f, "5C" );
+    console.assert(cardValue(25) == "7D",f, "7D" );
+    console.assert(cardValue(38) == "10H",f, "10H" );
+    console.assert(cardValue(7) == "2S",f, "2S" );
 
 };
 
@@ -787,23 +782,21 @@ var testPoints = function() {
     
     var f = 'testPoints() with';
 
-    var t = 'empty content'
-
-    console.assert(points([36,0,40,48,44]) == 100,f,t);  // Royal Straight Flush
-    console.assert(points([9,13,17,21,25]) == 75,f,t);   // Straight Flush
-    console.assert(points([36,37,38,7,39]) == 50,f,t);   // Four of a kind
-    console.assert(points([5,16,6,17,18]) == 25,f,t);    // Full House
-    console.assert(points([8,16,32,12,28]) == 20,f,t);   // Flush
-    console.assert(points([4,10,13,16,23]) == 15,f,t);   // Straight
-    console.assert(points([39,1,40,50,45]) == 15,f,t);
-    console.assert(points([4,1,10,13,19]) == 15,f,t);
-    console.assert(points([13,14,15,52,43]) == 10,f,t);  // Three of a kind
-    console.assert(points([8,9,16,17,23]) == 5,f,t);     // Two pair
-    console.assert(points([8,52,52,9,52]) == 2,f,t);     // One pair
-    console.assert(points([0,51,45,9,47]) == 2,f,t); 
-    console.assert(points([0,4,16,12,52]) == 0,f,t);
-    console.assert(points([52,12,52,52,52]) == 0,f,t);
-    console.assert(points([52,52,52,52,52]) == 0,f,t);
+    console.assert(points([36,0,40,48,44]) == 100, f , "Royal Straight Flush" );  // Royal Straight Flush
+    console.assert(points([9,13,17,21,25]) == 75,f, "Straight Flush" );   // Straight Flush
+    console.assert(points([36,37,38,7,39]) == 50,f, "Four of a kind" );   // Four of a kind
+    console.assert(points([5,16,6,17,18]) == 25,f, "Full House" );    // Full House
+    console.assert(points([8,16,32,12,28]) == 20,f, "Flush" );   // Flush
+    console.assert(points([4,10,13,16,23]) == 15,f, "Straight" );   // Straight
+    console.assert(points([39,1,40,50,45]) == 15,f, "Straight" );
+    console.assert(points([4,1,10,13,19]) == 15,f, "Straight" );
+    console.assert(points([13,14,15,52,43]) == 10,f, "Three of a kind" );  // Three of a kind
+    console.assert(points([8,9,16,17,23]) == 5,f, "Two pair" );     // Two pair
+    console.assert(points([8,52,52,9,52]) == 2,f, "One pair" );     // One pair
+    console.assert(points([0,51,45,9,47]) == 2,f, "One pair" ); 
+    console.assert(points([0,4,16,12,52]) == 0,f, "No points");
+    console.assert(points([52,12,52,52,52]) == 0,f, "No points");
+    console.assert(points([52,52,52,52,52]) == 0,f, "Empty hand");
 
 };
 
