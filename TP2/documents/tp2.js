@@ -551,7 +551,7 @@ var cardValue = function(cardNum) {
 // Unit tests
 
 var testCardValue = function() {
-    
+
     var f = 'testCardValue() with';
 
     console.assert(cardValue(0) == "AC",f, "AC" );
@@ -779,7 +779,7 @@ var points = function(hand) {
 // Unit tests
 
 var testPoints = function() {
-    
+
     var f = 'testPoints() with';
 
     console.assert(points([36,0,40,48,44]) == 100, f ,"Royal Straight Flush");
@@ -791,9 +791,9 @@ var testPoints = function() {
     console.assert(points([39,1,40,50,45]) == 15,f,"Straight as last");
     console.assert(points([4,1,10,13,19]) == 15,f,"Straight as first");
     console.assert(points([13,14,15,52,43]) == 10,f,"Three of a kind");
-    console.assert(points([8,9,16,17,23]) == 5,f,"Two pair"); 
+    console.assert(points([8,9,16,17,23]) == 5,f,"Two pair");
     console.assert(points([8,52,52,9,52]) == 2,f,"One pair and empty cards");
-    console.assert(points([0,51,45,9,47]) == 2,f,"One pair"); 
+    console.assert(points([0,51,45,9,47]) == 2,f,"One pair");
     console.assert(points([0,4,16,12,52]) == 0,f,"No points");
     console.assert(points([52,12,52,52,52]) == 0,f,"No points");
     console.assert(points([52,52,52,52,52]) == 0,f,"Empty hand");
