@@ -782,7 +782,7 @@ var points = function(hand) {
 
 var testPoints = function() {
     
-    var f = 'testCardValue() with';
+    var f = 'testPoints() with';
 
     var t = 'empty content'
 
