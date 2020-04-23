@@ -500,9 +500,9 @@ var testRandom = function(){
 /* Return an array containing the numbers from 0 to (nbCards -1) in a random
  * order
  *
- * nbCards (number) : integer n ≥ 1
+ * nbCards (number): integer n ≥ 1
  *
- * output (array): array containing the numbers in a random order
+ * output (array)  : array containing the numbers in a random order
  *
  * shuffle(52)
  */
@@ -524,18 +524,45 @@ var shuffle = function(nbCards) {
 };
 
 
-// This function takes an integer between 0 and 51  which represents a card
-// and returns the rank of the card
-
+/* Take an integer between 0 and 51 which represents a card and return the rank
+ * of the card
+ *
+ * cardNum (number): integer between 0 and 51 which represents a card
+ *
+ * output (number) : rank of the card
+ *
+ * cardRank(10)
+ */
 var cardRank = function (cardNum) {
-
   switch (cardNum >> 2) {
     case  0 : return 'A'; // Ace
     case 10 : return 'J'; // Jack
     case 11 : return 'Q'; // Queen
     case 12 : return 'K'; // King
-    default: return (cardNum >> 2) + 1;
+    default : return (cardNum >> 2) + 1;
   }
+};
+
+var testCardRank = function(){
+  var f = 'cardRank() with';
+
+  var t = '0 (an ace)';
+  console.assert( cardRank(0) == 'A', f, t);
+
+  var t = '4 (a 2)';
+  console.assert( cardRank(4) == '2', f, t);
+
+  var t = '39 (a 10)';
+  console.assert( cardRank(36) == '10', f, t);
+
+  var t = '40 (a jack)';
+  console.assert( cardRank(40) == 'J', f, t);
+
+  var t = '45 (a queen)';
+  console.assert( cardRank(45) == 'Q', f, t);
+
+  var t = '50 (a king)';
+  console.assert( cardRank(50) == 'K', f, t);
 
 };
 
@@ -1019,6 +1046,7 @@ var unitTests = function() {
   testHtmlDeck();
   testHtmlGame();
   testRandom();
+  testCardRank();
   testCardValue();
   testPoints();
 }
