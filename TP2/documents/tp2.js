@@ -870,6 +870,30 @@ var xOfAKind = function(hand,x) {
   return false;
 };
 
+// xOfAKind unit tests
+var testXOfAKind= function(){
+  var f = 'xOfAKind() with';
+
+  var t = '[52, 52, 52, 52, 52] (empty hand), x = 2';
+  console.assert( xOfAKind([52, 52, 52, 52, 52], 2) === false, f, t);
+
+  var t = '[0, 1, 52, 52, 52] (AC, AD), x = 2';
+  console.assert( xOfAKind([0, 1, 52, 52, 52], 2) === true, f, t);
+
+  var t = '[0, 1, 2, 52, 52] (AC, AD, AH), x = 3';
+  console.assert( xOfAKind([0, 1, 2, 52, 52], 3) === true, f, t);
+
+  var t = '[0, 1, 2, 52, 52] (AC, AD, AH), x = 2';
+  console.assert( xOfAKind([0, 1, 2, 52, 52], 2) === true, f, t);
+
+  var t = '[0, 1, 2, 3, 52] (AC, AD, AH, AS), x = 4';
+  console.assert( xOfAKind([0, 1, 2, 3, 52], 4) === true, f, t);
+
+  var t = '[0, 1, 2, 4, 52] (AC, AD, AH, 2C), x = 4';
+  console.assert( xOfAKind([0, 1, 2, 3, 52], 4) === false, f, t);
+
+};
+
 
 /* This function takes a sorted array of 5 numbers between 0 and 52 (hand) where
  * the numbers between 0 and 51 represent cards and 52 represents an empty card.
@@ -1218,6 +1242,7 @@ var unitTests = function() {
   testHasAce();
   testFlush();
   testRank();
+  testXOfAKind();
   testPoints();
 }
 
