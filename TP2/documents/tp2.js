@@ -578,14 +578,12 @@ var testCardRank = function(){
  * cardSuit(10) => 'H'
  */
 var cardSuit = function (cardNum) {
-
   switch (cardNum & 3) {
     case 0 : return 'C'; // Clubs
     case 1 : return 'D'; // Diamonds
     case 2 : return 'H'; // Hearts
     case 3 : return 'S'; // Spades
   }
-
 };
 
 // cardSuit unit tests
@@ -690,13 +688,12 @@ var highlightSwitch = function(id) {
  * 0 and 51 represent cards and 52 represents a missing card and returns the
  * number of cards in the hand
  *
- * hand (array): array of numbers between 0 and 52
+ * hand (array)   : array of numbers between 0 and 52
  *
  * output (number): the number of cards in the hand
  *
  * nbCard([10, 0, 52, 52, 52]) => 3
  */
-
 var nbCard = function(hand) {
   var nbCard = 0;
 
@@ -707,40 +704,61 @@ var nbCard = function(hand) {
   return nbCard;
 };
 
-// cardRank unit tests
+// nbCard unit tests
 var testNbCard = function(){
   var f = 'nbCard() with';
 
   var t = '[52, 52, 52, 52, 52] (0 card)';
-  console.assert( nbCard([52, 52, 52, 52, 52]) == '0', f, t);
+  console.assert( nbCard([52, 52, 52, 52, 52]) === 0, f, t);
 
   t = '[35, 52, 52, 52, 52] (1 card)';
-  console.assert( nbCard([35, 52, 52, 52, 52]) == '1', f, t);
+  console.assert( nbCard([35, 52, 52, 52, 52]) === 1, f, t);
 
   t = '[35, 0, 52, 52, 52] (2 cards)';
-  console.assert( nbCard([35, 0, 52, 52, 52]) == '2', f, t);
+  console.assert( nbCard([35, 0, 52, 52, 52]) === 2, f, t);
 
   t = '[35, 0, 10, 52, 52] (3 cards)';
-  console.assert( nbCard([35, 0, 10, 52, 52]) == '3', f, t);
+  console.assert( nbCard([35, 0, 10, 52, 52]) === 3, f, t);
 
   t = '[35, 0, 10, 51, 52] (4 cards)';
-  console.assert( nbCard([35, 0, 10, 51, 52]) == '4', f, t);
+  console.assert( nbCard([35, 0, 10, 51, 52]) === 4, f, t);
 
   t = '[35, 0, 10, 51, 1] (5 cards)';
-  console.assert( nbCard([35, 0, 10, 51, 1]) == '5', f, t);
-
+  console.assert( nbCard([35, 0, 10, 51, 1]) === 5, f, t);
 };
 
 
-// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
-// where the numbers between 0 and 51 represent cards and 52 represents an
-// empty card. It returns true if the hand contains an ace and false otherwise
-
+/* Takes a sorted array of 5 numbers between 0 and 52 (hand) where the numbers
+ * between 0 and 51 represent cards and 52 represents an empty card. It returns
+ * true if the hand contains an ace and false otherwise
+ *
+ * hand (array)    : array of numbers between 0 and 52
+ *
+ * output (boolean): true if the hand contains an ace and false otherwise
+ *
+ * hasAce([10, 0, 52, 52, 52]) => true
+ */
 var hasAce = function(hand) {
-
   return (hand[0] >> 2 == 0) ? true : false;
-
 };
+
+// hasAce unit tests
+var testHasAce = function(){
+  var f = 'hasAce() with';
+
+  var t = '[52, 52, 52, 52, 52] (empty hand)';
+  console.assert( hasAce([52, 52, 52, 52, 52]) === false, f, t);
+
+  t = '[4, 5, 6, 7, 51] (Hand without ace)';
+  console.assert( hasAce([4, 5, 6, 7, 51]) === false, f, t);
+
+  t = '[0, 5, 6, 7, 51] (Hand with one ace)';
+  console.assert( hasAce([0, 5, 6, 7, 51]) === true, f, t);
+
+  t = '[0, 1, 2, 3, 51] (Hand with for aces)';
+  console.assert( hasAce([0, 1, 2, 3, 51]) === true, f, t);
+};
+
 
 // This function takes an array of 5 numbers between 0 and 52 (hand) where
 // the numbers between 0 and 51 represent cards and 52 represents an empty
@@ -748,16 +766,11 @@ var hasAce = function(hand) {
 // otherwise
 
 var flush = function(hand) {
-
   for (var i = 1; i < hand.length; i++) {
-
     if ( ((hand[i-1] & 3) != (hand[i] & 3)) || hand[i] == 52 ) {
-
       return false;
-
     }
   }
-
   return true;
 };
 
@@ -1141,6 +1154,7 @@ var unitTests = function() {
   testCardSuit();
   testCardValue();
   testNbCard();
+  testHasAce();
   testPoints();
 }
 
