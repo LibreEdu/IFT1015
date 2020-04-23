@@ -486,6 +486,7 @@ var random = function(n) {
   return Math.floor(Math.random()*n);
 };
 
+// htmlDeck unit tests
 var testRandom = function(){
   var f = 'random() with';
   var t = '2';
@@ -529,9 +530,9 @@ var shuffle = function(nbCards) {
  *
  * cardNum (number): integer between 0 and 51 which represents a card
  *
- * output (number) : rank of the card
+ * output (string) : rank of the card
  *
- * cardRank(10)
+ * cardRank(10) => '3'
  */
 var cardRank = function (cardNum) {
   switch (cardNum >> 2) {
@@ -543,6 +544,7 @@ var cardRank = function (cardNum) {
   }
 };
 
+// cardRank unit tests
 var testCardRank = function(){
   var f = 'cardRank() with';
 
@@ -571,9 +573,9 @@ var testCardRank = function(){
  *
  * cardNum (number): integer between 0 and 51 which represents a card
  *
- * output (number) : rank of the card
+ * output (string) : rank of the card
  *
- * cardSuit(10)
+ * cardSuit(10) => 'H'
  */
 var cardSuit = function (cardNum) {
 
@@ -586,6 +588,7 @@ var cardSuit = function (cardNum) {
 
 };
 
+// cardSuit unit tests
 var testCardSuit = function(){
   var f = 'cardSuit() with';
 
@@ -615,32 +618,53 @@ var testCardSuit = function(){
 };
 
 
-// This function takes an integer between 0 and 51  which represents a card
-// and returns the rank of the card followed by the first letter of its suit
+/* Takes an integer between 0 and 51  which represents a card and returns the
+ * rank of the card followed by the first letter of its suit
+ *
+ * cardNum (number): integer between 0 and 51  which represents a card
+ *
+ * output (string) : the rank of the card followed by the first letter of its
+ *                   suit
+ *
+ * cardValue(10) => '3H'
+ */
 
 var cardValue = function(cardNum) {
-
   var rank = cardRank(cardNum);
   var suit = cardSuit(cardNum);
 
   return rank + suit;
-
 };
 
-// Unit tests
 
+// cardValue unit tests
 var testCardValue = function() {
 
-    var f = 'testCardValue() with';
+    var f = 'cardValue() with';
 
-    console.assert(cardValue(0) == "AC",f, "AC" );
-    console.assert(cardValue(51) == "KS",f, "KS" );
-    console.assert(cardValue(45) == "QD",f,"QD" );
-    console.assert(cardValue(42) == "JH",f, "JH" );
-    console.assert(cardValue(16) == "5C",f, "5C" );
-    console.assert(cardValue(25) == "7D",f, "7D" );
-    console.assert(cardValue(38) == "10H",f, "10H" );
-    console.assert(cardValue(7) == "2S",f, "2S" );
+    var t = '0 (AC)';
+    console.assert(cardValue(0) == "AC", f, t);
+
+    t = '51 (KS)';
+    console.assert(cardValue(51) == "KS", f, t);
+
+    t = '45 (QD)';
+    console.assert(cardValue(45) == "QD", f, t);
+
+    t = '42 (JH)';
+    console.assert(cardValue(42) == "JH", f, t);
+
+    t = '16 (5C)';
+    console.assert(cardValue(16) == "5C", f, t);
+
+    t = '25 (7D)';
+    console.assert(cardValue(25) == "7D", f, t);
+
+    t = '38 (10H)';
+    console.assert(cardValue(38) == "10H", f, t);
+
+    t = '7 (2S)';
+    console.assert(cardValue(7) == "2S", f, t);
 
 };
 
