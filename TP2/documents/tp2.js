@@ -794,9 +794,9 @@ var testFlush = function(){
 };
 
 
-/* Takes a sorted array of 5 numbers between 0 and 52 (hand) where the numbers
+/* Takes a sorted array of numbers between 0 and 52 (hand) where the numbers
  * between 0 and 51 represent cards and 52 represents an empty card and a binary
- * value (seq).  If seq = 0, it returns true if and only if all the cards in the
+ * value (seq). If seq = 0, it returns true if and only if all the cards in the
  * hand have the same rank. If seq = 1, it returns true if and only if the cards
  * are in a sequential order.
  */
@@ -808,6 +808,38 @@ var rank = function(cards, seq) {
     }
   }
   return true;
+};
+
+// rank unit tests
+var testRank = function(){
+  var f = 'rank() with';
+
+  var t = '[52, 52, 52, 52, 52] (empty hand), seq = 0';
+  console.assert( rank([52, 52, 52, 52, 52], 0) === false, f, t);
+
+  t = '[52, 52, 52, 52, 52] (empty hand), seq = 1';
+  console.assert( rank([52, 52, 52, 52, 52], 1) === false, f, t);
+
+  t = '[0, 4, 8, 12, 16] (AC, 2C, 3C, 4C, 5C), seq = 1';
+  console.assert( rank([0, 4, 8, 12, 16], 1) === true, f, t);
+
+  t = '[0, 1, 2, 3] (AC, AV, AH, AS), seq = 0';
+  console.assert( rank([0, 1, 2, 3], 0) === true, f, t);
+
+  t = '[1, 2, 3, 4] (AV, AH, AS, 2C), seq = 0';
+  console.assert( rank([1, 2, 3, 4], 0) === false, f, t);
+
+  t = '[1, 2, 3] (AV, AH, AS), seq = 0';
+  console.assert( rank([1, 2, 3], 0) === true, f, t);
+
+  t = '[28, 31] (8C, 8H), seq = 0';
+  console.assert( rank([28, 31], 0) === true, f, t);
+
+  t = '[0, 4, 8, 12, 17] (AC, 2C, 3C, 4C, 5D), seq = 1';
+  console.assert( rank([0, 4, 8, 12, 17], 1) === true, f, t);
+
+  t = '[0, 4, 8, 12, 17] (AC, 2C, 3C, 4C, 7H), seq = 1';
+  console.assert( rank([0, 4, 8, 12, 27], 1) === false, f, t);
 };
 
 
@@ -1185,6 +1217,7 @@ var unitTests = function() {
   testNbCard();
   testHasAce();
   testFlush();
+  testRank();
   testPoints();
 }
 
