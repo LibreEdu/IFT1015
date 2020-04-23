@@ -573,7 +573,7 @@ var testCardRank = function(){
  *
  * output (number) : rank of the card
  *
- * cardRank(10)
+ * cardSuit(10)
  */
 var cardSuit = function (cardNum) {
 
@@ -613,6 +613,7 @@ var testCardSuit = function(){
   t = '51 (KS)';
   console.assert( cardSuit(51) == 'S', f, t);
 };
+
 
 // This function takes an integer between 0 and 51  which represents a card
 // and returns the rank of the card followed by the first letter of its suit
