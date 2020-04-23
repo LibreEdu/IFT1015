@@ -1190,7 +1190,7 @@ https://stackoverflow.com/questions/40724697/javascript-do-something-before-aler
 */
 var theEnd = function() {
   var element = document.getElementById(deckId);
-  if ( deckCards.length == 52 - deckId && element.innerHTML == htmlImg('back')) {
+  if ( deckCards.length == 52 - deckId && element.innerHTML == htmlImg('back')){
     var sum = document.getElementById('T').innerHTML;
     setTimeout(function() {
       alert('Votre pointage final est ' + sum);
