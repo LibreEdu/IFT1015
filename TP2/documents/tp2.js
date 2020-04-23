@@ -1246,4 +1246,4 @@ var unitTests = function() {
   testPoints();
 }
 
-unitTests();
+//unitTests();
