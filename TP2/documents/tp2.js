@@ -549,22 +549,22 @@ var testCardRank = function(){
   var f = 'cardRank() with';
 
   var t = '0 (an ace)';
-  console.assert( cardRank(0) == 'A', f, t);
+  console.assert( cardRank( 0) ==  'A', f, t);
 
   t = '4 (a 2)';
-  console.assert( cardRank(4) == '2', f, t);
+  console.assert( cardRank( 4) ==  '2', f, t);
 
   t = '39 (a 10)';
   console.assert( cardRank(36) == '10', f, t);
 
   t = '40 (a jack)';
-  console.assert( cardRank(40) == 'J', f, t);
+  console.assert( cardRank(40) ==  'J', f, t);
 
   t = '45 (a queen)';
-  console.assert( cardRank(45) == 'Q', f, t);
+  console.assert( cardRank(45) ==  'Q', f, t);
 
   t = '50 (a king)';
-  console.assert( cardRank(50) == 'K', f, t);
+  console.assert( cardRank(50) ==  'K', f, t);
 };
 
 
@@ -591,16 +591,16 @@ var testCardSuit = function(){
   var f = 'cardSuit() with';
 
   var t = '0 (AC)';
-  console.assert( cardSuit(0) == 'C', f, t);
+  console.assert( cardSuit( 0) == 'C', f, t);
 
   t = '1 (AD)';
-  console.assert( cardSuit(1) == 'D', f, t);
+  console.assert( cardSuit( 1) == 'D', f, t);
 
   t = '2 (AH)';
-  console.assert( cardSuit(2) == 'H', f, t);
+  console.assert( cardSuit( 2) == 'H', f, t);
 
   t = '3 (AS)';
-  console.assert( cardSuit(3) == 'S', f, t);
+  console.assert( cardSuit( 3) == 'S', f, t);
 
   t = '48 (KC)';
   console.assert( cardSuit(48) == 'C', f, t);
@@ -639,7 +639,7 @@ var testCardValue = function() {
     var f = 'cardValue() with';
 
     var t = '0 (AC)';
-    console.assert(cardValue(0) == "AC", f, t);
+    console.assert(cardValue( 0) == "AC", f, t);
 
     t = '51 (KS)';
     console.assert(cardValue(51) == "KS", f, t);
@@ -715,16 +715,16 @@ var testNbCard = function(){
   console.assert( nbCard([35, 52, 52, 52, 52]) === 1, f, t);
 
   t = '[35, 0, 52, 52, 52] (2 cards)';
-  console.assert( nbCard([35, 0, 52, 52, 52]) === 2, f, t);
+  console.assert( nbCard([35,  0, 52, 52, 52]) === 2, f, t);
 
   t = '[35, 0, 10, 52, 52] (3 cards)';
-  console.assert( nbCard([35, 0, 10, 52, 52]) === 3, f, t);
+  console.assert( nbCard([35,  0, 10, 52, 52]) === 3, f, t);
 
   t = '[35, 0, 10, 51, 52] (4 cards)';
-  console.assert( nbCard([35, 0, 10, 51, 52]) === 4, f, t);
+  console.assert( nbCard([35,  0, 10, 51, 52]) === 4, f, t);
 
-  t = '[35, 0, 10, 51, 1] (5 cards)';
-  console.assert( nbCard([35, 0, 10, 51, 1]) === 5, f, t);
+  t = '[35, 0, 10, 51,  1] (5 cards)';
+  console.assert( nbCard([35,  0, 10, 51,  1]) === 5, f, t);
 };
 
 
@@ -750,21 +750,26 @@ var testHasAce = function(){
   console.assert( hasAce([52, 52, 52, 52, 52]) === false, f, t);
 
   t = '[4, 5, 6, 7, 51] (Hand without ace)';
-  console.assert( hasAce([4, 5, 6, 7, 51]) === false, f, t);
+  console.assert( hasAce([ 4,  5,  6,  7, 51]) === false, f, t);
 
   t = '[0, 5, 6, 7, 51] (Hand with one ace)';
-  console.assert( hasAce([0, 5, 6, 7, 51]) === true, f, t);
+  console.assert( hasAce([ 0,  5,  6,  7, 51]) === true, f, t);
 
   t = '[0, 1, 2, 3, 51] (Hand with for aces)';
-  console.assert( hasAce([0, 1, 2, 3, 51]) === true, f, t);
+  console.assert( hasAce([ 0,  1,  2,  3, 51]) === true, f, t);
 };
 
 
-// This function takes an array of 5 numbers between 0 and 52 (hand) where
-// the numbers between 0 and 51 represent cards and 52 represents an empty
-// card. It returns true if all cards are from the same suit and false
-// otherwise
-
+/* Takes an array of 5 numbers between 0 and 52 (hand) where the numbers between
+ * 0 and 51 represent cards and 52 represents an empty card. It returns true if
+ * all cards are from the same suit and false otherwise
+ *
+ * hand (array)    : array of numbers between 0 and 52
+ *
+ * output (boolean): true if all cards are from the same suit
+ *
+ * flush([15, 11, 35, 47, 7]) => true
+ */
 var flush = function(hand) {
   for (var i = 1; i < hand.length; i++) {
     if ( ((hand[i-1] & 3) != (hand[i] & 3)) || hand[i] == 52 ) {
@@ -774,6 +779,21 @@ var flush = function(hand) {
   return true;
 };
 
+// flush unit tests
+var testFlush = function(){
+  var f = 'flush() with';
+
+  var t = '[52, 52, 52, 52, 52] (empty hand)';
+  console.assert( flush([52, 52, 52, 52, 52]) === false, f, t);
+
+  t = '[15, 11, 35, 47, 7] (flush)';
+  console.assert( flush([15, 11, 35, 47,  7]) ===  true, f, t);
+
+  t = '[15, 11, 35, 47, 8] (four cards from the same suit)';
+  console.assert( flush([15, 11, 35, 47,  8]) === false, f, t);
+};
+
+console.log(flush([15, 11, 35, 47, 7]));
 
 // This function takes a sorted array of 5 numbers between 0 and 52 (hand)
 // where the numbers between 0 and 51 represent cards and 52 represents an
@@ -1155,6 +1175,7 @@ var unitTests = function() {
   testCardValue();
   testNbCard();
   testHasAce();
+  testFlush();
   testPoints();
 }
 
