@@ -793,7 +793,6 @@ var testFlush = function(){
   console.assert( flush([15, 11, 35, 47,  8]) === false, f, t);
 };
 
-console.log(flush([15, 11, 35, 47, 7]));
 
 // This function takes a sorted array of 5 numbers between 0 and 52 (hand)
 // where the numbers between 0 and 51 represent cards and 52 represents an
@@ -949,25 +948,52 @@ var points = function(hand) {
 // Unit tests
 
 var testPoints = function() {
+    var f = 'points() with';
 
-    var f = 'testPoints() with';
+    var t = 'Royal Straight Flush';
+    console.assert(points([36,0,40,48,44]) == 100, f , t);
 
-    console.assert(points([36,0,40,48,44]) == 100, f ,"Royal Straight Flush");
-    console.assert(points([9,13,17,21,25]) == 75,f,"Straight Flush");
-    console.assert(points([36,37,38,7,39]) == 50,f,"Four of a kind");
-    console.assert(points([5,16,6,17,18]) == 25,f,"Full House");
-    console.assert(points([8,16,32,12,28]) == 20,f,"Flush");
-    console.assert(points([4,10,13,16,23]) == 15,f,"Straight no As");
-    console.assert(points([39,1,40,50,45]) == 15,f,"Straight as last");
-    console.assert(points([4,1,10,13,19]) == 15,f,"Straight as first");
-    console.assert(points([13,14,15,52,43]) == 10,f,"Three of a kind");
-    console.assert(points([8,9,16,17,23]) == 5,f,"Two pair");
-    console.assert(points([8,52,52,9,52]) == 2,f,"One pair and empty cards");
-    console.assert(points([0,51,45,9,47]) == 2,f,"One pair");
-    console.assert(points([0,4,16,12,52]) == 0,f,"No points");
-    console.assert(points([52,12,52,52,52]) == 0,f,"No points");
-    console.assert(points([52,52,52,52,52]) == 0,f,"Empty hand");
+    t = 'Straight Flush';
+    console.assert(points([9,13,17,21,25]) == 75, f , t);
 
+    t = 'Four of a kind';
+    console.assert(points([36,37,38,7,39]) == 50, f , t);
+
+    t = 'Full House';
+    console.assert(points([5,16,6,17,18]) == 25, f , t);
+
+    t = 'Flush';
+    console.assert(points([8,16,32,12,28]) == 20, f , t);
+
+    t = 'Straight no ace';
+    console.assert(points([4,10,13,16,23]) == 15, f , t);
+
+    t = 'Straight ace last';
+    console.assert(points([39,1,40,50,45]) == 15, f , t);
+
+    t = 'Straight ace first';
+    console.assert(points([4,1,10,13,19]) == 15, f , t);
+
+    t = 'Three of a kind';
+    console.assert(points([13,14,15,52,43]) == 10, f , t);
+
+    t = 'Two pairs';
+    console.assert(points([8,9,16,17,23]) == 5, f , t);
+
+    t = 'One pair and empty cards';
+    console.assert(points([8,52,52,9,52]) == 2, f , t);
+
+    t = 'One pair';
+    console.assert(points([0,51,45,9,47]) == 2, f , t);
+
+    t = 'No points';
+    console.assert(points([0,4,16,12,52]) == 0, f , t);
+
+    t = 'No points';
+    console.assert(points([52,12,52,52,52]) == 0, f , t);
+
+    t = 'Empty hand';
+    console.assert(points([52,52,52,52,52]) == 0, f , t);
 };
 
 
