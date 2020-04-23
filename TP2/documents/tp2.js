@@ -54,10 +54,10 @@ var deckId = nbColumns * nbRows;
 var highlighted = '';
 
 // To know which card is where in order to calculate the points
-var gameCards = Array(deckId + 1).fill(52);
+var gameCards;
 
 // Cards to be drawn
-var deckCards = Array(52).fill(52);
+var deckCards;
 
 
 /* Return the HTML code of a table
@@ -134,9 +134,9 @@ var testHtmlTable = function() {
 
 /* Return the html code of a tr
  *
- * inner (string): inner HTML of the tr tag
+ * inner (string) : inner HTML of the tr tag
  *
- * output (string) : tr tag + inner HTML
+ * output (string): tr tag + inner HTML
  *
  * htmlTr('<td>Test</td>')
  */
@@ -183,11 +183,11 @@ var testHtmTr = function() {
 
 /* Return the HTML code of a td tag
  *
- * id (string): id of the td tag
- * js (string): javascript code of the td tag
- * inner (string): inner HTML of the td tag
+ * id (string)    : id of the td tag
+ * js (string)    : javascript code of the td tag
+ * inner (string) : inner HTML of the td tag
  *
- * output (string) : td tag + inner HTML
+ * output (string): td tag + inner HTML
  *
  * htmlTd('Test')
  */
@@ -226,10 +226,10 @@ var testHtmTd = function() {
 
 /* Return the HTML code of a td with onclick javascript
  *
- * id (string): id of the td tag
- * inner (string): inner HTML of the td tag
+ * id (string)    : id of the td tag
+ * inner (string) : inner HTML of the td tag
  *
- * output (string) : the td tag with onclick javascript + inner HTML
+ * output (string): the td tag with onclick javascript + inner HTML
  *
  * htmlTdOnclick('0', 'Test')
  */
@@ -266,9 +266,9 @@ var testHtmlTdOnclick  = function() {
 
 /* Return the HTML code of an image
  *
- * img (string): image name, without extension
+ * img (string)   : image name, without extension
  *
- * output (string) : HTML code of the image
+ * output (string): HTML code of the image
  *
  * htmlImg('2C')
  */
@@ -304,7 +304,7 @@ var testHtmlImg  = function() {
 
 /* Return the HTML code of the table containing the deck
  *
- * output (string) : HTML code of the table containing the deck
+ * output (string): HTML code of the table containing the deck
  *
  * htmlDeck()
  */
@@ -346,9 +346,10 @@ var testHtmlDeck  = function() {
     '</table>\n', f, t);
 }
 
+
 /* Return the HTML code of the table containing the cards of the game
  *
- * output (string) : HTML code of the table containing the cards of the game
+ * output (string): HTML code of the table containing the cards of the game
  *
  * htmlGame()
  */
@@ -473,35 +474,53 @@ var testHtmlGame  = function() {
 }
 
 
-
-// This function takes an integer n >= 1 and returns a random integer m
-// such that 0 <= m < n
-
+/* Take an integer n ≥ 1 and return a random integer m such that 0 ≤ m < n
+ *
+ * n (number)     : integer n ≥ 1
+ *
+ * output (number): random integer m such that 0 ≤ m < n
+ *
+ * random(6)
+ */
 var random = function(n) {
-
-    return Math.floor(Math.random()*n);
-
+  return Math.floor(Math.random()*n);
 };
 
-// This function returns an array containing the numbers from 0 to 51 in
-// a random order
+var testRandom = function(){
+  var f = 'random() with';
+  var t = '2';
+  var r;
+  for (var i = 0; i < 10; i++) {
+    r = random(2);
+    console.assert( r == 0 || r == 1, f, t);
+  }
+};
 
-var shuffle = function() {
 
-    var deck = Array(52).fill(0).map(function(x,i) { return i; });
+/* Return an array containing the numbers from 0 to (nbCards -1) in a random
+ * order
+ *
+ * nbCards (number) : integer n ≥ 1
+ *
+ * output (array): array containing the numbers in a random order
+ *
+ * shuffle(52)
+ */
+var shuffle = function(nbCards) {
 
-    for(var i = 51; i > 0; i--) {
+  // Array from 0 to nbCards
+  var deck = Array(nbCards).fill(0).map(function(card,i) {
+     return i;
+  });
 
-  var j = random(i); // index of the next card to be switched
+  for(var i = nbCards - 1; i > 0; i--) {
+    var j = random(i); // index of the next card to be switched
+    var t = deck[j];
+    deck[j] = deck[i];
+    deck[i] = t;
+  }
 
-  var t = deck[j];
-  deck[j] = deck[i];
-  deck[i] = t;
-
-    }
-
-    return deck;
-
+  return deck;
 };
 
 
@@ -985,7 +1004,7 @@ var clic = function(id) {
 // Initialization of the page
 var init = function() {
     gameCards = Array(deckId + 1).fill(52);
-    deckCards = shuffle();
+    deckCards = shuffle(52);
     document.getElementById('b').innerHTML = htmlDeck() + htmlGame();
 };
 
@@ -999,12 +1018,13 @@ var unitTests = function() {
   testHtmlImg();
   testHtmlDeck();
   testHtmlGame();
+  testRandom();
   testCardValue();
   testPoints();
 }
 
 
-//unitTests();
+unitTests();
 
 
 /* Test
