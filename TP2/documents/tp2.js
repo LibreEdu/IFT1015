@@ -628,14 +628,12 @@ var testCardSuit = function(){
  *
  * cardValue(10) => '3H'
  */
-
 var cardValue = function(cardNum) {
   var rank = cardRank(cardNum);
   var suit = cardSuit(cardNum);
 
   return rank + suit;
 };
-
 
 // cardValue unit tests
 var testCardValue = function() {
@@ -669,7 +667,12 @@ var testCardValue = function() {
 };
 
 
-// Highlight a card or remove the hight from a card
+/* Highlight a card or remove the highlight from a card
+ *
+ * id (number): id of the card position, the one of the click(id)
+ *
+ * highlightSwitch(0)
+ */
 var highlightSwitch = function(id) {
   var element = document.getElementById(id);
 
@@ -680,7 +683,6 @@ var highlightSwitch = function(id) {
     element.style.backgroundColor = highlightColor;
     highlighted = id;
   }
-
 };
 
 
