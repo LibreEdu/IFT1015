@@ -686,17 +686,49 @@ var highlightSwitch = function(id) {
 };
 
 
-// This function takes an array of 5 numbers between 0 and 52 (hand) where
-// the numbers between 0 and 51 represent cards and 52 represents a missing
-// card and returns the number of cards in the hand
+/* Takes an array of 5 numbers between 0 and 52 (hand) where the numbers between
+ * 0 and 51 represent cards and 52 represents a missing card and returns the
+ * number of cards in the hand
+ *
+ * hand (array): array of numbers between 0 and 52
+ *
+ * output (number): the number of cards in the hand
+ *
+ * nbCard([10, 0, 52, 52, 52]) => 3
+ */
 
 var nbCard = function(hand) {
-
   var nbCard = 0;
 
-  hand.map(function (card) { nbCard += (card == 52) ? 0 : 1; });
+  hand.map(function (card) {
+    nbCard += (card == 52) ? 0 : 1;
+  });
 
   return nbCard;
+};
+
+// cardRank unit tests
+var testNbCard = function(){
+  var f = 'nbCard() with';
+
+  var t = '[52, 52, 52, 52, 52] (0 card)';
+  console.assert( nbCard([52, 52, 52, 52, 52]) == '0', f, t);
+
+  t = '[35, 52, 52, 52, 52] (1 card)';
+  console.assert( nbCard([35, 52, 52, 52, 52]) == '1', f, t);
+
+  t = '[35, 0, 52, 52, 52] (2 cards)';
+  console.assert( nbCard([35, 0, 52, 52, 52]) == '2', f, t);
+
+  t = '[35, 0, 10, 52, 52] (3 cards)';
+  console.assert( nbCard([35, 0, 10, 52, 52]) == '3', f, t);
+
+  t = '[35, 0, 10, 51, 52] (4 cards)';
+  console.assert( nbCard([35, 0, 10, 51, 52]) == '4', f, t);
+
+  t = '[35, 0, 10, 51, 1] (5 cards)';
+  console.assert( nbCard([35, 0, 10, 51, 1]) == '5', f, t);
+
 };
 
 
@@ -1108,6 +1140,7 @@ var unitTests = function() {
   testCardRank();
   testCardSuit();
   testCardValue();
+  testNbCard();
   testPoints();
 }
 
