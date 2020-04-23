@@ -60,7 +60,7 @@ var gameCards;
 var deckCards;
 
 
-/* Return the HTML code of a table
+/* Returns the HTML code of a table
  *
  * content (string): HTML content between the two table tags
  *
@@ -132,7 +132,7 @@ var testHtmlTable = function() {
 }
 
 
-/* Return the html code of a tr
+/* Returns the html code of a tr
  *
  * inner (string) : inner HTML of the tr tag
  *
@@ -181,7 +181,7 @@ var testHtmTr = function() {
     '\t\t</tr>\n', f, t);
 }
 
-/* Return the HTML code of a td tag
+/* Returns the HTML code of a td tag
  *
  * id (string)    : id of the td tag
  * js (string)    : javascript code of the td tag
@@ -224,7 +224,7 @@ var testHtmTd = function() {
 }
 
 
-/* Return the HTML code of a td with onclick javascript
+/* Returns the HTML code of a td with onclick javascript
  *
  * id (string)    : id of the td tag
  * inner (string) : inner HTML of the td tag
@@ -264,7 +264,7 @@ var testHtmlTdOnclick  = function() {
 }
 
 
-/* Return the HTML code of an image
+/* Returns the HTML code of an image
  *
  * img (string)   : image name, without extension
  *
@@ -302,7 +302,7 @@ var testHtmlImg  = function() {
 }
 
 
-/* Return the HTML code of the table containing the deck
+/* Returns the HTML code of the table containing the deck
  *
  * output (string): HTML code of the table containing the deck
  *
@@ -347,7 +347,7 @@ var testHtmlDeck  = function() {
 }
 
 
-/* Return the HTML code of the table containing the cards of the game
+/* Returns the HTML code of the table containing the cards of the game
  *
  * output (string): HTML code of the table containing the cards of the game
  *
@@ -474,7 +474,7 @@ var testHtmlGame  = function() {
 }
 
 
-/* Take an integer n ≥ 1 and return a random integer m such that 0 ≤ m < n
+/* Takes an integer n ≥ 1 and returns a random integer m such that 0 ≤ m < n
  *
  * n (number)     : integer n ≥ 1
  *
@@ -497,7 +497,7 @@ var testRandom = function(){
 };
 
 
-/* Return an array containing the numbers from 0 to (nbCards -1) in a random
+/* Returns an array containing the numbers from 0 to (nbCards -1) in a random
  * order
  *
  * nbCards (number): integer n ≥ 1
@@ -524,8 +524,8 @@ var shuffle = function(nbCards) {
 };
 
 
-/* Take an integer between 0 and 51 which represents a card and return the rank
- * of the card
+/* Takes an integer between 0 and 51 which represents a card and returns the
+ * rank of the card
  *
  * cardNum (number): integer between 0 and 51 which represents a card
  *
@@ -549,27 +549,32 @@ var testCardRank = function(){
   var t = '0 (an ace)';
   console.assert( cardRank(0) == 'A', f, t);
 
-  var t = '4 (a 2)';
+  t = '4 (a 2)';
   console.assert( cardRank(4) == '2', f, t);
 
-  var t = '39 (a 10)';
+  t = '39 (a 10)';
   console.assert( cardRank(36) == '10', f, t);
 
-  var t = '40 (a jack)';
+  t = '40 (a jack)';
   console.assert( cardRank(40) == 'J', f, t);
 
-  var t = '45 (a queen)';
+  t = '45 (a queen)';
   console.assert( cardRank(45) == 'Q', f, t);
 
-  var t = '50 (a king)';
+  t = '50 (a king)';
   console.assert( cardRank(50) == 'K', f, t);
-
 };
 
 
-// This function takes an integer between 0 and 51  which represents a card
-// and returns the first letter of the card's suit
-
+/* Takes an integer between 0 and 51 which represents a card and returns the
+ * first letter of the card's suit
+ *
+ * cardNum (number): integer between 0 and 51 which represents a card
+ *
+ * output (number) : rank of the card
+ *
+ * cardRank(10)
+ */
 var cardSuit = function (cardNum) {
 
   switch (cardNum & 3) {
@@ -581,6 +586,33 @@ var cardSuit = function (cardNum) {
 
 };
 
+var testCardSuit = function(){
+  var f = 'cardSuit() with';
+
+  var t = '0 (AC)';
+  console.assert( cardSuit(0) == 'C', f, t);
+
+  t = '1 (AD)';
+  console.assert( cardSuit(1) == 'D', f, t);
+
+  t = '2 (AH)';
+  console.assert( cardSuit(2) == 'H', f, t);
+
+  t = '3 (AS)';
+  console.assert( cardSuit(3) == 'S', f, t);
+
+  t = '48 (KC)';
+  console.assert( cardSuit(48) == 'C', f, t);
+
+  t = '49 (KD)';
+  console.assert( cardSuit(49) == 'D', f, t);
+
+  t = '50 (KH)';
+  console.assert( cardSuit(50) == 'H', f, t);
+
+  t = '51 (KS)';
+  console.assert( cardSuit(51) == 'S', f, t);
+};
 
 // This function takes an integer between 0 and 51  which represents a card
 // and returns the rank of the card followed by the first letter of its suit
@@ -1047,6 +1079,7 @@ var unitTests = function() {
   testHtmlGame();
   testRandom();
   testCardRank();
+  testCardSuit();
   testCardValue();
   testPoints();
 }
