@@ -871,7 +871,7 @@ var xOfAKind = function(hand,x) {
 };
 
 // xOfAKind unit tests
-var testXOfAKind= function(){
+var testXOfAKind = function(){
   var f = 'xOfAKind() with';
 
   var t = '[52, 52, 52, 52, 52] (empty hand), x = 2';
@@ -891,7 +891,6 @@ var testXOfAKind= function(){
 
   var t = '[0, 1, 2, 4, 52] (AC, AD, AH, 2C), x = 4';
   console.assert( xOfAKind([0, 1, 2, 3, 52], 4) === false, f, t);
-
 };
 
 
