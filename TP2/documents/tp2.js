@@ -794,118 +794,97 @@ var testFlush = function(){
 };
 
 
-// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
-// where the numbers between 0 and 51 represent cards and 52 represents an
-// empty card and a binary value (seq).  If seq = 0, it returns true if and
-// only if all the cards in the hand have the same rank. If seq = 1, it
-// returns true if and only if the cards are in a sequential order.
-
+/* Takes a sorted array of 5 numbers between 0 and 52 (hand) where the numbers
+ * between 0 and 51 represent cards and 52 represents an empty card and a binary
+ * value (seq).  If seq = 0, it returns true if and only if all the cards in the
+ * hand have the same rank. If seq = 1, it returns true if and only if the cards
+ * are in a sequential order.
+ */
 var rank = function(cards, seq) {
-
   if(cards[cards.length - 1] == 52) return false;
-
   for (var i = 1; i < cards.length; i++) {
-
     if ( (cards[i-1] >> 2) + seq != cards[i] >> 2 ) {
-
       return false;
-
     }
   }
-
   return true;
 };
 
 
-// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
-// where the numbers between 0 and 51 represent cards and 52 represents an
-// empty card. It returns true if the hand is a royal straight false otherwise
-
+/* Takes a sorted array of 5 numbers between 0 and 52 (hand) where the numbers
+ * between 0 and 51 represent cards and 52 represents an empty card. It returns
+ * true if the hand is a royal straight false otherwise
+ */
 var royalStraight = function(hand) {
-
-    if (hand[0]>>2 != 0 || hand[1]>>2 != 9) return false;
-
+    if (hand[0]>>2 != 0 || hand[1]>>2 != 9) {
+      return false;
+    }
     return rank(hand.slice(1,5),1);
 };
 
 
-// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
-// where the numbers between 0 and 51 represent cards and 52 represents an
-// empty card and an integer x >= 1. returns true if and
-// only if the hand contains x cards of the same rank
-
+/* This function takes a sorted array of 5 numbers between 0 and 52 (hand) where
+ * the numbers between 0 and 51 represent cards and 52 represents an empty card
+ * and an integer x >= 1. returns true if and only if the hand contains x cards
+ * of the same rank.
+ */
 var xOfAKind = function(hand,x) {
-
   for (var i = 0; i <= hand.length - x; i++) {
-
     var partHand = hand.slice(i,i+x);
-
-    if(rank(partHand, 0 ) && partHand[0] != 52) return true;
-
+    if(rank(partHand, 0 ) && partHand[0] != 52) {
+      return true;
+    }
   }
-
   return false;
 };
 
 
-// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
-// where the numbers between 0 and 51 represent cards and 52 represents an
-// empty card. It returns an array of arrays of length 2 containing the cards
-// that follow each other: cards 0 and 1, cards 1 and 2...
-
+/* This function takes a sorted array of 5 numbers between 0 and 52 (hand) where
+ * the numbers between 0 and 51 represent cards and 52 represents an empty card.
+ * It returns an array of arrays of length 2 containing the cards that follow
+ * each other: cards 0 and 1, cards 1 and 2...
+ */
 var twoCards = function(hand) {
-
   var twos = Array(4);
-
   for(var i = 0; i < 4; i++) {
-
     twos[i] = hand.slice(i, i+2);
-
   }
-
   return twos;
 };
 
 
-// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
-// where the numbers between 0 and 51 represent cards and 52 represents an
-// empty card. It returns true if the hand contains two pairs of cards with
-// the same rank and false otherwise
-
+/* This function takes a sorted array of 5 numbers between 0 and 52 (hand) where
+ * the numbers between 0 and 51 represent cards and 52 represents an empty card.
+ * It returns true if the hand contains two pairs of cards with the same rank
+ * and false otherwise
+ */
 var twoPair = function(hand) {
-
   var pair = twoCards(hand);
-
   var firstTwo = rank(pair[0],0) && rank(pair[2],0);
   var lastTwo  = rank(pair[1],0) && rank(pair[3],0);
   var twoEnds  = rank(pair[0],0) && rank(pair[3],0);
-
   return firstTwo || lastTwo || twoEnds;
 };
 
 
-
-// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
-// where the numbers between 0 and 51 represent cards and 52 represents an
-// empty card. It returns true if the hand is a fullHouse and false otherwise
-
+/* This function takes a sorted array of 5 numbers between 0 and 52 (hand) where
+ * the numbers between 0 and 51 represent cards and 52 represents an empty card.
+ * It returns true if the hand is a fullHouse and false otherwise
+ */
 var fullHouse = function(hand) {
-
   var threeAndTwo = rank( hand.slice(0,3), 0 ) && rank( hand.slice(3), 0 );
   var twoAndThree = rank( hand.slice(0,2), 0 ) && rank( hand.slice(2), 0 );
-
   return threeAndTwo || twoAndThree;
 };
 
 
-// This function takes a sorted array of 5 numbers between 0 and 52 (hand)
-// where the numbers between 0 and 51 represent cards and 52 represents an
-// empty card. It returns the number of points of the hand
-
+/* This function takes a sorted array of 5 numbers between 0 and 52 (hand) where
+ * the numbers between 0 and 51 represent cards and 52 represents an empty card.
+ * It returns the number of points of the hand
+ */
 var points = function(hand) {
 
   // Sort hand in numerical order
-
   var hand = hand.sort( function (x, y) { return x - y; });
 
   switch(nbCard(hand)) {
@@ -945,8 +924,7 @@ var points = function(hand) {
   }
 };
 
-// Unit tests
-
+// points unit tests
 var testPoints = function() {
     var f = 'points() with';
 
@@ -1153,7 +1131,6 @@ var game = function(id) {
 
 /* The game's over
 https://stackoverflow.com/questions/40724697/javascript-do-something-before-alert
-https://stackoverflow.com/questions/33955650/what-is-settimeout-doing-when-set-to-0-milliseconds
 */
 var theEnd = function() {
   var element = document.getElementById(deckId);
@@ -1181,7 +1158,13 @@ var clic = function(id) {
 // Initialization of the page
 var init = function() {
     gameCards = Array(deckId + 1).fill(52);
+
     deckCards = shuffle(52);
+    /* Test
+    deckCards = Array(27).fill(52).concat([31,0,40,33,2,35,37,41,49,45,32,36,44,
+      48,0,38,42,46,50,34,39,43,47,51,3]);
+    //*/
+
     document.getElementById('b').innerHTML = htmlDeck() + htmlGame();
 };
 
@@ -1205,11 +1188,4 @@ var unitTests = function() {
   testPoints();
 }
 
-
 unitTests();
-
-
-/* Test
-deckCards = Array(27).fill(52).concat([31,0,40,33,2,35,37,41,49,45,32,36,44,48,
-  0,38,42,46,50,34,39,43,47,51,3]);
-//*/
